@@ -51,7 +51,7 @@ public class LocationService {
 		return districtDao.getList();
 	}
 	
-	public District getDistrictById(String id) {
+	public District getDistrict(String id) {
 		return districtDao.getDistrict(id);
 	}
 	
@@ -80,7 +80,7 @@ public class LocationService {
 		return wardDao.getList();
 	}
 	
-	public Ward getWardById(String id) {
+	public Ward getWard(String id) {
 		return wardDao.getWard(id);
 	}
 	

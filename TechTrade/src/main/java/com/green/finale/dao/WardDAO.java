@@ -24,11 +24,11 @@ public class WardDAO {
 		return query.getResultList();
 	}
 	
-	public Ward getListById(String id) {
+	public Ward getWard(String id) {
 		return sessionFactory.getCurrentSession().find(Ward.class, id);
 	}
 
-	public Ward getListByName(String name) {
+	public Ward getWardByName(String name) {
 		return sessionFactory.getCurrentSession().find(Ward.class, name);
 	}
 
@@ -44,7 +44,7 @@ public class WardDAO {
 
 	public void deleteById(String id) {
 		Session ss = (Session) sessionFactory.getCurrentSession();
-		ss.delete(getListById(id));
+		ss.delete(getWard(id));
 	}
 	
 	public void delete(Ward ward) {

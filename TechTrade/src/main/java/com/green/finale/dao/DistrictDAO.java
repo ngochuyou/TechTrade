@@ -23,11 +23,11 @@ public class DistrictDAO {
 		return query.getResultList();
 	}
 
-	public District getListById(String id) {
+	public District getDistrict(String id) {
 		return sessionFactory.getCurrentSession().find(District.class, id);
 	}
 
-	public District getListByName(String name) {
+	public District getDistrictByName(String name) {
 		return sessionFactory.getCurrentSession().find(District.class, name);
 	}
 
@@ -43,7 +43,7 @@ public class DistrictDAO {
 
 	public void deleteById(String id) {
 		Session ss = (Session) sessionFactory.getCurrentSession();
-		ss.delete(getListById(id));
+		ss.delete(getDistrict(id));
 	}
 	
 	public void delete(District district) {

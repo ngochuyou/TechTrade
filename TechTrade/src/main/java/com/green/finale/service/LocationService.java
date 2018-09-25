@@ -52,11 +52,11 @@ public class LocationService {
 	}
 	
 	public District getDistrictById(String id) {
-		return districtDao.getListById(id);
+		return districtDao.getDistrict(id);
 	}
 	
 	public District getDistrictByName(String name) {
-		return districtDao.getListByName(name);
+		return districtDao.getDistrictByName(name);
 	}
 	
 	public String createDistrict(District district) {
@@ -81,11 +81,11 @@ public class LocationService {
 	}
 	
 	public Ward getWardById(String id) {
-		return wardDao.getListById(id);
+		return wardDao.getWard(id);
 	}
 	
 	public Ward getWardByName(String name) {
-		return wardDao.getListByName(name);
+		return wardDao.getWardByName(name);
 	}
 	
 	public String createWard(Ward ward) {

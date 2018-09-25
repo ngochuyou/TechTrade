@@ -38,7 +38,7 @@ public class LocationService {
 		cityDao.update(city);
 	}
 	
-	public List<City> getCity(){
+	public List<City> getCityList(){
 		return cityDao.getList();
 	}
 	
@@ -47,7 +47,7 @@ public class LocationService {
 	}
 	
 	//About District
-	public List<District> getDistrict(){
+	public List<District> getDistrictList(){
 		return districtDao.getList();
 	}
 	
@@ -76,7 +76,7 @@ public class LocationService {
 	}
 	
 	//About Ward
-	public List<Ward> getWard(){
+	public List<Ward> getWardList(){
 		return wardDao.getList();
 	}
 	

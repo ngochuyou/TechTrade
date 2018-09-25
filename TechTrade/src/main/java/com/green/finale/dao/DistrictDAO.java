@@ -41,9 +41,14 @@ public class DistrictDAO {
 		ss.update(district);
 	}
 
-	public void delete(String id) {
+	public void deleteById(String id) {
 		Session ss = (Session) sessionFactory.getCurrentSession();
 		ss.delete(getListById(id));
+	}
+	
+	public void delete(District district) {
+		Session ss = (Session) sessionFactory.getCurrentSession();
+		ss.delete(district);
 	}
 
 }

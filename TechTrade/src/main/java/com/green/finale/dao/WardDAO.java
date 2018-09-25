@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.green.finale.entity.Ward;
 
+
 @Repository
 public class WardDAO {
 
@@ -41,8 +42,13 @@ public class WardDAO {
 		ss.update(ward);
 	}
 
-	public void delete(String id) {
+	public void deleteById(String id) {
 		Session ss = (Session) sessionFactory.getCurrentSession();
 		ss.delete(getListById(id));
+	}
+	
+	public void delete(Ward ward) {
+		Session ss = (Session) sessionFactory.getCurrentSession();
+		ss.delete(ward);
 	}
 }

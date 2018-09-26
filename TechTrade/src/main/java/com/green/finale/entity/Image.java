@@ -12,19 +12,19 @@ public class Image {
 	@Id
 	@GeneratedValue
 	@Column(name = "id", nullable = false)
-	private String id;
+	private int id;
 
 	@Column(name = "location", nullable = false)
 	private String location;
 
 	@Column(name = "key_id", nullable = false)
-	private long keyId;
+	private String keyId;
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -36,11 +36,11 @@ public class Image {
 		this.location = location;
 	}
 
-	public long getKeyId() {
+	public String getKeyId() {
 		return keyId;
 	}
 
-	public void setKeyId(long keyId) {
+	public void setKeyId(String keyId) {
 		this.keyId = keyId;
 	}
 

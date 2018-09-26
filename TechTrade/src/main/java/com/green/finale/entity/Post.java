@@ -50,11 +50,14 @@ public class Post {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "account_id", nullable = false)
 	private Account createBy;
-
+	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
 	private PostStatus status;
 
+	@Column(name = "in_use")
+	private boolean inUse;
+	
 	public long getId() {
 		return id;
 	}

@@ -40,4 +40,10 @@ public class AccountDAO {
 		
 		ss.delete(acc);
 	}
+	
+	public Account find(String username) {
+		Session ss = factory.getCurrentSession();
+		
+		return ss.get(Account.class, username);
+	}
 }

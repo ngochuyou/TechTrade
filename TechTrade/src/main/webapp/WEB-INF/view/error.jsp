@@ -12,5 +12,8 @@
 <body>
 	<h1>Error Page</h1>
 	<form:errors path=""></form:errors>
+	<c:if test="${not empty error }">
+		<p>${error }</p>
+	</c:if>
 </body>
 </html>

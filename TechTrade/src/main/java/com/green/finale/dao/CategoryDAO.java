@@ -2,6 +2,7 @@ package com.green.finale.dao;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
@@ -27,7 +28,14 @@ public class CategoryDAO {
 	public String insert(Category category) {
 		Session ss = factory.getCurrentSession();
 		
-		return (String) ss.save(category);
+		try {
+			String result = (String) ss.save(category);
+			
+			return result; 
+		} catch (Exception ex) {
+			System.out.println("exceptioned");
+			return null;
+		}
 	}
 	
 	public void update(Category category) {
@@ -40,5 +48,14 @@ public class CategoryDAO {
 		Session ss = factory.getCurrentSession();
 		
 		ss.delete(category);
+	}
+	
+	public Category find(String id) throws NoResultException {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<Category> hql = ss.createQuery("FROM Category WHERE id = :id", Category.class);
+		
+		hql.setParameter("id", id);
+		
+		return hql.getSingleResult();
 	}
 }

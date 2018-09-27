@@ -35,21 +35,21 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		.authorizeRequests()
-			.anyRequest()/*.authenticated()
-			.antMatchers("/resources/**")*/.permitAll();
+			.anyRequest().authenticated()
+			.antMatchers("/resources/**").permitAll()
 //			.antMatchers("/admin/**").access("hasRole('ADMIN')")
 //			.antMatchers("/contact/create").access("hasRole('CONTACT-MANAGER')")
-//		.and()
-//			.formLogin()
-//			.loginPage("/login")
-//			.loginProcessingUrl("/handleLogin")
-//			.usernameParameter("username")
-//			.passwordParameter("password")
-//			.permitAll()
-//		.and()
-//			.logout().logoutUrl("/logout")
-//		.and().csrf()
-//		.and().exceptionHandling().accessDeniedPage("/denied")
-//		.and().userDetailsService(userDetailService);
+		.and()
+			.formLogin()
+			.loginPage("/login")
+			.loginProcessingUrl("/handleLogin")
+			.usernameParameter("username")
+			.passwordParameter("password")
+			.permitAll()
+		.and()
+			.logout().logoutUrl("/logout")
+		.and().csrf()
+		.and().exceptionHandling().accessDeniedPage("/denied")
+		.and().userDetailsService(userDetailService);
 	}
 }

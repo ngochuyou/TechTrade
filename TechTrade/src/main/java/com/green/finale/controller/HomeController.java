@@ -17,6 +17,7 @@ public class HomeController {
 
 	@GetMapping
 	public String index() {
+		
 		return "redirect:/category";
 	}
 
@@ -24,6 +25,7 @@ public class HomeController {
 	public String login() {
 		// check login status
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		if (authenticationTrustResolver.isAnonymous(authentication)) {
 			
 			return "login";
@@ -35,6 +37,7 @@ public class HomeController {
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logoutPage() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
 		if (auth != null) {
 			SecurityContextHolder.getContext().setAuthentication(null);
 		}

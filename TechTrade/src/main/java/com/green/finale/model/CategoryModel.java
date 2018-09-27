@@ -1,29 +1,39 @@
 package com.green.finale.model;
 
-import java.util.List;
-
-import com.green.finale.entity.Brand;
 import com.green.finale.entity.Category;
 
 public class CategoryModel {
+	private int id;
+	private String name;
 
-	private List<Category> cateList;
-	private List<Brand> brandList;
-
-	public List<Category> getCateList() {
-		return cateList;
+	public void injectCategory(Category cate) {
+		this.setId(cate.getId());
+		this.setName(cate.getName());
 	}
 
-	public void setCateList(List<Category> cateList) {
-		this.cateList = cateList;
+	public Category extractCategory() {
+		Category cate = new Category();
+
+		cate.setId(this.getId());
+		cate.setName(this.getName());
+
+		return cate;
 	}
 
-	public List<Brand> getBrandList() {
-		return brandList;
+	public int getId() {
+		return id;
 	}
 
-	public void setBrandList(List<Brand> brandList) {
-		this.brandList = brandList;
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

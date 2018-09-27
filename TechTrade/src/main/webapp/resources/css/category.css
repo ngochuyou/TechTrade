@@ -14,3 +14,24 @@
 li {
 	cursor: pointer;
 }
+
+th {
+	font-size: 30px;
+}
+
+td {
+	position: relative;
+	font-size: 20px;
+}
+
+.dropdown {
+	position: absolute;
+	right: 10px;
+	display: inline-block;
+}
+
+.btn {
+	color: black;
+	background-color: white;
+	border-color: white;
+}

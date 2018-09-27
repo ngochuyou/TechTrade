@@ -3,6 +3,7 @@ package com.green.finale.entity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -12,8 +13,9 @@ import javax.persistence.Table;
 @Table(name = "brand")
 public class Brand {
 	@Id
-	@Column(name = "id", nullable = false)
-	private String id;
+	@GeneratedValue
+	@Column(name = "id")
+	private int id;
 
 	@Column(name = "name", nullable = false)
 	private String name;
@@ -22,11 +24,14 @@ public class Brand {
 	@JoinColumn(name = "category_id", nullable = false)
 	private Category category;
 
-	public String getId() {
+	@Column(name = "in_use", nullable = false)
+	private boolean inUse = true;
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -44,6 +49,14 @@ public class Brand {
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	public boolean isInUse() {
+		return inUse;
+	}
+
+	public void setInUse(boolean inUse) {
+		this.inUse = inUse;
 	}
 
 }

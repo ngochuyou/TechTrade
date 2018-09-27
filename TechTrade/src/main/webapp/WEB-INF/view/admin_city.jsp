@@ -13,7 +13,7 @@
 	crossorigin="anonymous"></script>
 </head>
 <body>
-	<c:set var="path" value="${pageContext.request.contextPath}"></c:set>
+	<c:set var="path" value="/TechTrade"></c:set>
 	<h1>Admin Only: Cities Management</h1>
 	<c:if test="${empty city.cityList }">
 		<p>No city found</p>

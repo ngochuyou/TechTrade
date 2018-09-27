@@ -2,26 +2,26 @@ package com.green.finale.model;
 
 import com.green.finale.entity.Brand;
 
-public class BrandDetail {
+public class BrandModel {
 
-	private String id;
+	private int id;
 	private String name;
-	private String categoryId;
-	
+	private int categoryId;
+
 	public Brand extractBrand() {
 		Brand br = new Brand();
-		
+
 		br.setId(this.getId());
 		br.setName(this.getName());
-		
+
 		return br;
 	}
-	
-	public String getId() {
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -33,11 +33,11 @@ public class BrandDetail {
 		this.name = name;
 	}
 
-	public String getCategoryId() {
+	public int getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(String categoryId) {
+	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}
 

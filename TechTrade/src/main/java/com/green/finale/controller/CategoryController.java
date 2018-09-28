@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.green.finale.entity.Category;
-import com.green.finale.model.BrandModel;
 import com.green.finale.model.CategoryModel;
 import com.green.finale.model.CategoryPage;
 import com.green.finale.service.CategoryService;
@@ -31,7 +30,6 @@ public class CategoryController {
 
 		catePage.setCateList(cateService.getInUseCategoryList());
 		catePage.setUnUsedCateList(cateService.getUnUsedCategoryList());
-		catePage.setBrandList(cateService.getBrandList());
 
 		model.addAttribute("cateModel", cateModel);
 		model.addAttribute("pageModel", catePage);
@@ -63,12 +61,12 @@ public class CategoryController {
 		if (result.hasErrors()) {
 			return "error";
 		}
-		
+
 		String resultMessage = cateService.deleteCategory(cateModel);
-		
+
 		if (resultMessage != null) {
 			model.addAttribute("error", resultMessage);
-			
+
 			return "error";
 		}
 
@@ -76,18 +74,18 @@ public class CategoryController {
 	}
 
 	@GetMapping(value = "/restore")
-	public String restoreCategory(@RequestParam(name = "id") String cateId, Model model) {
+	public String handleRestoreCategory(@RequestParam(name = "id") String cateId, Model model) {
 		String result = cateService.restoreCategory(cateId);
-		
+
 		if (result != null) {
 			model.addAttribute("error", result);
-			
+
 			return "error";
 		}
-		
+
 		return "redirect:/category";
 	}
-	
+
 	@PostMapping(value = "/update")
 	public String handleUpdateCategory(@ModelAttribute(name = "cateModel") CategoryModel cateModel,
 			BindingResult result, Model model) {
@@ -118,24 +116,5 @@ public class CategoryController {
 
 		return cateService.searchCategory(parsedId);
 	}
-
-	// brand control
-	@PostMapping(value = "/brand/create")
-	public String handleCreateBrand(@ModelAttribute(name = "brandModel") BrandModel brandModel, BindingResult result) {
-		if (result.hasErrors()) {
-
-			return "error";
-		}
-
-		cateService.createBrand(brandModel);
-
-		return "redirect:/category";
-	}
-//
-//	@ExceptionHandler(Exception.class)
-//	public String exceptionHandler() {
-//
-//		return "error";
-//	}
-
+	
 }

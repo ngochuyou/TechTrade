@@ -2,17 +2,13 @@ package com.green.finale.service;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import com.green.finale.dao.BrandDAO;
 import com.green.finale.dao.CategoryDAO;
-import com.green.finale.entity.Brand;
 import com.green.finale.entity.Category;
-import com.green.finale.model.BrandModel;
 import com.green.finale.model.CategoryModel;
 import com.green.finale.utils.Messages;
 
@@ -21,22 +17,19 @@ public class CategoryService {
 	@Autowired
 	private CategoryDAO cateDao;
 
-	@Autowired
-	private BrandDAO brandDao;
-
 	// About Category
 	@Transactional
 	public List<Category> getCategoryList() {
 
 		return cateDao.getList();
 	}
-	
+
 	@Transactional
 	public List<Category> getInUseCategoryList() {
 
 		return cateDao.getInUseList();
 	}
-	
+
 	@Transactional
 	public List<Category> getUnUsedCategoryList() {
 
@@ -51,7 +44,7 @@ public class CategoryService {
 			int newCateId = newCate.getId();
 
 			if (searchCategory(newCateId) != null) {
-				return Messages.DUPLICATED_ID + newCateId;
+				return Messages.ALREADYEXSIT;
 			} else {
 				cateDao.insert(newCate);
 
@@ -87,7 +80,7 @@ public class CategoryService {
 		try {
 			int parsedId = categoryIdToint(cateId);
 			Category cate = searchCategory(parsedId);
-			
+
 			if (cate == null) {
 				return Messages.NONEXSIT;
 			} else {
@@ -97,10 +90,10 @@ public class CategoryService {
 		} catch (NullPointerException ex) {
 			return Messages.NONEXSIT;
 		}
-		
+
 		return null;
 	}
-	
+
 	@Transactional
 	public String updateCategory(CategoryModel cateModel) {
 		Category newCate = cateModel.extractCategory();
@@ -126,32 +119,17 @@ public class CategoryService {
 		}
 
 	}
-	
+
 	public Integer categoryIdToint(String cateId) {
 		int parsedId;
-		
+
 		try {
 			parsedId = Integer.parseInt(cateId);
 		} catch (NumberFormatException ex) {
 			return null;
 		}
-		
+
 		return parsedId;
 	}
-	
-	// About Brand
-	@Transactional
-	public List<Brand> getBrandList() {
 
-		return brandDao.getList();
-	}
-
-	@Transactional
-	public String createBrand(BrandModel brandModel) {
-		Brand newBrand = brandModel.extractBrand();
-
-		newBrand.setCategory(searchCategory(brandModel.getCategoryId()));
-
-		return brandDao.insert(newBrand);
-	}
 }

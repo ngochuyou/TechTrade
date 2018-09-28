@@ -35,3 +35,7 @@ td {
 	background-color: white;
 	border-color: white;
 }
+
+.main {
+	overflow: auto;
+}

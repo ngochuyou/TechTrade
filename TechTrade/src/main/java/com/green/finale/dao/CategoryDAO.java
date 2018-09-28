@@ -46,7 +46,7 @@ public class CategoryDAO {
 
 	public void update(Category category) {
 		Session ss = factory.getCurrentSession();
-		
+			
 		ss.update(category);
 	}
 

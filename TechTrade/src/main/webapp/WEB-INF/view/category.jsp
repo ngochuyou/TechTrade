@@ -29,68 +29,102 @@
 	<c:set var="path" value="/TechTrade"></c:set>
 	<div class="container-fluid p-3">
 		<div class="row">
-			<div class="col-3"></div>
-			<div class="col-6">
+			<div class="col-2"></div>
+			<div class="col-8 main">
 				<h1>Category Management</h1>
 				<h2>Categories and Brands</h2>
-				<c:if test="${empty pageModel.cateList }">
-					<p>No Category found</p>
-				</c:if>
-				<c:if test="${not empty pageModel.cateList }">
-					<table class="table table-bordered">
-						<tr>
-							<th>Category</th>
-							<th>Brands</th>
-						</tr>
+				<table class="table table-bordered">
+					<tr>
+						<th>Category</th>
+						<th>Brands</th>
+					</tr>
+					<c:if test="${not empty pageModel.cateList }">
 						<c:forEach var="cate" items="${pageModel.cateList }">
 							<tr>
-								<td><span>${cate.name }</span>
-									<div class="dropdown">
-										<button class="btn btn-outline-light dropdown-toggle text-secondary"
-											type="button" id="dropdownMenu2" data-toggle="dropdown"
-											aria-haspopup="true" aria-expanded="false"></button>
-										<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-											<form:form modelAttribute="cateModel"
-												action="${path }/category/delete" method="post">
-												<form:hidden path="id" value="${cate.id }" />
-												<form:button class="dropdown-item">Delete</form:button>
-											</form:form>
-											<button class="dropdown-item cate-updateBtn" type="button"
-												id="${cate.id }">Update</button>
+								<td><div class="m-2">
+										<span id="cate-name${cate.id }">${cate.name }</span>
+										<div class="dropdown">
+											<button
+												class="btn btn-outline-light dropdown-toggle text-secondary"
+												type="button" id="dropdownMenu2" data-toggle="dropdown"
+												aria-haspopup="true" aria-expanded="false"></button>
+											<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+												<form:form modelAttribute="cateModel"
+													action="${path }/category/delete" method="post">
+													<form:hidden path="id" value="${cate.id }" />
+													<form:button class="dropdown-item">Delete</form:button>
+												</form:form>
+												<button class="dropdown-item cate-updateBtn" type="button"
+													id="cate-id${cate.id }">Update</button>
+											</div>
 										</div>
 									</div></td>
 								<td><c:forEach var="brand" items="${pageModel.brandList }">
 										<c:if test="${brand.category.id eq cate.id}">
-											<p>${brand.name }</p>
+											<div
+												class="m-2 ${brand.inUse eq false ? 'text-light bg-secondary' : ''}">
+												<span id="brand-id${brand.id }">${brand.name }</span>
+												<div class="dropdown">
+													<button
+														class="btn btn-outline-light dropdown-toggle text-secondary"
+														type="button" id="dropdownMenu2" data-toggle="dropdown"
+														aria-haspopup="true" aria-expanded="false"></button>
+													<c:if test="${brand.inUse eq true}">
+														<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+															<form:form modelAttribute="brandModel"
+																action="${path }/category/brand/delete" method="post">
+																<form:hidden path="id" value="${brand.id }" />
+																<form:button class="dropdown-item">Delete</form:button>
+															</form:form>
+															<button class="dropdown-item brand-updateBtn"
+																type="button" id="brand-${brand.id }-cate-${cate.id }">Update</button>
+														</div>
+													</c:if>
+													<c:if test="${brand.inUse eq false }">
+														<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+															<button class="dropdown-item"
+																type="button"
+																onclick="window.location.href='<spring:url value="/category/brand/restore?id=${brand.id }"></spring:url>'">Restore</button>
+														</div>
+													</c:if>
+												</div>
+											</div>
 										</c:if>
-									</c:forEach></td>
+									</c:forEach>
+									<button class="btn btn-outline-light brand-form-openBtn m-2"
+										id="brand-cate${cate.id }">New brand</button></td>
 							</tr>
 						</c:forEach>
+					</c:if>
+					<c:if test="${empty pageModel.cateList }">
+						<p>No Category found</p>
+					</c:if>
+					<c:if test="${not empty pageModel.unUsedCateList }">
 						<c:forEach var="uCate" items="${pageModel.unUsedCateList }">
 							<tr class="text-light bg-secondary">
-								<td><span>${uCate.name }</span>
-									<div class="dropdown">
-										<button class="btn btn-outline-light dropdown-toggle text-secondary"
-											type="button" id="dropdownMenu2" data-toggle="dropdown"
-											aria-haspopup="true" aria-expanded="false"></button>
-										<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-											<button class="dropdown-item" type="button"
-												onclick="window.location.href='<spring:url value="/category/restore?id=${uCate.id }"></spring:url>'">Restore</button>
+								<td><div class="m-2">
+										<span>${uCate.name }</span>
+										<div class="dropdown">
+											<button
+												class="btn btn-outline-light dropdown-toggle text-secondary"
+												type="button" id="dropdownMenu2" data-toggle="dropdown"
+												aria-haspopup="true" aria-expanded="false"></button>
+											<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+												<button class="dropdown-item" type="button"
+													onclick="window.location.href='<spring:url value="/category/restore?id=${uCate.id }"></spring:url>'">Restore</button>
+											</div>
 										</div>
 									</div></td>
-								<td>
-									<!--<c:forEach var="brand" items="${pageModel.brandList }">
-									<c:if test="${brand.category.id eq cate.id}">
-										<p>${brand.name }</p>
-									</c:if>
-								</c:forEach>-->
-								</td>
+								<td></td>
 							</tr>
 						</c:forEach>
-					</table>
-				</c:if>
+					</c:if>
+					<c:if test="${empty pageModel.unUsedCateList }">
+						<p>No Unused Category found</p>
+					</c:if>
+				</table>
 			</div>
-			<div class="col-3">
+			<div class="col-2">
 				<ul class="list-group">
 					<li class="list-group-item">
 						<div id="cate-form-openBtn">New Category</div>
@@ -108,7 +142,26 @@
 				<form:input path="name" class="form-control" id="cate-form-name" />
 			</div>
 			<form:button class="btn btn-primary">Submit</form:button>
-			<div class="btn" id="cate-form-closeBtn">Cancel</div>
+			<div class="btn form-closeBtn">Cancel</div>
+		</form:form>
+		<div class="text-danger" id="cate-form-message"></div>
+	</div>
+	<div class="hidden-absolute-container p-3" id="brand-form-container">
+		<form:form modelAttribute="brandModel"
+			action="${path }/category/brand/create" method="post" id="brand-form">
+			<form:hidden path="id" class="form-control" id="brand-form-id" />
+			<form:hidden path="categoryId" class="form-control"
+				id="brand-form-categoryId" />
+			<div class="form-group">
+				<label>Brand Name</label>
+				<form:input path="name" class="form-control" id="brand-form-name" />
+			</div>
+			<div class="form-group">
+				<label>Category Name</label> <input class="form-control"
+					id="brand-form-categoryName" readonly="readonly" />
+			</div>
+			<form:button class="btn btn-primary">Submit</form:button>
+			<div class="btn form-closeBtn">Cancel</div>
 		</form:form>
 		<div class="text-danger" id="cate-form-message"></div>
 	</div>

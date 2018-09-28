@@ -4,39 +4,42 @@ $(document).ready(function() {
 		$('#cate-form-container').show("fast");
 	});
 
-	$('#cate-form-closeBtn').click(function() {
-		$('#cate-form-container').hide("fast");
+	$('.form-closeBtn').click(function() {
+		$('.hidden-absolute-container').hide("fast");
 	});
 
 	$('.cate-updateBtn').click(function() {
-		$.ajax({
-			url : '/TechTrade/category/get',
-			type : "GET",
-			data : {
-				cateId : this.id
-			},
-			dataType : 'json',
-			success : function(data) {
-				$('#cate-form').attr('action', '/TechTrade/category/update');
-				$('#cate-form-id').val(data.id);
-				$('#cate-form-name').val(data.name);
-			},
-			error : function() {
-				$('#cate-form-message').html("You are trying to update a non-exsit Category");
-			}
-		});
+		var id = this.id.match(/\d+/);
+		
+		$('#cate-form-id').val(id);
+		$('#cate-form-name').val($('#cate-name' + id).html());
+		$('#cate-form').attr('action', '/TechTrade/category/update');
 		$('#cate-form-container').show("fast");
 	});
 
-	$('#testBtn').click(function() {
-		$.ajax({
-			url : '/TechTrade/category/test',
-			type : "GET",
-			dataType : 'json',
-			success : function(data) {
-				alert(data.name);
-				alert(data.id)
-			}
-		})
+	$('.brand-form-openBtn').click(function() {
+		var categoryId = this.id.match(/\d+/);
+		
+		$('#brand-form').attr('action', '/TechTrade/category/brand/create');
+		$('#brand-form-categoryId').val(categoryId);
+		$('#brand-form-categoryName').val($('#cate-name' + categoryId).html());
+		$('#brand-form-container').show("fast");
+	});
+	
+	$('.brand-updateBtn').click(function() {
+		$('#brand-form').attr('action', '/TechTrade/category/brand/update');
+		
+		var id = this.id;
+		var group = id.split(/cate-\d+/);
+		
+		$('#brand-form-id').val(group[0].match(/\d+/));
+		
+		group = id.split(/brand-\d+/);
+		
+		var cateId = group[1].match(/\d+/);
+		
+		$('#brand-form-categoryId').val(cateId);
+		$('#brand-form-categoryName').val($('#cate-name' + cateId).html());
+		$('#brand-form-container').show("fast");
 	});
 });

@@ -30,7 +30,7 @@ public class CategoryController {
 
 		catePage.setCateList(cateService.getInUseCategoryList());
 		catePage.setUnUsedCateList(cateService.getUnUsedCategoryList());
-
+		
 		model.addAttribute("cateModel", cateModel);
 		model.addAttribute("pageModel", catePage);
 
@@ -55,14 +55,9 @@ public class CategoryController {
 		return "error";
 	}
 
-	@PostMapping(value = "/delete")
-	public String handleDeleteCategory(@ModelAttribute(name = "cateModel") CategoryModel cateModel,
-			BindingResult result, Model model) {
-		if (result.hasErrors()) {
-			return "error";
-		}
-
-		String resultMessage = cateService.deleteCategory(cateModel);
+	@GetMapping(value = "/delete")
+	public String handleDeleteCategory(@RequestParam(name = "id") String cateId, Model model) {
+		String resultMessage = cateService.deleteCategory(cateId);
 
 		if (resultMessage != null) {
 			model.addAttribute("error", resultMessage);
@@ -117,4 +112,9 @@ public class CategoryController {
 		return cateService.searchCategory(parsedId);
 	}
 	
+	@GetMapping(value = "/test")
+	public String random() {
+		
+		return "redirect:/category";
+	}
 }

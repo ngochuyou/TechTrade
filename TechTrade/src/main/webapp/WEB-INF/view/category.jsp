@@ -29,136 +29,80 @@
 	<c:set var="path" value="/TechTrade"></c:set>
 	<div class="container-fluid p-3">
 		<div class="row">
-			<div class="col-2"></div>
-			<div class="col-8 main">
-				<h1>Category Management</h1>
-				<h2>Categories and Brands</h2>
-				<table class="table table-bordered">
-					<tr>
-						<th>Category</th>
-						<th>Brands</th>
-					</tr>
-					<c:if test="${not empty pageModel.cateList }">
-						<c:forEach var="cate" items="${pageModel.cateList }">
+			<div class="col-2 border-right"></div>
+			<div class="col-7 main">
+				<h1 class="mt-2 mb-4">Category Management</h1>
+				<c:if test="${empty pageModel.cateList }">
+					<p>No Category found</p>
+				</c:if>
+				<c:if test="${not empty pageModel.cateList }">
+					<h2>Category list</h2>
+					<div>
+						<table class="table table-bordered">
 							<tr>
-								<td><div class="m-2">
-										<span id="cate-name${cate.id }">${cate.name }</span>
-										<div class="dropdown">
-											<button
-												class="btn btn-outline-light dropdown-toggle text-secondary"
-												type="button" id="dropdownMenu2" data-toggle="dropdown"
-												aria-haspopup="true" aria-expanded="false"></button>
-											<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-												<form:form modelAttribute="cateModel"
-													action="${path }/category/delete" method="post">
-													<form:hidden path="id" value="${cate.id }" />
-													<form:button class="dropdown-item">Delete</form:button>
-												</form:form>
-												<button class="dropdown-item cate-updateBtn" type="button"
-													id="cate-id${cate.id }">Update</button>
-											</div>
-										</div>
-									</div></td>
-								<td><c:forEach var="brand" items="${pageModel.brandList }">
-										<c:if test="${brand.category.id eq cate.id}">
-											<div
-												class="m-2 ${brand.inUse eq false ? 'text-light bg-secondary' : ''}">
-												<span id="brand-id${brand.id }">${brand.name }</span>
-												<div class="dropdown">
-													<button
-														class="btn btn-outline-light dropdown-toggle text-secondary"
-														type="button" id="dropdownMenu2" data-toggle="dropdown"
-														aria-haspopup="true" aria-expanded="false"></button>
-													<c:if test="${brand.inUse eq true}">
-														<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-															<form:form modelAttribute="brandModel"
-																action="${path }/category/brand/delete" method="post">
-																<form:hidden path="id" value="${brand.id }" />
-																<form:button class="dropdown-item">Delete</form:button>
-															</form:form>
-															<button class="dropdown-item brand-updateBtn"
-																type="button" id="brand-${brand.id }-cate-${cate.id }">Update</button>
-														</div>
-													</c:if>
-													<c:if test="${brand.inUse eq false }">
-														<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-															<button class="dropdown-item"
-																type="button"
-																onclick="window.location.href='<spring:url value="/category/brand/restore?id=${brand.id }"></spring:url>'">Restore</button>
-														</div>
-													</c:if>
-												</div>
-											</div>
-										</c:if>
-									</c:forEach>
-									<button class="btn btn-outline-light brand-form-openBtn m-2"
-										id="brand-cate${cate.id }">New brand</button></td>
+								<th class="text-title">ID</th>
+								<th class="text-title">Name</th>
 							</tr>
-						</c:forEach>
-					</c:if>
-					<c:if test="${empty pageModel.cateList }">
-						<p>No Category found</p>
-					</c:if>
-					<c:if test="${not empty pageModel.unUsedCateList }">
-						<c:forEach var="uCate" items="${pageModel.unUsedCateList }">
-							<tr class="text-light bg-secondary">
-								<td><div class="m-2">
-										<span>${uCate.name }</span>
+							<c:forEach var="cate" items="${pageModel.cateList }">
+								<tr>
+									<td><span>${cate.id }</span></td>
+									<td><span id="cate-name${cate.id }">${cate.name }</span>
 										<div class="dropdown">
-											<button
-												class="btn btn-outline-light dropdown-toggle text-secondary"
+											<button class="btn btn-secondary dropdown-toggle"
 												type="button" id="dropdownMenu2" data-toggle="dropdown"
 												aria-haspopup="true" aria-expanded="false"></button>
 											<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 												<button class="dropdown-item" type="button"
-													onclick="window.location.href='<spring:url value="/category/restore?id=${uCate.id }"></spring:url>'">Restore</button>
+													onclick="window.location.href='<spring:url value="/category/delete?id=${cate.id }"></spring:url>'">Mark as unused</button>
+												<button class="dropdown-item cate-updateBtn"
+													id="cate-${cate.id }" type="button">Update</button>
 											</div>
-										</div>
-									</div></td>
-								<td></td>
-							</tr>
-						</c:forEach>
-					</c:if>
-					<c:if test="${empty pageModel.unUsedCateList }">
-						<p>No Unused Category found</p>
-					</c:if>
+										</div></td>
+								</tr>
+							</c:forEach>
+						</table>
+					</div>
+				</c:if>
+				<h2>Marked as unused</h2>
+				<table class="table table-bordered">
+					<tr>
+						<th class="text-title">ID</th>
+						<th class="text-title">Name</th>
+					</tr>
+					<c:forEach var="uCate" items="${pageModel.unUsedCateList }">
+						<tr class="bg-secondary">
+							<td><span>${uCate.id }</span></td>
+							<td><span>${uCate.name }</span>
+								<div class="dropdown">
+									<button class="btn btn-secondary dropdown-toggle" type="button"
+										id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+										aria-expanded="false"></button>
+									<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+										<button class="dropdown-item" type="button"
+											onclick="window.location.href='<spring:url value="/category/restore?id=${uCate.id }"></spring:url>'">Restore</button>
+									</div>
+								</div></td>
+					</c:forEach>
 				</table>
 			</div>
-			<div class="col-2">
-				<ul class="list-group">
-					<li class="list-group-item">
-						<div id="cate-form-openBtn">New Category</div>
-					</li>
+			<div class="col-3 border-left">
+				<ul class="list-group text-center">
+					<li class="list-group-item list-group-item-action"
+						id="cate-form-openBtn"><span class="text-medium">New
+							Category</span></li>
 				</ul>
 			</div>
 		</div>
 	</div>
 	<div class="hidden-absolute-container p-3" id="cate-form-container">
-		<form:form modelAttribute="cateModel"
+		<h2 class="border-bottom">Category Form</h2>
+		<form:form modelAttribute="cateModel" class="my-4 mx-2"
 			action="${path }/category/create" method="post" id="cate-form">
 			<form:hidden path="id" class="form-control" id="cate-form-id" />
 			<div class="form-group">
-				<label>Category Name</label>
-				<form:input path="name" class="form-control" id="cate-form-name" />
-			</div>
-			<form:button class="btn btn-primary">Submit</form:button>
-			<div class="btn form-closeBtn">Cancel</div>
-		</form:form>
-		<div class="text-danger" id="cate-form-message"></div>
-	</div>
-	<div class="hidden-absolute-container p-3" id="brand-form-container">
-		<form:form modelAttribute="brandModel"
-			action="${path }/category/brand/create" method="post" id="brand-form">
-			<form:hidden path="id" class="form-control" id="brand-form-id" />
-			<form:hidden path="categoryId" class="form-control"
-				id="brand-form-categoryId" />
-			<div class="form-group">
-				<label>Brand Name</label>
-				<form:input path="name" class="form-control" id="brand-form-name" />
-			</div>
-			<div class="form-group">
-				<label>Category Name</label> <input class="form-control"
-					id="brand-form-categoryName" readonly="readonly" />
+				<label class="mb-3 font-weight-bold">Category Name</label>
+				<form:input path="name" class="form-control mb-3"
+					id="cate-form-name" />
 			</div>
 			<form:button class="btn btn-primary">Submit</form:button>
 			<div class="btn form-closeBtn">Cancel</div>

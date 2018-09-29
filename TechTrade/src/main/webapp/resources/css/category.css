@@ -1,9 +1,9 @@
 .hidden-absolute-container {
 	position: absolute;
-	top: 35%;
-	left: 35%;
-	right: 35%;
-	bottom: 28%;
+	top: 30%;
+	left: 30%;
+	right: 30%;
+	bottom: 25%;
 	display: none;
 	border-color: rgba(0, 0, 0, .2);
 	color: #000;
@@ -38,4 +38,12 @@ td {
 
 .main {
 	overflow: auto;
+}
+
+.text-medium {
+	font-size: 20px;
+}
+
+.text-title {
+	font-size: 22px;
 }

@@ -62,16 +62,21 @@ public class CategoryService {
 	}
 
 	@Transactional
-	public String deleteCategory(CategoryModel cateModel) {
-		Category cate = searchCategory(cateModel.getId());
-
-		if (cate == null) {
+	public String deleteCategory(String cateId) {
+		try {
+			int parsedId = categoryIdToint(cateId);
+			Category cate = searchCategory(parsedId);
+			
+			if (cate == null) {
+				return Messages.NONEXSIT;
+			} else {
+				cate.setInUse(false);
+				cateDao.update(cate);
+			}
+		} catch (NullPointerException ex) {
 			return Messages.NONEXSIT;
-		} else {
-			cate.setInUse(false);
-			cateDao.update(cate);
 		}
-
+		
 		return null;
 	}
 
@@ -130,6 +135,10 @@ public class CategoryService {
 		}
 
 		return parsedId;
+	}
+	
+	public void random() {
+		
 	}
 
 }

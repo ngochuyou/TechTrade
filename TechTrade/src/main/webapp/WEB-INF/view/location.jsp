@@ -27,28 +27,90 @@
 	integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 	crossorigin="anonymous"></script>
 <title>Manager Location</title>
+<style>
+.red {
+	color: red;
+}
+
+.blue {
+	color: blue;
+}
+
+#standard {
+	width: 30%;
+	float: left;
+	margin: 18px;
+}
+</style>
+<script type="text/javascript">
+	$(function() {
+		$("#standard").customselect();
+	});
+</script>
 </head>
+
 <body>
 	<div class="container">
+		<div>
+			<select id='standard' name='standard' class='custom-select'>
+				<option value=''>Please Select City</option>
+				<c:if test="${not empty cityList }">
+					<c:forEach var="citySLB" items="${cityList}">
+						<option value="${citySLB.id}">${citySLB.name}</option>
+					</c:forEach>
+				</c:if>
+			</select> <select id='standard' name='standard' class='custom-select'>
+				<option value=''>Please Select District</option>
+				<c:if test="${not empty districtList }">
+					<c:forEach var="districtSLB" items="${districtList}">
+						<option value="${districtSLB.id}" class="${dID eq districtSLB.id?'red':'blue'}">${districtSLB.name}</option>
+					</c:forEach>
+				</c:if>
+			</select> <select id='standard' name='standard' class='custom-select'>
+				<option value=''>Please Select Ward</option>
+				<c:if test="${not empty wardList }">
+					<c:forEach var="wardSLB" items="${wardList}">
+						<option value="${wardSLB.id}">${wardSLB.name}</option>
+					</c:forEach>
+				</c:if>
+			</select>
+
+		</div>
 		<table class="table">
 			<tr>
 				<th>City</th>
 				<th>District</th>
-				<th>Ward</th>
 			</tr>
-			
+
 			<!-- check list of city before show on web -->
 			<c:if test="${empty cityList }">
-			<tr>
-				<td colspan="3">Empty!!!</td>
-			</tr>
+				<tr>
+					<td colspan="3">Empty!!!</td>
+				</tr>
 			</c:if>
-			
-			<tr>
-				<td>${cityList.name}</td>
-				<td>${districtList.name}</td>
-				<td>${wardList.name}</td>
-			</tr>
+
+			<c:if test="${ not empty cityList }">
+				<c:forEach var="city" items="${cityList}">
+					<tr>
+						<td>${city.name}</td>
+						<td><c:forEach var="district" items="${districtList}">
+								<c:if test="${district.city.id eq city.id}">
+									<p class="${dID eq district.id?'red':'blue'}">${district.name}</p>
+								</c:if>
+
+								<div style="float: right">
+									<c:forEach var="ward" items="${wardList}">
+										<c:if
+											test="${(ward.district.id  eq district.id) and (district.city.id eq city.id)}">
+											<p style="color: red">${ward.name}</p>
+										</c:if>
+									</c:forEach>
+								</div>
+							</c:forEach></td>
+
+					</tr>
+				</c:forEach>
+			</c:if>
 		</table>
 
 	</div>

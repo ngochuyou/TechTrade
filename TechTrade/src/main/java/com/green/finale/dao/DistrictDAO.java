@@ -45,10 +45,18 @@ public class DistrictDAO {
 		Session ss = (Session) sessionFactory.getCurrentSession();
 		ss.delete(getDistrict(id));
 	}
-	
+
 	public void delete(District district) {
 		Session ss = (Session) sessionFactory.getCurrentSession();
 		ss.delete(district);
+	}
+
+	public List<District> getDistrictByIdCity(String idCity) {
+		Session ss = sessionFactory.getCurrentSession();
+		String queryStr = "From District as d Where d.city.id like :idCity";
+		TypedQuery<District> query = ss.createQuery(queryStr, District.class);
+		query.setParameter("idCity", idCity);
+		return query.getResultList();
 	}
 
 }

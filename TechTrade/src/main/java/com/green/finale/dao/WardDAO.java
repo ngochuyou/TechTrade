@@ -51,4 +51,12 @@ public class WardDAO {
 		Session ss = (Session) sessionFactory.getCurrentSession();
 		ss.delete(ward);
 	}
+	
+	public List<Ward> getWardByIdCity(String idDistrict) {
+		Session ss = sessionFactory.getCurrentSession();
+		String queryStr = "From Ward  Where district.id like :idDistrict";
+		TypedQuery<Ward> query = ss.createQuery(queryStr, Ward.class);
+		query.setParameter("idDistrict", idDistrict);
+		return query.getResultList();
+	}
 }

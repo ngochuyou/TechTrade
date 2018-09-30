@@ -6,6 +6,7 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,10 +24,10 @@ public class AccountDAO {
 		return hql.getResultList();
 	}
 	
-	public long insert(Account acc) {
+	public String insert(Account acc) {
 		Session ss = factory.getCurrentSession();
 		
-		return (long) ss.save(acc);
+		return (String) ss.save(acc);
 	}
 	
 	public void update(Account acc) {
@@ -45,5 +46,14 @@ public class AccountDAO {
 		Session ss = factory.getCurrentSession();
 		
 		return ss.get(Account.class, username);
+	}
+	
+	public List<String> getRandomAccountIdList(int limit) {
+		Session ss = factory.getCurrentSession();
+		NativeQuery<?> nQuery = ss.createSQLQuery("SELECT account.username FROM account ORDER BY RAND() LIMIT :limit");
+		
+		nQuery.setParameter("limit", limit);
+		
+		return (List<String>) nQuery.getResultList();
 	}
 }

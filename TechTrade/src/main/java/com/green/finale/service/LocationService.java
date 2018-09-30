@@ -81,7 +81,7 @@ public class LocationService {
 	}
 	
 	public Ward getWard(String id) {
-		return wardDao.getWard(id);
+		return wardDao.find(id);
 	}
 	
 	public Ward getWardByName(String name) {
@@ -101,7 +101,7 @@ public class LocationService {
 	}
 	
 	public void deleteWardById(String id) {
-		wardDao.deleteById(id);
+		wardDao.find(id);
 	}
 	
 }

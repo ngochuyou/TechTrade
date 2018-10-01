@@ -98,7 +98,7 @@ public class LocationService {
 
 	@Transactional
 	public Ward getWard(String id) {
-		return wardDao.getWard(id);
+		return wardDao.find(id);
 	}
 
 	@Transactional
@@ -123,7 +123,7 @@ public class LocationService {
 
 	@Transactional
 	public void deleteWardById(String id) {
-		wardDao.deleteById(id);
+		wardDao.find(id);
 	}
 
 	@Transactional

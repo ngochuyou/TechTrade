@@ -6,6 +6,7 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,21 +24,21 @@ public class CategoryDAO {
 
 		return hql.getResultList();
 	}
-	
+
 	public List<Category> getInUseList() {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<Category> hql = ss.createQuery("FROM Category WHERE inUse = true", Category.class);
 
 		return hql.getResultList();
 	}
-	
+
 	public List<Category> getUnUsedList() {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<Category> hql = ss.createQuery("FROM Category WHERE inUse = false", Category.class);
 
 		return hql.getResultList();
 	}
-	
+
 	public int insert(Category category) {
 		Session ss = factory.getCurrentSession();
 
@@ -46,7 +47,7 @@ public class CategoryDAO {
 
 	public void update(Category category) {
 		Session ss = factory.getCurrentSession();
-			
+
 		ss.update(category);
 	}
 
@@ -55,17 +56,24 @@ public class CategoryDAO {
 		TypedQuery<Category> hql = ss.createQuery("FROM Category WHERE id = :id", Category.class);
 
 		hql.setParameter("id", id);
-		
+
 		Category resultCate = null;
-		
+
 		try {
 			resultCate = hql.getSingleResult();
 		} catch (Exception ex) {
 			return null;
 		}
-		
+
 		ss.evict(resultCate);
 
 		return resultCate;
+	}
+
+	public List<Integer> getRandomCategoryIdList() {
+		Session ss = factory.getCurrentSession();
+		NativeQuery<?> nQuery = ss.createSQLQuery("SELECT category.id FROM category ORDER BY RAND()");
+
+		return (List<Integer>) nQuery.getResultList();
 	}
 }

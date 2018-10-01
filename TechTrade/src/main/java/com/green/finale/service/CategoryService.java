@@ -66,7 +66,7 @@ public class CategoryService {
 		try {
 			int parsedId = categoryIdToint(cateId);
 			Category cate = searchCategory(parsedId);
-			
+
 			if (cate == null) {
 				return Messages.NONEXSIT;
 			} else {
@@ -76,7 +76,7 @@ public class CategoryService {
 		} catch (NullPointerException ex) {
 			return Messages.NONEXSIT;
 		}
-		
+
 		return null;
 	}
 
@@ -135,10 +135,6 @@ public class CategoryService {
 		}
 
 		return parsedId;
-	}
-	
-	public void random() {
-		
 	}
 
 }

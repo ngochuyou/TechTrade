@@ -15,6 +15,7 @@ import com.green.finale.entity.Category;
 import com.green.finale.model.CategoryModel;
 import com.green.finale.model.CategoryPage;
 import com.green.finale.service.CategoryService;
+import com.green.finale.service.RandomService;
 
 @Controller
 @RequestMapping("/category")
@@ -22,6 +23,9 @@ public class CategoryController {
 	@Autowired
 	private CategoryService cateService;
 
+	@Autowired
+	private RandomService ranService;
+	
 	// category control
 	@GetMapping
 	public String view(Model model) {
@@ -114,6 +118,7 @@ public class CategoryController {
 	
 	@GetMapping(value = "/test")
 	public String random() {
+		ranService.addRandomPost();
 		
 		return "redirect:/category";
 	}

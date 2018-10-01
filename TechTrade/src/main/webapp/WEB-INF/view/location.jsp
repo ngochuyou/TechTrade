@@ -51,7 +51,7 @@
 
 <body>
 	<div class="container">
-		<div>
+		<%-- <div>
 			<select id='standard' name='standard' class='custom-select'>
 				<option value=''>Please Select City</option>
 				<c:if test="${not empty cityList }">
@@ -63,7 +63,7 @@
 				<option value=''>Please Select District</option>
 				<c:if test="${not empty districtList }">
 					<c:forEach var="districtSLB" items="${districtList}">
-						<option value="${districtSLB.id}" class="${dID eq districtSLB.id?'red':'blue'}">${districtSLB.name}</option>
+						<option value="${districtSLB.id}">${districtSLB.name}</option>
 					</c:forEach>
 				</c:if>
 			</select> <select id='standard' name='standard' class='custom-select'>
@@ -71,11 +71,12 @@
 				<c:if test="${not empty wardList }">
 					<c:forEach var="wardSLB" items="${wardList}">
 						<option value="${wardSLB.id}">${wardSLB.name}</option>
+
 					</c:forEach>
 				</c:if>
-			</select>
 
-		</div>
+			</select>
+		</div> --%>
 		<table class="table">
 			<tr>
 				<th>City</th>
@@ -92,10 +93,12 @@
 			<c:if test="${ not empty cityList }">
 				<c:forEach var="city" items="${cityList}">
 					<tr>
-						<td>${city.name}</td>
+						<td
+							onclick="window.location.href='<spring:url value="/location?idCity=${city.id}"></spring:url>'">${city.name}</td>
 						<td><c:forEach var="district" items="${districtList}">
 								<c:if test="${district.city.id eq city.id}">
-									<p class="${dID eq district.id?'red':'blue'}">${district.name}</p>
+									<p class="${dID eq district.id?'red':'blue'}"
+										onclick="window.location.href='<spring:url value="/location?idCity=${city.id}?idDistrict=${district.id}"></spring:url>'">${district.name}</p>
 								</c:if>
 
 								<div style="float: right">

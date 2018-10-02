@@ -9,28 +9,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.green.finale.entity.Account;
-import com.green.finale.model.RegistryAccountModel;
+import com.green.finale.model.AccountModel;
 import com.green.finale.service.AccountService;
+import com.green.finale.service.LocationService;
 
 @Controller
 @RequestMapping("/account")
 public class AccountController {
-	
 	@Autowired
 	private AccountService accService;
 	
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	@Autowired
+	private LocationService locaService;
+	
+	@RequestMapping(value = "/sign-up", method = RequestMethod.GET)
 	public String createTodoList(Model model) {
-		RegistryAccountModel regisAcc = new RegistryAccountModel();
+		AccountModel regisAcc = new AccountModel();
+		
 		model.addAttribute("regisAcc", regisAcc);
+		model.addAttribute("cityList", locaService.getCityList());
+		model.addAttribute("districtList", locaService.getDistrictByIdCity("01"));
+		model.addAttribute("wardList", locaService.getWardByIdDistrict("001"));
+		
 		return "registry";
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String handleCreateTodoList(@ModelAttribute("regisAcc") RegistryAccountModel regisAcc,
+	public String handleCreateTodoList(@ModelAttribute("regisAcc") AccountModel regisAcc,
 			BindingResult result, Model model) {
 		
-		Account acc = regisAcc.toRegistryAccount();
+		Account acc = null;
 		
 		accService.createAccount(acc);
 		

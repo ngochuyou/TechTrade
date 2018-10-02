@@ -1,12 +1,10 @@
 package com.green.finale.service;
 
-import java.util.Calendar;
 import java.util.Date;
-
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.green.finale.dao.AccountDAO;
 import com.green.finale.entity.Account;
@@ -20,15 +18,10 @@ public class AccountService {
 	
 	@Transactional
 	public String createAccount(Account acc) {
-		Calendar cal = Calendar.getInstance();
-		Date dateAT = cal.getTime();
-		
-		acc.setCreateAt(dateAT);
+		acc.setCreateAt(new Date());
 		acc.setRole(AccountRole.User);
 		
 		return accDao.insert(acc);
 	}
 	
-
-
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import com.green.finale.entity.Category;
 
 public class CategoryPage {
-
 	private List<Category> cateList;
 	private List<Category> unUsedCateList;
 

@@ -18,7 +18,7 @@ public class HomeController {
 	@GetMapping
 	public String index() {
 		
-		return "redirect:/category";
+		return "home";
 	}
 
 	@GetMapping(value = "/login")

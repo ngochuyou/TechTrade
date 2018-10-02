@@ -25,17 +25,17 @@ public class Account {
 	@Column(name = "password", nullable = false)
 	private String password;
 
-	@Column(name = "fullname", nullable = false)
+	@Column(name = "fullname")
 	private String fullname;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "gender", nullable = false)
+	@Column(name = "gender")
 	private Gender gender;
 
-	@Column(name = "avatar", nullable = false)
+	@Column(name = "avatar")
 	private String avatar;
 
-	@Column(name = "phone", nullable = false)
+	@Column(name = "phone")
 	private String phone;
 
 	@Column(name = "email", nullable = false)
@@ -50,7 +50,7 @@ public class Account {
 	@Column(name = "prestige_points")
 	private int prestigePoints;
 
-	@Column(name = "id", nullable = false)
+	@Column(name = "id")
 	private String id;
 
 	@Enumerated(EnumType.STRING)
@@ -58,10 +58,10 @@ public class Account {
 	private AccountRole role;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "ward_id", nullable = false)
+	@JoinColumn(name = "ward_id")
 	private Ward ward;
 
-	@Column(name = "address", nullable = false, length = 500)
+	@Column(name = "address", length = 500)
 	private String address;
 
 	public String getUsername() {

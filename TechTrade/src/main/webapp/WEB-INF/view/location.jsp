@@ -51,32 +51,6 @@
 
 <body>
 	<div class="container">
-		<%-- <div>
-			<select id='standard' name='standard' class='custom-select'>
-				<option value=''>Please Select City</option>
-				<c:if test="${not empty cityList }">
-					<c:forEach var="citySLB" items="${cityList}">
-						<option value="${citySLB.id}">${citySLB.name}</option>
-					</c:forEach>
-				</c:if>
-			</select> <select id='standard' name='standard' class='custom-select'>
-				<option value=''>Please Select District</option>
-				<c:if test="${not empty districtList }">
-					<c:forEach var="districtSLB" items="${districtList}">
-						<option value="${districtSLB.id}">${districtSLB.name}</option>
-					</c:forEach>
-				</c:if>
-			</select> <select id='standard' name='standard' class='custom-select'>
-				<option value=''>Please Select Ward</option>
-				<c:if test="${not empty wardList }">
-					<c:forEach var="wardSLB" items="${wardList}">
-						<option value="${wardSLB.id}">${wardSLB.name}</option>
-
-					</c:forEach>
-				</c:if>
-
-			</select>
-		</div> --%>
 		<table class="table">
 			<tr>
 				<th>City</th>

@@ -30,15 +30,19 @@ public class LocationController {
 		model.addAttribute("cityList", locaService.getCityList());
 
 		if (idCity != null) {
-			System.out.println("anhduy");
 			model.addAttribute("districtList", locaService.getDistrictByIdCity(idCity));
 		}
 		if (idDistrict != null) {
 			District district = locaService.getDistrict(idDistrict);
 			model.addAttribute("districtList", locaService.getDistrictByIdCity(district.getCity().getId()));
-			model.addAttribute("dID",idDistrict);
+			model.addAttribute("dID", idDistrict);
 			model.addAttribute("wardList", locaService.getWardByIdDistrict(idDistrict));
 		}
+
+//		if (idDistrict != null || idCity != null) {
+//			model.addAttribute("districtList", locaService.getDistrictByIdCity(idCity));
+//			model.addAttribute("wardList", locaService.getWardByIdDistrict(idDistrict));
+//		}
 
 		return "location";
 	}

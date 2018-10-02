@@ -98,7 +98,7 @@
 						<td><c:forEach var="district" items="${districtList}">
 								<c:if test="${district.city.id eq city.id}">
 									<p class="${dID eq district.id?'red':'blue'}"
-										onclick="window.location.href='<spring:url value="/location?idCity=${city.id}?idDistrict=${district.id}"></spring:url>'">${district.name}</p>
+										onclick="window.location.href='<spring:url value="/location?idDistrict=${district.id}"></spring:url>'">${district.name}</p>
 								</c:if>
 
 								<div style="float: right">

@@ -65,7 +65,7 @@ $(document).ready(function() {
 				
 				wardSb.empty();
 				
-				var wardSbHTML = wardSb;
+				var wardSbHTML = wardSb.html();
 				
 				$.each(list, function() {
 					wardSbHTML += '<option value="' + this.id + '">' + this.name + '</option>';
@@ -77,5 +77,35 @@ $(document).ready(function() {
 				alert('error');
 			}
 		});
+	});
+	
+	$('#reg-form').validate({
+		rules : {
+			email : {
+				required : true,
+				email : true,
+			},
+			username : {
+				required : true,
+				minlength : 8
+			},
+			password : {
+				required : true,
+				minlength : 8
+			},
+			confirmPassword : {
+				required : true,
+				equalTo : password
+			},
+			phone : {
+				required : true,
+				digits : true
+			},
+		},
+		messages : {
+			phone : {
+				digits : "Please enter a valid phonenumber"
+			}
+		}
 	});
 });

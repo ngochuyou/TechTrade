@@ -291,3 +291,8 @@ footer a:hover, footer a:focus {
 img {
 	object-fit: cover;
 }
+
+label {
+	color: red;
+	margin: 0 5px;
+}

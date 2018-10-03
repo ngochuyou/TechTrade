@@ -38,11 +38,12 @@ js "></script>
 </head>
 <body>
 	<div class="container-fluid px-0">
-		<nav
-			class="navbar navbar-expand-lg color-main">
+		<nav class="navbar navbar-expand-lg color-main">
 			<div class="col-1"></div>
 			<div class="col-10">
-				<h1 class="text-light font-weight-bold font-italic border-left border-right">Become One Of Us And Make Your Deals.</h1>
+				<h1
+					class="text-light font-weight-bold font-italic border-left border-right">Become
+					One Of Us And Make Your Deals.</h1>
 			</div>
 			<div class="1">
 				<button class="btn btn-nobg-light font-weight-bold">Sign in</button>
@@ -86,20 +87,14 @@ js "></script>
 											placeholder="Username..." class="w-100" />
 									</div>
 									<div class="form-group">
-										<form:input path="fullname" id="fullname"
-											placeholder="Fullname..." class="w-100" />
-									</div>
-									<div class="form-group">
 										<label class="sr-only" for="form-password">Password</label>
 										<form:input type="password" path="password" id="password"
 											placeholder="Password..." class="w-100" />
 									</div>
 									<div class="form-group">
 										<label class="sr-only" for="form-password">Confirm
-											Password</label>
-										<form:input type="password" path="password"
-											id="confirmPassword" placeholder="Confirm Password"
-											class="w-100" />
+											Password</label> <input type="password" name="confirmPassword"
+											id="confirmPassword" class="w-100" placeholder="Confirm Password">
 									</div>
 									<div class="form-group">
 										<form:input type="text" path="phone" id="phone"

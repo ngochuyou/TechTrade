@@ -101,10 +101,16 @@ $(document).ready(function() {
 				required : true,
 				digits : true
 			},
+			gender : {
+				required : true,
+			}
 		},
 		messages : {
 			phone : {
 				digits : "Please enter a valid phonenumber"
+			},
+			confirmPassword : {
+				equalTo : "Please enter the same password that you entered above"
 			}
 		}
 	});

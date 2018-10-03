@@ -65,9 +65,7 @@ public class RandomService {
 			acc[i].setAvatar("default.jpg");
 			acc[i].setCreateAt(randomDate());
 			acc[i].setEmail(usernameString + ".bot@gmail.com");
-			acc[i].setFullname(usernameString);
 			acc[i].setGender(Gender.valueOf(gender[ran.nextInt((1 - 0) + 1) + 0]));
-			acc[i].setId(String.valueOf(i));
 			acc[i].setPassword(encoder.encode(usernameString));
 			acc[i].setPhone("0974032706");
 			acc[i].setPrestigePoints(ran.nextInt((1000 - 10) + 1) + 10);

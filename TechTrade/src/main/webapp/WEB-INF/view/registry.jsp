@@ -78,11 +78,13 @@ js "></script>
 									id="reg-form">
 									<div class="form-group">
 										<label class="sr-only" for="form-email">Email</label>
+										<p id="email-check-result" class="text-danger"></p>
 										<form:input path="email" id="email" placeholder="Email... "
 											class="w-100" />
 									</div>
 									<div class="form-group">
 										<label class="sr-only" for="form-username">Username</label>
+										<p id="username-check-result" class="text-danger"></p>
 										<form:input path="username" id="username"
 											placeholder="Username..." class="w-100" />
 									</div>

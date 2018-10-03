@@ -25,9 +25,6 @@ public class Account {
 	@Column(name = "password", nullable = false)
 	private String password;
 
-	@Column(name = "fullname")
-	private String fullname;
-
 	@Enumerated(EnumType.STRING)
 	@Column(name = "gender")
 	private Gender gender;
@@ -49,9 +46,6 @@ public class Account {
 
 	@Column(name = "prestige_points")
 	private int prestigePoints;
-
-	@Column(name = "id")
-	private String id;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false)
@@ -78,14 +72,6 @@ public class Account {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getFullname() {
-		return fullname;
-	}
-
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
 	}
 
 	public Gender getGender() {
@@ -142,14 +128,6 @@ public class Account {
 
 	public void setPrestigePoints(int prestigePoints) {
 		this.prestigePoints = prestigePoints;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public AccountRole getRole() {

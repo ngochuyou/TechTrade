@@ -58,6 +58,7 @@ public class WardDAO {
 		return query.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Integer> getRandomWardIdList(int limit) {
 		Session ss = (Session) sessionFactory.getCurrentSession();
 		NativeQuery<?> nativeQuery = ss.createSQLQuery("SELECT ward.id FROM ward ORDER BY RAND() LIMIT :limit");
@@ -65,6 +66,5 @@ public class WardDAO {
 		nativeQuery.setParameter("limit", limit);
 
 		return (List<Integer>) nativeQuery.getResultList();
-// branch 'master' of https://github.com/ngochuyou/TechTrade.git
 	}
 }

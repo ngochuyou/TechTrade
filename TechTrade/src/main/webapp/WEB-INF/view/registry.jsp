@@ -96,7 +96,8 @@ js "></script>
 									<div class="form-group">
 										<label class="sr-only" for="form-password">Confirm
 											Password</label> <input type="password" name="confirmPassword"
-											id="confirmPassword" class="w-100" placeholder="Confirm Password">
+											id="confirmPassword" class="w-100"
+											placeholder="Confirm Password">
 									</div>
 									<div class="form-group">
 										<form:input type="text" path="phone" id="phone"
@@ -134,9 +135,17 @@ js "></script>
 											</c:forEach>
 										</form:select>
 									</div>
-									<div class="form-group"></div>
-									<form:button type="submit" class="btn">Sign me up!</form:button>
+									<div class="border-bottom my-3"></div>
 								</form:form>
+								<div class="form-group hidden" id="code-verify">
+									<h1>An verify code has been sent to your email</h1>
+									<p>Please enter the code to the following field to continue</p>
+									<input type="text" class="w-75" id="code" />
+									<button class="btn btn-outline-success float-right w-25" id="verify-btn">Verify</button>
+									<p id="code-result" class="text-danger"></p>
+								</div>
+								<button type="submit" class="btn w-100" id="submit-btn">Sign
+									me up!</button>
 							</div>
 						</div>
 					</div>

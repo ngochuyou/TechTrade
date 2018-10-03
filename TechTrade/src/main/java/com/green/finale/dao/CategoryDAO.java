@@ -69,7 +69,8 @@ public class CategoryDAO {
 
 		return resultCate;
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	public List<Integer> getRandomCategoryIdList() {
 		Session ss = factory.getCurrentSession();
 		NativeQuery<?> nQuery = ss.createSQLQuery("SELECT category.id FROM category ORDER BY RAND()");

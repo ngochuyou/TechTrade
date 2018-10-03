@@ -195,4 +195,34 @@ $(document)
 											}
 										}
 									});
+					var code;
+
+					$('#submit-btn').click(function() {
+						if ($('#reg-form').valid() == true) {
+
+							$.ajax({
+								type : 'GET',
+								url : '/TechTrade/account/verify',
+								data : {
+									email : $('#email').val()
+								},
+								success : function(verifyCode) {
+									code = verifyCode;
+								}
+							});
+							$('#code-verify').show("fast");
+						}
+					});
+
+					$('#verify-btn')
+							.click(
+									function() {
+										if ($('#code').val() == code) {
+											$('#reg-form').submit();
+										} else {
+											$('#code-result')
+													.text(
+															"Invalid verify code, please try again.");
+										}
+									});
 				});

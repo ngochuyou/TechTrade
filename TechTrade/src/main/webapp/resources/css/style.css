@@ -296,3 +296,17 @@ label {
 	color: red;
 	margin: 0 5px;
 }
+
+.hidden-center-form {
+	position: absolute;
+	top: 40%;
+	left: 20%;
+	background-color: white;
+	display: none;
+	box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px
+		rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4);
+}
+
+.hidden {
+	display: none;
+}

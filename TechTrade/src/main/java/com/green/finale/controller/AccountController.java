@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.green.finale.model.AccountModel;
 import com.green.finale.service.AccountService;
+import com.green.finale.service.EmailService;
 import com.green.finale.service.LocationService;
-import com.green.finale.utils.Messages;
 
 @Controller
 @RequestMapping("/account")
@@ -25,6 +25,9 @@ public class AccountController {
 	@Autowired
 	private LocationService locaService;
 
+	@Autowired
+	private EmailService mailService;
+	
 	@RequestMapping(value = "/sign-up", method = RequestMethod.GET)
 	public String createTodoList(Model model) {
 		AccountModel regisAcc = new AccountModel();
@@ -55,7 +58,7 @@ public class AccountController {
 		if (accService.findAccountByEmail(email)) {
 			return null;
 		} else {
-			return Messages.ALREADYEXSIT;
+			return "Email already exsits";
 		}
 	}
 
@@ -64,8 +67,13 @@ public class AccountController {
 		if (accService.find(username)) {
 			return null;
 		} else {
-			return Messages.ALREADYEXSIT;
+			return "Username already exsits";
 		}
 	}
 
+	@GetMapping(value = "/verify")
+	public @ResponseBody int sendEmail(@RequestParam(name = "email") String email) {
+		
+		return mailService.sendVerifyCode(email);
+	}
 }

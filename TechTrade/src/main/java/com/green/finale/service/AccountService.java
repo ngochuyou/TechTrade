@@ -43,21 +43,26 @@ public class AccountService {
 	@Transactional
 	public String createAccount(AccountModel acc) {
 		if (validateRegistryAccount(acc)) {
-			Account account = new Account();
-			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			if ((accDao.find(acc.getUsername()) == null) && (accDao.findByEmail(acc.getEmail()) == null)) {
+				Account account = new Account();
+				BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-			account.setEmail(acc.getEmail());
-			account.setUsername(acc.getUsername());
-			account.setPassword(passwordEncoder.encode(acc.getPassword()));
-			account.setGender(acc.getGender());
-			account.setAvatar("default.JPG");
-			account.setPhone(acc.getPhone());
-			account.setCreateAt(new Date());
-			account.setSpentMoney(0);
-			account.setPrestigePoints(0);
-			account.setRole(AccountRole.User);
+				account.setEmail(acc.getEmail());
+				account.setUsername(acc.getUsername());
+				account.setPassword(passwordEncoder.encode(acc.getPassword()));
+				account.setGender(acc.getGender());
+				account.setAvatar("default.JPG");
+				account.setPhone(acc.getPhone());
+				account.setCreateAt(new Date());
+				account.setSpentMoney(0);
+				account.setPrestigePoints(0);
+				account.setRole(AccountRole.User);
 
-			accDao.insert(account);
+				accDao.insert(account);
+
+			} else {
+				return Messages.ALREADYEXSIT;
+			}
 
 		} else {
 			return Messages.INVALID_FIELDS;

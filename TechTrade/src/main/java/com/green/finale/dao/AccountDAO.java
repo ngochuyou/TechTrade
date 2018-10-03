@@ -62,6 +62,7 @@ public class AccountDAO {
 		return account;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getRandomAccountIdList(int limit) {
 		Session ss = factory.getCurrentSession();
 		NativeQuery<?> nQuery = ss.createSQLQuery("SELECT account.username FROM account ORDER BY RAND() LIMIT :limit");

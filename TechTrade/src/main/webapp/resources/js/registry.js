@@ -129,7 +129,7 @@ $(document)
 
 					$('#email').keyup(function() {
 						var emailVar = $('#email').val();
-
+						
 						$.ajax({
 
 							type : 'GET',

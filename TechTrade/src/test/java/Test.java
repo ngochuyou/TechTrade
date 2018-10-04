@@ -1,5 +1,16 @@
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 public class Test {
 	public static void main(String[] args) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String a = "$2a$10$oE0u8YbLHqT/ktyUcH0RJ.9NYGfOiwu33qJhT309FlOw7Zav5qP8m";
+		
+		if (a.equals(encoder.encode("myelt1998"))) {
+			System.out.println("yes");
+		} else {
+			System.out.println("no");
+		}
+		
 //
 //		try {
 //			BufferedReader br = new BufferedReader(

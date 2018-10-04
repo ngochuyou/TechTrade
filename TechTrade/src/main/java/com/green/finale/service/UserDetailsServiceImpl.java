@@ -20,14 +20,22 @@ import com.green.finale.entity.Account;
 public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	private AccountDAO accountDao;
-	
+
 	@Override
 	@Transactional
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Account account = accountDao.find(username);
-		
+	public UserDetails loadUserByUsername(String key) throws UsernameNotFoundException {
+		Account account = accountDao.find(key);
+
 		if (account == null) {
-			throw new UsernameNotFoundException(username + " not found!");
+			account = accountDao.findByEmail(key);
+
+			if (account == null) {
+				account = accountDao.findByPhone(key);
+
+				if (account == null) {
+					throw new UsernameNotFoundException(key + " not found!");
+				}
+			}
 		}
 
 		// TODO: get user permission here
@@ -36,7 +44,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //		authorities.add(new SimpleGrantedAuthority("CONTACT-MANAGER"));
 
 		UserDetails user = new User(account.getUsername(), account.getPassword(), authorities);
-		
+
 		return user;
 	}
 

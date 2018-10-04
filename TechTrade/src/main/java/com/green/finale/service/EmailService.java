@@ -14,18 +14,18 @@ public class EmailService {
 	public JavaMailSender emailSender;
 
 	@Transactional
-	public int sendVerifyCode(String to) {
+	public int sendVerifyCode(String to, String text, String subject) {
 		SimpleMailMessage message = new SimpleMailMessage();
-		StringBuilder sb = new StringBuilder("Hi! Your account's verify code is ");
+		StringBuilder sb = new StringBuilder(text);
 		int code = randomVerifyCode();
-
+	
 		sb.append(code);
-		sb.append(".Please enter this code on your sign-up form continue. Thank you!\nTechTrade");
-		message.setSubject("TechTrade - Verify your account");
+		sb.append(".Please enter this code to continue. Thank you!\nTechTrade");
+		message.setSubject(subject);
 		message.setText(sb.toString());
 		message.setTo(to);
 		emailSender.send(message);
-
+		
 		return code;
 	}
 

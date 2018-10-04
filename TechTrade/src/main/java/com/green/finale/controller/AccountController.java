@@ -1,20 +1,25 @@
 package com.green.finale.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.green.finale.entity.Account;
 import com.green.finale.model.AccountModel;
 import com.green.finale.service.AccountService;
 import com.green.finale.service.EmailService;
 import com.green.finale.service.LocationService;
+import com.green.finale.utils.Contants;
 
 @Controller
 @RequestMapping("/account")
@@ -28,8 +33,16 @@ public class AccountController {
 	@Autowired
 	private EmailService mailService;
 
+	@Autowired
+	private AuthenticationTrustResolver authenticationTrustResolver;
+
 	@RequestMapping(value = "/sign-up", method = RequestMethod.GET)
 	public String createTodoList(Model model) {
+		if (!authenticationTrustResolver.isAnonymous(SecurityContextHolder.getContext().getAuthentication())) {
+
+			return "home";
+		}
+
 		AccountModel regisAcc = new AccountModel();
 
 		model.addAttribute("regisAcc", regisAcc);
@@ -83,13 +96,14 @@ public class AccountController {
 	@GetMapping(value = "/verify")
 	public @ResponseBody int sendEmail(@RequestParam(name = "email", defaultValue = "") String email) {
 
-		return mailService.sendVerifyCode(email);
+		return mailService.sendVerifyCode(email, "Hi! Your account's verify code is ",
+				"TechTrade - Verify your account");
 	}
 
 	@GetMapping(value = "/avatar")
-	public @ResponseBody byte[] getUserAvatar(@RequestParam(name = "key", defaultValue = "") String key) {
+	public @ResponseBody byte[] getUserAvatar(@RequestParam(name = "username", defaultValue = "") String username) {
 
-		return accService.getUserAva(key);
+		return accService.getUserAva(username);
 	}
 
 	@GetMapping(value = "/keycheck")
@@ -99,5 +113,40 @@ public class AccountController {
 		} catch (Exception ex) {
 			return null;
 		}
+	}
+
+	@GetMapping(value = "/password/forgot")
+	public String resetPassword(@RequestParam(name = "username", defaultValue = "") String username, Model model) {
+		Account acc = accService.find(username);
+		
+		if (acc != null) {
+			AccountModel accModel = new AccountModel();
+
+			accModel.setUsername(username);
+			accModel.setEmail(acc.getEmail());
+			model.addAttribute("accModel", accModel);
+			model.addAttribute("code", mailService.sendVerifyCode(accModel.getEmail(), "Hi! Here is your reset code ",
+					"TechTrade - Reset your password"));
+
+			return "reset_password";
+		}
+
+		model.addAttribute("error", Contants.NONEXSIT);
+
+		return "error";
+	}
+
+	@PostMapping(value = "/password/forgot")
+	public String handleResetPassword(@ModelAttribute(name = "accModel") AccountModel accModel, BindingResult result,
+			Model model) {
+		String message = accService.resetPassword(accModel);
+
+		if (message != null) {
+			model.addAttribute("error", message);
+
+			return "error";
+		}
+
+		return "/login";
 	}
 }

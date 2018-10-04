@@ -12,6 +12,7 @@ public class AccountModel {
 	private Gender gender;
 	private AccountRole role;
 	private String wardId;
+	private String newPassword;
 
 	public String getUsername() {
 		return username;
@@ -75,6 +76,14 @@ public class AccountModel {
 
 	public void setGender(Gender gender) {
 		this.gender = gender;
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
 	}
 
 }

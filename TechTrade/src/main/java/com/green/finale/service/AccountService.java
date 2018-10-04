@@ -29,6 +29,17 @@ public class AccountService {
 	private AccountDAO accDao;
 
 	@Transactional
+	public Account find(String username) {
+		Account acc = accDao.find(username);
+
+		if (acc == null) {
+			return null;
+		} else {
+			return acc;
+		}
+	}
+	
+	@Transactional
 	public Account findAccountByEmail(String email) {
 		Account acc = accDao.findByEmail(email);
 
@@ -40,19 +51,8 @@ public class AccountService {
 	}
 
 	@Transactional
-	public Account find(String username) {
-		Account acc = accDao.findByEmail(username);
-
-		if (acc == null) {
-			return null;
-		} else {
-			return acc;
-		}
-	}
-
-	@Transactional
 	public Account findAccountByPhone(String phone) {
-		Account acc = accDao.findByEmail(phone);
+		Account acc = accDao.findByPhone(phone);
 
 		if (acc == null) {
 			return null;
@@ -80,11 +80,9 @@ public class AccountService {
 				account.setRole(AccountRole.User);
 
 				accDao.insert(account);
-
 			} else {
 				return Contants.ALREADYEXSIT;
 			}
-
 		} else {
 			return Contants.INVALID_FIELDS;
 		}
@@ -140,26 +138,26 @@ public class AccountService {
 			return null;
 		}
 	}
-	
+
 	@Transactional
 	public Account keycheck(String key) {
 		Account acc = accDao.find(key);
-		
+
 		if (acc == null) {
 			acc = accDao.findByEmail(key);
-			
+
 			if (acc == null) {
 				acc = accDao.findByPhone(key);
-				
+
 				if (acc == null) {
 					return null;
 				}
 			}
 		}
-		
+
 		return acc;
 	}
-	
+
 	public String uploadFile(MultipartFile file) {
 
 		if (file.isEmpty()) {
@@ -191,4 +189,27 @@ public class AccountService {
 
 		return data;
 	}
+	
+	@Transactional
+	public String resetPassword(AccountModel accModel) {
+		Account acc = accDao.find(accModel.getUsername());
+		
+		if (acc != null) {
+			String newPass = accModel.getNewPassword();
+			
+			if (StringUtils.isEmpty(newPass) || newPass.length() < 8) {
+				return Contants.INVALID_FIELDS;
+			}
+			
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			
+			acc.setPassword(encoder.encode(newPass));
+			accDao.update(acc);
+			
+			return null;
+		}
+		
+		return Contants.NONEXSIT;
+	}
+	
 }

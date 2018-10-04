@@ -51,22 +51,29 @@ public class AccountDAO {
 	public Account findByEmail(String email) {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<Account> query = ss.createQuery("From Account Where email = :email", Account.class);
+		
 		query.setParameter("email", email);
+		
 		Account account = null;
+		
 		try {
 			account = query.getSingleResult();
 
 		} catch (Exception e) {
 			return null;
 		}
+		
 		return account;
 	}
 
 	public Account findByPhone(String phone) {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<Account> query = ss.createQuery("From Account Where phone = :phone", Account.class);
+		
 		query.setParameter("phone", phone);
+		
 		Account account = null;
+		
 		try {
 			account = query.getSingleResult();
 		} catch (Exception e) {

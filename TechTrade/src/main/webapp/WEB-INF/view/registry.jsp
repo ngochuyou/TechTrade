@@ -3,12 +3,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Login &amp; Register</title>
+<title>Register</title>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 <script
@@ -46,7 +45,8 @@ js "></script>
 					One Of Us And Make Your Deals.</h1>
 			</div>
 			<div class="1">
-				<button class="btn btn-nobg-light font-weight-bold">Sign in</button>
+				<a href="<spring:url value="/login"></spring:url>"><button
+						class="btn btn-nobg-light font-weight-bold">Sign in</button></a>
 			</div>
 		</nav>
 	</div>
@@ -100,7 +100,7 @@ js "></script>
 											placeholder="Confirm Password">
 									</div>
 									<div class="form-group">
-									<p id="phone-check-result" class="text-danger"></p>
+										<p id="phone-check-result" class="text-danger"></p>
 										<form:input type="text" path="phone" id="phone"
 											placeholder="Phone number" class="w-100" />
 									</div>
@@ -139,10 +139,11 @@ js "></script>
 									<div class="border-bottom my-3"></div>
 								</form:form>
 								<div class="form-group hidden" id="code-verify">
-									<h1>An verify code has been sent to your email</h1>
+									<h2>An verify code has been sent to your email</h2>
 									<p>Please enter the code to the following field to continue</p>
 									<input type="text" class="w-75" id="code" />
-									<button class="btn btn-outline-success float-right w-25" id="verify-btn">Verify</button>
+									<button class="btn btn-outline-success float-right w-25"
+										id="verify-btn">Verify</button>
 									<p id="code-result" class="text-danger"></p>
 								</div>
 								<button type="submit" class="btn w-100" id="submit-btn">Sign

@@ -27,7 +27,7 @@ public class AccountController {
 
 	@Autowired
 	private EmailService mailService;
-	
+
 	@RequestMapping(value = "/sign-up", method = RequestMethod.GET)
 	public String createTodoList(Model model) {
 		AccountModel regisAcc = new AccountModel();
@@ -54,26 +54,33 @@ public class AccountController {
 	}
 
 	@GetMapping(value = "/email")
-	public @ResponseBody String emailCheck(@RequestParam(name = "email", defaultValue="") String email) {
+	public @ResponseBody String emailCheck(@RequestParam(name = "email", defaultValue = "") String email) {
 		if (accService.findAccountByEmail(email)) {
 			return null;
 		} else {
-			return "Email already exsits";
+			return "Email already exists";
 		}
 	}
 
 	@GetMapping(value = "/username")
-	public @ResponseBody String usernameCheck(@RequestParam(name = "username",defaultValue="") String username) {
+	public @ResponseBody String usernameCheck(@RequestParam(name = "username", defaultValue = "") String username) {
 		if (accService.find(username)) {
 			return null;
 		} else {
-			return "Username already exsits";
+			return "Username already exists";
 		}
+	}
+	@GetMapping
+	public @ResponseBody String phoneCheck(@RequestParam(name = "phone",defaultValue="") String phone) {
+		if(accService.findAccountByPhone(phone)) {
+			return null;
+		}
+		return "Phone already exists";
 	}
 
 	@GetMapping(value = "/verify")
 	public @ResponseBody int sendEmail(@RequestParam(name = "email") String email) {
-		
+
 		return mailService.sendVerifyCode(email);
 	}
 }

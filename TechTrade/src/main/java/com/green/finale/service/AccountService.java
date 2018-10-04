@@ -41,6 +41,15 @@ public class AccountService {
 	}
 
 	@Transactional
+	public boolean findAccountByPhone(String phone) {
+		if (accDao.findByPhone(phone) == null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Transactional
 	public String createAccount(AccountModel acc) {
 		if (validateRegistryAccount(acc)) {
 			if ((accDao.find(acc.getUsername()) == null) && (accDao.findByEmail(acc.getEmail()) == null)) {

@@ -100,8 +100,9 @@ js "></script>
 											placeholder="Confirm Password">
 									</div>
 									<div class="form-group">
+									<p id="phone-check-result" class="text-danger"></p>
 										<form:input type="text" path="phone" id="phone"
-											placeholder="Phonenumber" class="w-100" />
+											placeholder="Phone number" class="w-100" />
 									</div>
 									<div class="form-group">
 										<form:select path="gender" class="custom-select hpx-50">

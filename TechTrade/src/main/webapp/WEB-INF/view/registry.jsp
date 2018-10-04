@@ -56,7 +56,7 @@ js "></script>
 				<div class="row">
 					<div class="col-sm-8 col-sm-offset-2 m-auto">
 						<h1 class="font-weight-bold">Tech Trade</h1>
-						<h3>Login &amp; Register</h3>
+						<h3>Register</h3>
 						<div class="description"></div>
 					</div>
 				</div>

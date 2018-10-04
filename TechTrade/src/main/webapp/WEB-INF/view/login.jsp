@@ -8,35 +8,25 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Login &amp; Register</title>
+<title>Login</title>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="<spring:url value="/resources/css/style.css"></spring:url>"
+	type="text/css">
+<link rel="stylesheet"
+	href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+<link rel="stylesheet"
+	href="<spring:url value="/resources/css/form-elements.css"></spring:url>"
+	type="text/css">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-<link rel="stylesheet"
-	href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-<link rel="stylesheet"
-	href="<spring:url value="/resources/font-awesome/css/font-awesome.min.css"></spring:url>">
-<link rel="stylesheet"
-	href="<spring:url value="/resources/css/form-elements.css"></spring:url>"
-	type="text/css">
-<link rel="shortcut icon"
-	href="<spring:url value="/resources/ico/favicon.png"></spring:url>">
-<script
-	src="
-http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.
-js "></script>
-<link rel="stylesheet"
-	href="<spring:url value="/resources/css/style.css"></spring:url>"
-	type="text/css">
-<style>
-</style>
 </head>
-<body>
+<body class="flow-hidden">
 	<div class="container-fluid px-0">
 		<nav class="navbar navbar-expand-lg color-main">
 			<div class="col-1"></div>
@@ -46,39 +36,63 @@ js "></script>
 					One Of Us And Make Your Deals.</h1>
 			</div>
 			<div class="1">
-				<button class="btn btn-nobg-light font-weight-bold">Sign in</button>
+				<button
+					class="collapse navbar-collapse btn btn-nobg-light font-weight-bold">Sign
+					up</button>
 			</div>
 		</nav>
 	</div>
-	<div class="top-content">
-		<div class="inner-bg">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-8 col-sm-offset-2 m-auto">
-						<h1 class="font-weight-bold">Tech Trade</h1>
-						<h3>Register</h3>
-						<div class="description"></div>
-					</div>
+	<div class="top-content h-100">
+		<div class="container-fluid h-100">
+			<div class="row h-100">
+				<div class="col-8 bg-info h-100">
+					<h1>Banner here</h1>
 				</div>
-				<div class="row">
-					<div class="col-md-7 col-sm-10 m-auto w-75">
-						<div class="form-box">
-							<div class="form-top">
-								<div class="form-top-left">
-									<h3 class="font-weight-bold">Sign up now</h3>
-									<p class="text-medium">Fill in the form below to get
-										instant access:</p>
-								</div>
-								<div class="form-top-right">
-									<i class="fa fa-pencil"></i>
-								</div>
-							</div>
-							<div class="form-bottom">
-								<div class="form-group">
-									<label class="sr-only" for="form-email">Email</label>
-									<p id="email-check-result" class="text-danger"></p>
-									<form:input path="email" id="email" placeholder="Email... "
-										class="w-100" />
+				<div class="col-4 h-100 bg-eee">
+					<div class="row">
+						<div class="w-100">
+							<div class="form-box my-0">
+								<div class="form-bottom">
+									<div>
+										<h2 class="text-center font-weight-bold">TechTrade</h2>
+									</div>
+									<div class="form-group my-3">
+										<p class="text-center" id="welcome">Enter username or
+											email</p>
+									</div>
+									<div id="user-info" class="second-stage"></div>
+									<p
+										class="second-stage text-primary font-weight-bold text-center hidden pointer"
+										id="notme-btn">Not you? Try again here.</p>
+									<c:url value="/handleLogin" var="loginUrl" />
+									<form action="${loginUrl}" method="post" id="form">
+										<c:if test="${param.error != null}">
+											<p class="text-danger text-center first-stage">Invalid password.</p>
+										</c:if>
+										<c:if test="${param.logout != null}">
+											<p class="text-danger">You have been logged out.</p>
+										</c:if>
+										<p id="result" class="text-center text-danger"></p>
+										<div class="form-group my-3">
+											<label for="username" class="sr-only">Username</label> <input
+												type="text" name="username" id="username"
+												class="w-100 first-stage" placeholder="Username" />
+										</div>
+										<div class="form-group my-3">
+											<label for="password" class="sr-only">Password</label> <input
+												type="password" name="password"
+												class="w-100 hidden second-stage" placeholder="Password" />
+										</div>
+										<input type="hidden" name="${_csrf.parameterName}"
+											value="${_csrf.token}" />
+										<div class="form-group my-3">
+											<div class="btn btn-outline-primary first-stage" id="sone-btn">Continue</div>
+										</div>
+										<div class="form-group my-3">
+											<button type="submit" class="btn second-stage hidden">Sign
+												in</button>
+										</div>
+									</form>
 								</div>
 							</div>
 						</div>
@@ -87,7 +101,7 @@ js "></script>
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript"
+		src="<spring:url value="/resources/js/login.js"></spring:url>"></script>
 </body>
-<script type="text/javascript"
-	src="<spring:url value="/resources/js/registry.js"></spring:url>"></script>
 </html>

@@ -23,7 +23,6 @@ public class HomeController {
 
 	@GetMapping(value = "/login")
 	public String login() {
-		// check login status
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
 		if (authenticationTrustResolver.isAnonymous(authentication)) {
@@ -41,6 +40,7 @@ public class HomeController {
 		if (auth != null) {
 			SecurityContextHolder.getContext().setAuthentication(null);
 		}
+		
 		return "redirect:/login?logout=true";
 	}
 

@@ -25,6 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Account account = accountDao.find(username);
+		
 		if (account == null) {
 			throw new UsernameNotFoundException(username + " not found!");
 		}
@@ -35,6 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //		authorities.add(new SimpleGrantedAuthority("CONTACT-MANAGER"));
 
 		UserDetails user = new User(account.getUsername(), account.getPassword(), authorities);
+		
 		return user;
 	}
 

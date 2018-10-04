@@ -1,5 +1,10 @@
 package com.green.finale.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,12 +14,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.green.finale.dao.AccountDAO;
 import com.green.finale.entity.Account;
 import com.green.finale.model.AccountModel;
 import com.green.finale.utils.AccountRole;
-import com.green.finale.utils.Messages;
+import com.green.finale.utils.Contants;
 
 @Service
 public class AccountService {
@@ -23,29 +29,35 @@ public class AccountService {
 	private AccountDAO accDao;
 
 	@Transactional
-	public boolean findAccountByEmail(String email) {
-		if (accDao.findByEmail(email) == null) {
-			return true;
+	public Account findAccountByEmail(String email) {
+		Account acc = accDao.findByEmail(email);
+
+		if (acc == null) {
+			return null;
 		} else {
-			return false;
+			return acc;
 		}
 	}
 
 	@Transactional
-	public boolean find(String username) {
-		if (accDao.find(username) == null) {
-			return true;
+	public Account find(String username) {
+		Account acc = accDao.findByEmail(username);
+
+		if (acc == null) {
+			return null;
 		} else {
-			return false;
+			return acc;
 		}
 	}
 
 	@Transactional
-	public boolean findAccountByPhone(String phone) {
-		if (accDao.findByPhone(phone) == null) {
-			return true;
+	public Account findAccountByPhone(String phone) {
+		Account acc = accDao.findByEmail(phone);
+
+		if (acc == null) {
+			return null;
 		} else {
-			return false;
+			return acc;
 		}
 	}
 
@@ -60,7 +72,7 @@ public class AccountService {
 				account.setUsername(acc.getUsername());
 				account.setPassword(passwordEncoder.encode(acc.getPassword()));
 				account.setGender(acc.getGender());
-				account.setAvatar("default.JPG");
+				account.setAvatar("default.jpg");
 				account.setPhone(acc.getPhone());
 				account.setCreateAt(new Date());
 				account.setSpentMoney(0);
@@ -70,11 +82,11 @@ public class AccountService {
 				accDao.insert(account);
 
 			} else {
-				return Messages.ALREADYEXSIT;
+				return Contants.ALREADYEXSIT;
 			}
 
 		} else {
-			return Messages.INVALID_FIELDS;
+			return Contants.INVALID_FIELDS;
 		}
 
 		return null;
@@ -118,4 +130,65 @@ public class AccountService {
 
 	}
 
+	@Transactional
+	public byte[] getUserAva(String username) {
+		Account acc = accDao.find(username);
+		
+		try {
+			return getImageBytes(acc.getAvatar());
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+	
+	@Transactional
+	public Account keycheck(String key) {
+		Account acc = accDao.find(key);
+		
+		if (acc == null) {
+			acc = accDao.findByEmail(key);
+			
+			if (acc == null) {
+				acc = accDao.findByPhone(key);
+				
+				if (acc == null) {
+					return null;
+				}
+			}
+		}
+		
+		return acc;
+	}
+	
+	public String uploadFile(MultipartFile file) {
+
+		if (file.isEmpty()) {
+			return null;
+		}
+
+		try {
+
+			// Get the file and save it to UPLOADED_FOLDER
+			byte[] bytes = file.getBytes();
+			Path path = Paths.get(Contants.UPLOAD_FILE_DESTINATION + file.getOriginalFilename());
+			Files.write(path, bytes);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return file.getOriginalFilename();
+	}
+
+	public byte[] getImageBytes(String filename) throws IOException {
+		File file = new File(Contants.UPLOAD_FILE_DESTINATION + filename);
+
+		if (!file.exists()) {
+			return null;
+		}
+
+		byte[] data = Files.readAllBytes(file.toPath());
+
+		return data;
+	}
 }

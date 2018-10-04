@@ -10,7 +10,7 @@ import org.springframework.util.StringUtils;
 import com.green.finale.dao.CategoryDAO;
 import com.green.finale.entity.Category;
 import com.green.finale.model.CategoryModel;
-import com.green.finale.utils.Messages;
+import com.green.finale.utils.Contants;
 
 @Service
 public class CategoryService {
@@ -44,7 +44,7 @@ public class CategoryService {
 			int newCateId = newCate.getId();
 
 			if (searchCategory(newCateId) != null) {
-				return Messages.ALREADYEXSIT;
+				return Contants.ALREADYEXSIT;
 			} else {
 				cateDao.insert(newCate);
 
@@ -52,7 +52,7 @@ public class CategoryService {
 			}
 		}
 
-		return Messages.EMPTY_FIELDS;
+		return Contants.EMPTY_FIELDS;
 	}
 
 	@Transactional
@@ -68,13 +68,13 @@ public class CategoryService {
 			Category cate = searchCategory(parsedId);
 
 			if (cate == null) {
-				return Messages.NONEXSIT;
+				return Contants.NONEXSIT;
 			} else {
 				cate.setInUse(false);
 				cateDao.update(cate);
 			}
 		} catch (NullPointerException ex) {
-			return Messages.NONEXSIT;
+			return Contants.NONEXSIT;
 		}
 
 		return null;
@@ -87,13 +87,13 @@ public class CategoryService {
 			Category cate = searchCategory(parsedId);
 
 			if (cate == null) {
-				return Messages.NONEXSIT;
+				return Contants.NONEXSIT;
 			} else {
 				cate.setInUse(true);
 				cateDao.update(cate);
 			}
 		} catch (NullPointerException ex) {
-			return Messages.NONEXSIT;
+			return Contants.NONEXSIT;
 		}
 
 		return null;
@@ -105,7 +105,7 @@ public class CategoryService {
 
 		if (validateCategory(newCate) && !StringUtils.isEmpty(newCate.getId())) {
 			if (searchCategory(newCate.getId()) == null) {
-				return Messages.NONEXSIT;
+				return Contants.NONEXSIT;
 			}
 
 			cateDao.update(newCate);
@@ -113,7 +113,7 @@ public class CategoryService {
 			return null;
 		}
 
-		return Messages.EMPTY_FIELDS;
+		return Contants.EMPTY_FIELDS;
 	}
 
 	public boolean validateCategory(Category cate) {

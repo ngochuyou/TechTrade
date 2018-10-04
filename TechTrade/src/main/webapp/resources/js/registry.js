@@ -160,6 +160,7 @@ $(document)
 					
 					$('#phone').keyup(function() {
 						var phoneVar = $('#phone').val();
+						
 						$.ajax({
 							type : 'GET',
 							url : '/TechTrade/account/phone',

@@ -44,6 +44,7 @@ public class AccountController {
 	public String handleCreateTodoList(@ModelAttribute("regisAcc") AccountModel regisAcc, BindingResult result,
 			Model model) {
 		String resultStr = accService.createAccount(regisAcc);
+
 		if (resultStr == null) {
 			return "redirect:/location";
 		} else {
@@ -55,7 +56,7 @@ public class AccountController {
 
 	@GetMapping(value = "/email")
 	public @ResponseBody String emailCheck(@RequestParam(name = "email", defaultValue = "") String email) {
-		if (accService.findAccountByEmail(email)) {
+		if (accService.findAccountByEmail(email) == null) {
 			return null;
 		} else {
 			return "Email already exists";
@@ -64,23 +65,39 @@ public class AccountController {
 
 	@GetMapping(value = "/username")
 	public @ResponseBody String usernameCheck(@RequestParam(name = "username", defaultValue = "") String username) {
-		if (accService.find(username)) {
+		if (accService.find(username) == null) {
 			return null;
 		} else {
 			return "Username already exists";
 		}
 	}
-	@GetMapping
-	public @ResponseBody String phoneCheck(@RequestParam(name = "phone",defaultValue="") String phone) {
-		if(accService.findAccountByPhone(phone)) {
+
+	@GetMapping(value = "/phone")
+	public @ResponseBody String phoneCheck(@RequestParam(name = "phone", defaultValue = "") String phone) {
+		if (accService.findAccountByPhone(phone) == null) {
 			return null;
 		}
 		return "Phone already exists";
 	}
 
 	@GetMapping(value = "/verify")
-	public @ResponseBody int sendEmail(@RequestParam(name = "email") String email) {
+	public @ResponseBody int sendEmail(@RequestParam(name = "email", defaultValue = "") String email) {
 
 		return mailService.sendVerifyCode(email);
+	}
+
+	@GetMapping(value = "/avatar")
+	public @ResponseBody byte[] getUserAvatar(@RequestParam(name = "key", defaultValue = "") String key) {
+
+		return accService.getUserAva(key);
+	}
+
+	@GetMapping(value = "/keycheck")
+	public @ResponseBody String keyCheck(@RequestParam(name = "key", defaultValue = "") String key) {
+		try {
+			return accService.keycheck(key).getUsername();
+		} catch (Exception ex) {
+			return null;
+		}
 	}
 }

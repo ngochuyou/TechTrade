@@ -11,7 +11,7 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 <link rel="stylesheet"
-	href="<spring:url value="/resources/css/category.css"></spring:url>"
+	href="<spring:url value="/resources/css/style.css"></spring:url>"
 	type="text/css">
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <script
@@ -88,7 +88,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="hidden-absolute-container p-3" id="cate-form-container">
+	<div class="hidden-center-container p-3" id="cate-form-container">
 		<h2 class="border-bottom">Category Form</h2>
 		<form:form modelAttribute="cateModel" class="my-4 mx-2"
 			action="${path }/category/create" method="post" id="cate-form">

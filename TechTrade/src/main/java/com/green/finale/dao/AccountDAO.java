@@ -62,6 +62,19 @@ public class AccountDAO {
 		return account;
 	}
 
+	public Account findByPhone(String phone) {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<Account> query = ss.createQuery("From Account Where phone = :phone", Account.class);
+		query.setParameter("phone", phone);
+		Account account = null;
+		try {
+			account = query.getSingleResult();
+		} catch (Exception e) {
+			return null;
+		}
+		return account;
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<String> getRandomAccountIdList(int limit) {
 		Session ss = factory.getCurrentSession();

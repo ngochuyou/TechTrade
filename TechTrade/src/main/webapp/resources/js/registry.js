@@ -129,7 +129,7 @@ $(document)
 
 					$('#email').keyup(function() {
 						var emailVar = $('#email').val();
-						
+
 						$.ajax({
 
 							type : 'GET',
@@ -157,10 +157,10 @@ $(document)
 							},
 						});
 					});
-					
+
 					$('#phone').keyup(function() {
 						var phoneVar = $('#phone').val();
-						
+
 						$.ajax({
 							type : 'GET',
 							url : '/TechTrade/account/phone',

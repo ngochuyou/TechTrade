@@ -32,7 +32,7 @@ public class HomeController {
 	private LocationService locaService;
 
 	@Autowired
-	private RandomService random;
+	private RandomService ranService;
 
 	@Autowired
 	private CategoryService cateService;
@@ -50,6 +50,7 @@ public class HomeController {
 		} else {
 
 		}
+		ranService.addRandomPostImage();
 
 		return "home";
 	}
@@ -81,4 +82,4 @@ public class HomeController {
 	public String accessDeniedPage() {
 		return "denied";
 	}
-}
+

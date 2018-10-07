@@ -12,10 +12,10 @@ public class ImageDAO {
 	@Autowired
 	private SessionFactory factory;
 	
-	public String insert(Image image) {
+	public long insert(Image image) {
 		Session ss = factory.getCurrentSession();
 		
-		return (String) ss.save(image);
+		return (long) ss.save(image);
 	}
 	
 }

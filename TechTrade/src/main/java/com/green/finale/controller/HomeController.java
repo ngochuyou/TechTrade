@@ -11,11 +11,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import com.green.finale.entity.Category;
 import com.green.finale.entity.Post;
+import com.green.finale.service.CategoryService;
 import com.green.finale.service.LocationService;
 import com.green.finale.service.PostService;
+import com.green.finale.service.RandomService;
 
 @Controller
 @RequestMapping("/")
@@ -25,24 +27,28 @@ public class HomeController {
 
 	@Autowired
 	private PostService postService;
-	
+
 	@Autowired
 	private LocationService locaService;
-	
-	
+
+	@Autowired
+	private RandomService random;
+
+	@Autowired
+	private CategoryService cateService;
 
 	@GetMapping
-	public String index(Model model, @RequestParam(name = "category", defaultValue = "") int category,
-			@RequestParam(name = "ward", defaultValue = "") String ward) {
+	public String index(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
+
 		if (authenticationTrustResolver.isAnonymous(authentication)) {
 			List<Post> post = postService.getPostList();
+			List<Category> category = cateService.getCategoryList();
+
 			model.addAttribute("post", post);
-		} 
-		else {
-			List<Post> postWard = postService.getPostListByWard(ward);
-			
+			model.addAttribute("category", category);
+		} else {
+
 		}
 
 		return "home";

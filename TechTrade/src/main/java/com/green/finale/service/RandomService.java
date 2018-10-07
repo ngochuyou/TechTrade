@@ -131,7 +131,7 @@ public class RandomService {
 		String[] tagArray = new String[64];
 
 		try {
-			BufferedReader bf = new BufferedReader(new FileReader("D:\\randomHashTag.txt"));
+			BufferedReader bf = new BufferedReader(new FileReader("/Users/duypham/Documents/Programming/Finall_Project/randomHashTag.txt"));
 			String s;
 
 			for (int i = 0; (s = bf.readLine()) != null; i++) {
@@ -169,7 +169,7 @@ public class RandomService {
 		String[] desArray = new String[41];
 
 		try {
-			BufferedReader bf = new BufferedReader(new FileReader("D:\\description.txt"));
+			BufferedReader bf = new BufferedReader(new FileReader("/Users/duypham/Documents/Programming/Finall_Project/description.txt"));
 			String s;
 
 			for (int i = 0; (s = bf.readLine()) != null; i++) {
@@ -206,7 +206,7 @@ public class RandomService {
 		String[] titleArray = new String[74];
 
 		try {
-			BufferedReader bf = new BufferedReader(new FileReader("D:\\titles.txt"));
+			BufferedReader bf = new BufferedReader(new FileReader("/Users/duypham/Documents/Programming/Finall_Project/titles.txt"));
 			String s;
 
 			for (int i = 0; (s = bf.readLine()) != null; i++) {

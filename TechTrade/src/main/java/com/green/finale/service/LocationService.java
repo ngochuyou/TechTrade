@@ -131,4 +131,9 @@ public class LocationService {
 		return wardDao.getWardByIdDistrict(district);
 	}
 
+	@Transactional
+	public List<String> getWardIdListByWardId(String id) {
+		return wardDao.getWardIdListByWardId(id);
+	}
+
 }

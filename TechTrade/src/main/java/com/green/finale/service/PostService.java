@@ -75,5 +75,9 @@ public class PostService {
 
 		return true;
 	}
+	
+	public void test() {
+		
+	}
 
 }

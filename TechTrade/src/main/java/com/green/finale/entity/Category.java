@@ -20,6 +20,12 @@ public class Category {
 	@Column(name = "in_use", nullable = false)
 	private boolean inUse = true;
 
+	@Column(name = "icon", nullable = false, length = 20)
+	private String icon;
+
+	@Column(name = "tag_color", nullable = false, length = 20)
+	private String tagColor;
+
 	public int getId() {
 		return id;
 	}
@@ -42,6 +48,22 @@ public class Category {
 
 	public void setInUse(boolean inUse) {
 		this.inUse = inUse;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public String getTagColor() {
+		return tagColor;
+	}
+
+	public void setTagColor(String tagColor) {
+		this.tagColor = tagColor;
 	}
 
 }

@@ -128,7 +128,7 @@ public class LocationService {
 
 	@Transactional
 	public List<Ward> getWardByIdDistrict(String district) {
-		return wardDao.getWardByIdCity(district);
+		return wardDao.getWardByIdDistrict(district);
 	}
 
 }

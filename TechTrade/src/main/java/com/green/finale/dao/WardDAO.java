@@ -50,11 +50,19 @@ public class WardDAO {
 		ss.delete(ward);
 	}
 
-	public List<Ward> getWardByIdCity(String idDistrict) {
+	public List<Ward> getWardByIdDistrict(String idDistrict) {
 		Session ss = sessionFactory.getCurrentSession();
 		String queryStr = "From Ward  Where district.id like :idDistrict";
 		TypedQuery<Ward> query = ss.createQuery(queryStr, Ward.class);
 		query.setParameter("idDistrict", idDistrict);
+		return query.getResultList();
+	}
+
+	public List<Ward> getDistrictId(String idWard) {
+		Session ss = sessionFactory.getCurrentSession();
+		String queryStr = "Select district From Ward  Where idWard like :idWard";
+		TypedQuery<Ward> query = ss.createQuery(queryStr, Ward.class);
+		query.setParameter("idWard", idWard);
 		return query.getResultList();
 	}
 

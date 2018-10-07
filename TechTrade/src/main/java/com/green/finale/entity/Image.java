@@ -1,9 +1,12 @@
 package com.green.finale.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -12,36 +15,37 @@ public class Image {
 	@Id
 	@GeneratedValue
 	@Column(name = "id", nullable = false)
-	private int id;
+	private long id;
 
-	@Column(name = "location", nullable = false)
-	private String location;
+	@Column(name = "filename", nullable = false)
+	private String filename;
 
-	@Column(name = "key_id", nullable = false)
-	private String keyId;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "post_id", nullable = false)
+	private Post post;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public String getLocation() {
-		return location;
+	public String getFilename() {
+		return filename;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 
-	public String getKeyId() {
-		return keyId;
+	public Post getPost() {
+		return post;
 	}
 
-	public void setKeyId(String keyId) {
-		this.keyId = keyId;
+	public void setPost(Post post) {
+		this.post = post;
 	}
 
 }

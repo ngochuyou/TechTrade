@@ -18,9 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.green.finale.dao.AccountDAO;
 import com.green.finale.dao.CategoryDAO;
+import com.green.finale.dao.ImageDAO;
 import com.green.finale.dao.PostDAO;
 import com.green.finale.dao.WardDAO;
 import com.green.finale.entity.Account;
+import com.green.finale.entity.Image;
 import com.green.finale.entity.Post;
 import com.green.finale.utils.AccountRole;
 import com.green.finale.utils.Gender;
@@ -40,6 +42,9 @@ public class RandomService {
 	@Autowired
 	private PostDAO postDao;
 
+	@Autowired
+	private ImageDAO imageDao;
+	
 	@Transactional
 	public void addRandomAccount() {
 		int n = 1000;
@@ -60,6 +65,7 @@ public class RandomService {
 			}
 
 			usernameString = String.valueOf(username);
+			
 			acc[i].setUsername(usernameString);
 			acc[i].setAddress(usernameString + "Address");
 			acc[i].setAvatar("default.jpg");
@@ -106,6 +112,28 @@ public class RandomService {
 
 	}
 
+	@Transactional
+	public void addRandomPostImage() {
+		String list[] = new String[20];
+		Random ran = new Random();
+		Image image = null;
+		
+		for (int i=0; i<20; i++) {
+			list[i] = "image" + (i + 1);
+		}
+		
+		int n = 11000;
+		
+		for (int i=0; i<n; i++) {
+			image = new Image();
+			
+			image.setFilename(list[ran.nextInt((19 - 0) + 1) + 0]);
+			image.setPost(postDao.find(ran.nextInt((10000 - 1) + 1) + 1));
+			
+			imageDao.insert(image);
+		}
+	}
+	
 	public Date randomDate() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Random ran = new Random();

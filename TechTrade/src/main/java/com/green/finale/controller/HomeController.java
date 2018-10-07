@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.green.finale.entity.Post;
-import com.green.finale.service.LocationService;
+import com.green.finale.service.CategoryService;
 import com.green.finale.service.PostService;
+import com.green.finale.service.RandomService;
 
 @Controller
 @RequestMapping("/")
@@ -27,23 +28,21 @@ public class HomeController {
 	private PostService postService;
 	
 	@Autowired
-	private LocationService locaService;
+	private CategoryService cateService;
 	
+	@Autowired
+	private RandomService ranService;
 	
-
 	@GetMapping
-	public String index(Model model, @RequestParam(name = "category", defaultValue = "") int category,
-			@RequestParam(name = "ward", defaultValue = "") String ward) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	public String index(Model model) {
+//		model.addAttribute("cateList", cateService.getCategoryList());
+//		
+//		List<Post> posts = postService.getNewestList(0);
+//		
+//		model.addAttribute("commentList", postService.getCommentListByPost(posts));
+//		model.addAttribute("postList", posts);
 		
-		if (authenticationTrustResolver.isAnonymous(authentication)) {
-			List<Post> post = postService.getPostList();
-			model.addAttribute("post", post);
-		} 
-		else {
-			List<Post> postWard = postService.getPostListByWard(ward);
-			
-		}
+		ranService.addRandomPostImage();
 
 		return "home";
 	}

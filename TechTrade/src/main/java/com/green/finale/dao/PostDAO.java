@@ -17,13 +17,32 @@ import com.green.finale.entity.Post;
 public class PostDAO {
 	@Autowired
 	private SessionFactory factory;
-
+	
+	private static final int maxResult = 10;
+	
+	public Post find(long id) {
+		Session ss = factory.getCurrentSession();
+		
+		return ss.get(Post.class, id);
+	}
+	
 	public List<Post> getList() {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<Post> hql = ss.createQuery("FROM Post", Post.class);
+		
 		return hql.getResultList();
 	}
 
+	public List<Post> getNewestList(long page) {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<Post> hql = ss.createQuery("FROM Post ORDER BY createAt desc", Post.class);
+		
+		hql.setMaxResults(maxResult);
+		hql.setFirstResult((int) page * maxResult);
+		
+		return hql.getResultList();
+	}
+	
 	public List<Post> getListByAccount(Account acc) {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<Post> hql = ss.createQuery("FROM Post Where createBy.username = :acc", Post.class);

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+</head>
+<body>
+	<div class="wrapper">
+		<nav id="sidebar" class="sidebar-active">
+			<div class="sidebar-header p-3 border-bottom">
+				<h2 class="text-light">TechTrade</h2>
+			</div>
+			<div class="sidebar-body hpx-500">
+				<div class="list-group border-bottom">
+					<a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-3 noborder thumb-medium">
+						<div class="row">
+							<div class="col-4 h-100"><h1><i class="fas fa-mobile"></i></h1></div>
+							<div class="col-8 my-auto border-left"><span>Smartphone<span class="badge badge-pill bg-light text-main position-right">1</span></span></div>
+						</div>
+					</a>
+					<a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-3 noborder thumb-medium">
+						<div class="row">
+							<div class="col-4 h-100"><h1><i class="fas fa-tablet"></i></h1></div>
+							<div class="col-8 my-auto border-left"><span>Tablet<span class="badge badge-pill bg-light text-main position-right">1</span></span></div>
+						</div>
+					</a>
+					<a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-3 noborder thumb-medium">
+						<div class="row">
+							<div class="col-4 h-100"><h1><i class="fas fa-camera"></i></h1></div>
+							<div class="col-8 my-auto border-left"><span>Camera<span class="badge badge-pill bg-light text-main position-right">1</span></span></div>
+						</div>
+					</a>
+					<a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-3 noborder thumb-medium">
+						<div class="row">
+							<div class="col-4 h-100"><h1><i class="fas fa-laptop"></i></h1></div>
+							<div class="col-8 my-auto border-left"><span>Laptop<span class="badge badge-pill bg-light text-main position-right">1</span></span></div>
+						</div>
+					</a>
+					<a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-3 noborder thumb-medium">
+						<div class="row">
+							<div class="col-4 h-100"><h1><i class="fas fa-desktop"></i></h1></div>
+							<div class="col-8 my-auto border-left"><span>PC<span class="badge badge-pill bg-light text-main position-right">1</span></span></div>
+						</div>
+					</a>
+					<a href="#" class="list-group-item list-group-item-action flex-column align-items-start py-3 noborder thumb-medium">
+						<div class="row">
+							<div class="col-4 h-100"><h1><i class="fas fa-desktop"></i></h1></div>
+							<div class="col-8 my-auto border-left"><span>PC<span class="badge badge-pill bg-light text-main position-right">1</span></span></div>
+						</div>
+					</a>
+				</div>
+			</div>
+			<div class="row sidebar-footer pr-3">
+				<div class="col-4 text-center">
+					<a href="#"><h1><i class="fas fa-info"></i></h1></a>
+				</div>
+				<div class="col-4 text-center">
+					<a href="#"><h1><i class="fas fa-file-alt"></i></h1></a>
+				</div>
+				<div class="col-4 text-center">
+					<a href="#"><h1><i class="fas fa-flag"></i></h1></a>
+				</div>
+			</div>
+		</nav>
+		</div>
+		<div id="content" class="p-0 container-fluid">
+			<nav class="navbar navbar-expand-lg color-main p-0 sticky-top">
+				<button type="button" id="sidebarCollapse" class="btn color-main m-3">
+						<i class="fas fa-list fa-lg text-light"></i>
+				</button>
+				<form class="form-inline m-3 my-lg-0 w-50 position-relative">
+					<input class="form-control w-100 font-weight-bold" type="search" placeholder="Try something like Category's name or Post" aria-label="Search" id='search'>
+					<div class="hidden w-100 my-dropdown-container" id="my-dropdown-container">
+						<a class="dropdown-item text-main" href="#">Action</a>
+						<a class="dropdown-item text-main" href="#">Another action</a>
+						<a class="dropdown-item text-main" href="#">Something else here</a>
+						<a class="dropdown-item text-main" href="#">Something else here</a>
+						<a class="dropdown-item text-main" href="#">Something else here</a>
+						<a class="dropdown-item text-main" href="#">Something else here</a>
+						<a class="dropdown-item text-main" href="#">Something else here</a>
+						<a class="dropdown-item text-main" href="#">Something else here</a>
+					</div>
+					<button class="btn btn-blank-main bg-light position-right border-left font-weight-bold" type="submit"><i class="fas fa-search"></i></button>
+				</form>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon text-light"><i class="fas fa-align-justify"></i></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+						<ul class="navbar-nav mt-lg-0 position-right">
+							<li class="nav-item active">
+								<button class="btn-blank hpx-70  my-0 my-sm-0 font-weight-bold wpx-100" type="submit">Sign in</button>
+							</li>
+							<li class="nav-item active">
+								<button class="btn-blank hpx-70 my-2 my-sm-0 font-weight-bold wpx-100" type="submit">Sign up</button>
+							</li>
+						</ul>
+				</div>
+			</nav>
+		<div style="background-image: url('../img/parallax.jpg');" class="parallax"></div>
+		<div class="p-5">
+			<h1 class="panel-header">Closest to you</h1>
+			<div class="post">
+				<div class="row my-2">
+					<div class="col-10"><h2 class="text-truncate font-weight-bold">post namepost namepost namepost namepost namepost namepost namepost namepost name</h2>
+						<p>By <span class="font-italic text-main">ngochuyou</span> on Aug 4th, 2018</p>
+						<div>
+						<span>Tags <i class="fas fa-hashtag"></i> </span>
+						<span class="bg-primary tags">Smartphone</span>
+						<span class="color-main tags">#iphoneX</span>
+						<span class="color-main tags">#nicecamera</span>
+					</div>
+					</div>
+					<div class="col-2"><img src="../img/parallax.jpg" class="avatar position-right"></div>
+				</div>
+				<div class="row">
+					<div class="col custom-control-description text-size-post">
+						The definite article is used to refer to a particular member of a group or class. It may be something that the speaker has already mentioned or it may be something uniquely specified. There is one definite article in English, for both singular and plural nouns: the:
+
+						The children know the fastest way home.
+						The sentence above refers to specific children and a specific way home; it contrasts with the much more general observation that:
+
+						Children know the fastest ways home.
+						The latter sentence refers to children in general and their specific ways home. Likewise,
+
+						Give me the book.refers to a specific book whose identity is known or obvious to the listener; as such it has a markedly different meaning from
+
+						Give me a book.which uses an indefinite article, which does not specify what book is to be given.
+
+						The definite article can also be used in English to indicate a specific class among other classes:
+
+						The cabbage white butterfly lays its eggs on members of the Brassica genus.
+						However, recent developments show that definite articles are morphological elements linked to certain noun types due to lexicalization. Under this point of view, definiteness does not play a role in the selection of a definite article more than the lexical entry attached to the article.[clarification needed][5][6]
+					</div>			
+				</div>
+				<div class="row my-5">
+					<div id="carouselExampleControls" class="carousel slide px-3" data-ride="carousel">
+						<ol class="carousel-indicators">
+   						 <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+   						 <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    						<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+ 						 </ol>
+						<div class="carousel-inner">
+							<div class="carousel-item active">
+								<div class="row">
+														<div class="col-4 pr-0 hpx-350">
+					<div class="post-img w-100"><img src="../img/parallax.jpg"></div>
+					</div>
+					<div class="col-4 px-1 hpx-350">
+						<div class="post-img w-100"><img src="../img/parallax.jpg"></div>
+					</div>
+					<div class="col-4 pl-0 hpx-350">
+						<div class="post-img w-100">
+							<img src="../img/parallax.jpg">
+						</div>
+					</div>
+								</div>
+							</div>
+							<div class="carousel-item"><div class="row">
+														<div class="col-4 pr-0 hpx-350">
+					<div class="post-img w-100"><img src="../img/parallax.jpg"></div>
+					</div>
+					<div id="demo"></div>
+					<div class="col-4 px-1 hpx-350">
+						<div class="post-img w-100"><img src="../img/parallax.jpg"></div>
+					</div>
+					<div class="col-4 pl-0 hpx-350">
+						<div class="post-img w-100">
+							<img src="../img/parallax.jpg">
+						</div>
+					</div>
+								</div></div>
+							<div class="carousel-item"><div class="row">
+														<div class="col-4 pr-0 hpx-350">
+					<div class="post-img w-100"><img src="../img/parallax.jpg"></div>
+					</div>
+					<div class="col-4 px-1 hpx-350">
+						<div class="post-img w-100"><img src="../img/parallax.jpg"></div>
+					</div>
+					<div class="col-4 pl-0 hpx-350">
+						<div class="post-img w-100">
+							<img src="../img/parallax.jpg">
+						</div>
+					</div>
+								</div></div>
+						</div>
+						<a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+   					 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+   					 <span class="sr-only">Previous</span>
+  					</a>
+  					<a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+    					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+    					<span class="sr-only">Next</span>
+  					</a>
+										</div>
+				</div>
+				<div class="row post-footer">
+					<div class="col-10 row pointer">
+						<div class="col-6 float-left border text-center h-100 comments-btn"><h3 class="mt-3"><i class="fas fa-ellipsis-h mr-5"></i>Comments</h3></div>
+						<div class="col-6 float-left border text-center h-100"><h3 class="mt-3"><i class="fas fa-thumbtack mr-5"></i>Pin</h3></div>
+					</div>
+					<div class="col-2"><p class="text-right mt-3">TechTrade <i class="fa fa-check"></i></p></div>
+				</div>
+				<div class="row comments-container">
+					<div class="col" >
+						<div class="panel-header">Comments</div>
+						<div class="row px-5 my-3">
+							<div class="col-1">
+								<img src="../img/parallax.jpg" class="avatar-small">
+							</div>
+							<div class="col-11">
+								<div class="comments">The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:</div>
+							</div>
+						</div>
+						<div class="row px-5 my-3">
+							<div class="col-1">
+								<img src="../img/parallax.jpg" class="avatar-small">
+							</div>
+							<div class="col-11">
+								<div class="comments">The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:</div>
+							</div>
+						</div>
+						<div class="row px-5 my-3">
+							<div class="col-1">
+								<img src="../img/parallax.jpg" class="avatar-small">
+							</div>
+							<div class="col-11">
+								<div class="comments">The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="post">
+				<div class="row my-2">
+					<div class="col-10"><h2 class="text-truncate font-weight-bold">post namepost namepost namepost namepost namepost namepost namepost namepost name</h2>
+						<p>By <span class="font-italic text-main">ngochuyou</span> on Aug 4th, 2018</p>
+						<div>
+						<span>Tags <i class="fas fa-hashtag"></i> </span>
+						<span class="bg-primary tags">Smartphone</span>
+						<span class="color-main tags">#iphoneX</span>
+						<span class="color-main tags">#nicecamera</span>
+					</div>
+					</div>
+					<div class="col-2"><img src="../img/parallax.jpg" class="avatar position-right"></div>
+				</div>
+				<div class="row">
+					<div class="col custom-control-description text-size-post">
+						The definite article is used to refer to a particular member of a group or class. It may be something that the speaker has already mentioned or it may be something uniquely specified. There is one definite article in English, for both singular and plural nouns: the:
+
+						The children know the fastest way home.
+						The sentence above refers to specific children and a specific way home; it contrasts with the much more general observation that:
+
+						Children know the fastest ways home.
+						The latter sentence refers to children in general and their specific ways home. Likewise,
+
+						Give me the book.refers to a specific book whose identity is known or obvious to the listener; as such it has a markedly different meaning from
+
+						Give me a book.which uses an indefinite article, which does not specify what book is to be given.
+
+						The definite article can also be used in English to indicate a specific class among other classes:
+
+						The cabbage white butterfly lays its eggs on members of the Brassica genus.
+						However, recent developments show that definite articles are morphological elements linked to certain noun types due to lexicalization. Under this point of view, definiteness does not play a role in the selection of a definite article more than the lexical entry attached to the article.[clarification needed][5][6]
+					</div>			
+				</div>
+				<div class="row my-5">
+					<div id="carouselExampleControls" class="carousel slide px-3" data-ride="carousel">
+						<ol class="carousel-indicators">
+   						 <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+   						 <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    						<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+ 						 </ol>
+						<div class="carousel-inner">
+							<div class="carousel-item active">
+								<div class="row">
+														<div class="col-4 pr-0 hpx-350">
+					<div class="post-img w-100"><img src="../img/parallax.jpg"></div>
+					</div>
+					<div class="col-4 px-1 hpx-350">
+						<div class="post-img w-100"><img src="../img/parallax.jpg"></div>
+					</div>
+					<div class="col-4 pl-0 hpx-350">
+						<div class="post-img w-100">
+							<img src="../img/parallax.jpg">
+						</div>
+					</div>
+								</div>
+							</div>
+							<div class="carousel-item"><div class="row">
+														<div class="col-4 pr-0 hpx-350">
+					<div class="post-img w-100"><img src="../img/parallax.jpg"></div>
+					</div>
+					<div class="col-4 px-1 hpx-350">
+						<div class="post-img w-100"><img src="../img/parallax.jpg"></div>
+					</div>
+					<div class="col-4 pl-0 hpx-350">
+						<div class="post-img w-100">
+							<img src="../img/parallax.jpg">
+						</div>
+					</div>
+								</div></div>
+							<div class="carousel-item"><div class="row">
+														<div class="col-4 pr-0 hpx-350">
+					<div class="post-img w-100"><img src="../img/parallax.jpg"></div>
+					</div>
+					<div class="col-4 px-1 hpx-350">
+						<div class="post-img w-100"><img src="../img/parallax.jpg"></div>
+					</div>
+					<div class="col-4 pl-0 hpx-350">
+						<div class="post-img w-100">
+							<img src="../img/parallax.jpg">
+						</div>
+					</div>
+								</div></div>
+						</div>
+						<a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+   					 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+   					 <span class="sr-only">Previous</span>
+  					</a>
+  					<a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+    					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+    					<span class="sr-only">Next</span>
+  					</a>
+										</div>
+				</div>
+				<div class="row post-footer">
+					<div class="col-10 row pointer">
+						<div class="col-6 float-left border text-center h-100 comments-btn"><h3 class="mt-3"><i class="fas fa-ellipsis-h mr-5"></i>Comments</h3></div>
+						<div class="col-6 float-l my-3eft border text-center h-100"><h3 class="mt-3"><i class="fas fa-thumbtack mr-5"></i>Pin</h3></div>
+					</div>
+					<div class="col-2"><p class="text-right mt-3">TechTrade <i class="fa fa-check"></i></p></div>
+				</div>
+				<div class="row comments-container">
+					<div class="col">
+						<div class="panel-header">Comments</div>
+						<div class="row px-5 my-3">
+							<div class="col-1">
+								<img src="../img/parallax.jpg" class="avatar-small">
+							</div>
+							<div class="col-11">
+								<div class="comments">The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:</div>
+							</div>
+						</div>
+						<div class="row px-5 my-3">
+							<div class="col-1">
+								<img src="../img/parallax.jpg" class="avatar-small">
+							</div>
+							<div class="col-11">
+								<div class="comments">The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:</div>
+							</div>
+						</div>
+						<div class="row px-5 my-3">
+							<div class="col-1">
+								<img src="../img/parallax.jpg" class="avatar-small">
+							</div>
+							<div class="col-11">
+								<div class="comments">The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:</div>
+							</div>
+						</div>
+						<div class="row px-5 my-3">
+							<div class="col-1">
+								<img src="../img/parallax.jpg" class="avatar-small">
+							</div>
+							<div class="col-11">
+								<div class="comments">The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:</div>
+							</div>
+						</div>
+						<div class="row px-5 my-3">
+							<div class="col-1">
+								<img src="../img/parallax.jpg" class="avatar-small">
+							</div>
+							<div class="col-11">
+								<div class="comments">The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:The definite article can also be used in English to indicate a specific class among other classes:
+								The definite article can also be used in English to indicate a specific class among other classes:</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="overlay"></div>
+	</div>
+	<script type="text/javascript" src="../js/home.js"></script>
+</div>
+</body>
+</html>

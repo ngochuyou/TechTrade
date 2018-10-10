@@ -3,6 +3,8 @@ package com.green.finale.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -39,11 +41,18 @@ public class PostService {
 	}
 
 	@Transactional
+	public List<Post> getNewestPost() {
+		List<Post> post = postDao.getList();
+		Collections.reverse(post);
+		return post;
+	}
+
+	@Transactional
 	public List<Post> getNewestList(long page) {
-		
+
 		return postDao.getNewestList(page);
 	}
-	
+
 	@Transactional
 	public List<Post> getPostListByAccount(Account acc) {
 		return postDao.getListByAccount(acc);
@@ -70,7 +79,7 @@ public class PostService {
 		boolean status = true;
 		if (validatePost(postMD)) {
 			Post post = new Post();
-			
+
 			post.setName(postMD.getName());
 			post.setDescription(postMD.getDescription());
 			post.setStatus(status);
@@ -82,14 +91,29 @@ public class PostService {
 		}
 		return 0;
 	}
-	
+
 	@Transactional
 	public List<Comment> getCommentsByPost(long postId) {
 		List<Comment> comments = commentDao.getListByPost(postId);
-		
+	
 		return comments;
 	}
 	
+	public List<Comment> getCommentListByPost(List<Post> postList) {
+		List<Comment> comments = new ArrayList<>();
+		List<Comment> temp = new ArrayList<>();
+
+		for (Post p : postList) {
+			temp = commentDao.getListByPost(p.getId());
+
+			for (Comment c : temp) {
+				comments.add(c);
+			}
+		}
+
+		return comments;
+	}
+
 	public boolean validatePost(PostModel post) {
 		if (StringUtils.isEmpty(post.getName())) {
 			return false;
@@ -135,4 +159,9 @@ public class PostService {
 
 		return data;
 	}
+
+	public void test() {
+
+	}
+	
 }

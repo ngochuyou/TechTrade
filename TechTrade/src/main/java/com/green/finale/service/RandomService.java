@@ -144,6 +144,7 @@ public class RandomService {
 		int cateCapa = categories.size()-1;
 		int titleCapa = titleList.size()-1;
 		int ranNum;
+		
 		for (String des: desList) {
 			p = new Post();
 
@@ -301,7 +302,6 @@ public class RandomService {
 		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("D:\\titles.txt"));
-			
 			String s;
 			
 			while ((s = br.readLine()) != null) {

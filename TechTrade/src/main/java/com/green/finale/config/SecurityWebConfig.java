@@ -33,8 +33,14 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-		.authorizeRequests()
+		http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/resources/**").permitAll()
+				.antMatchers("/account/sign-up").permitAll().antMatchers("/account/avatar**").permitAll()
+				.antMatchers("/account/keycheck**").permitAll().antMatchers("/account/verify**").permitAll()
+				.antMatchers("/account/password/forgot**").permitAll().antMatchers("/account/email**").permitAll()
+				.antMatchers("/account/username**").permitAll().antMatchers("/account/phone**").permitAll()
+				.antMatchers("/location/district/**").permitAll().antMatchers("/location/ward/**").permitAll()
+				.anyRequest().authenticated()
+
 //			.antMatchers("/resources/**").permitAll()
 //			.antMatchers("/").permitAll()
 //			.antMatchers("/post/images/**").permitAll()
@@ -48,20 +54,12 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 //			.antMatchers("/account/phone**").permitAll()
 //			.antMatchers("/location/district/**").permitAll()
 //			.antMatchers("/location/ward/**").permitAll()
-			.anyRequest().permitAll()
+				.anyRequest().permitAll()
+
 //			.antMatchers("/admin/**").access("hasRole('ADMIN')")
 //			.antMatchers("/contact/create").access("hasRole('CONTACT-MANAGER')")
-		.and()
-			.formLogin()
-			.loginPage("/login")
-			.loginProcessingUrl("/handleLogin")
-			.usernameParameter("username")
-			.passwordParameter("password")
-			.permitAll()
-		.and()
-			.logout().logoutUrl("/logout")
-		.and().csrf()
-		.and().exceptionHandling().accessDeniedPage("/denied")
-		.and().userDetailsService(userDetailService);
+				.and().formLogin().loginPage("/login").loginProcessingUrl("/handleLogin").usernameParameter("username")
+				.passwordParameter("password").permitAll().and().logout().logoutUrl("/logout").and().csrf().and()
+				.exceptionHandling().accessDeniedPage("/denied").and().userDetailsService(userDetailService);
 	}
 }

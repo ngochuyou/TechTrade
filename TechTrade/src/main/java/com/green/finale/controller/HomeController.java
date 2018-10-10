@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.green.finale.service.CategoryService;
 import com.green.finale.service.PostService;
 
@@ -20,15 +19,15 @@ public class HomeController {
 
 	@Autowired
 	private PostService postService;
-	
+
 	@Autowired
 	private CategoryService cateService;
-	
+
 	@GetMapping
 	public String index(Model model) {
 		model.addAttribute("cateList", cateService.getCategoryList());
 		model.addAttribute("postList", postService.getNewestList(0));
-		
+
 		return "home";
 	}
 

@@ -16,7 +16,7 @@ public class Image {
 	private String filename;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "post_id", nullable = false)
+	@JoinColumn(name = "post_id", nullable=false)
 	private Post post;
 
 	public String getFilename() {

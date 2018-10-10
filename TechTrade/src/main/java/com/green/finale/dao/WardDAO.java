@@ -65,10 +65,21 @@ public class WardDAO {
 		query.setParameter("idWard", idWard);
 		return query.getResultList();
 	}
+	
+	public List<String> getWardIdListByWardId (String id){
+		System.out.println(id);
+		Session ss = sessionFactory.getCurrentSession();
+		String queryStr = "Select id From Ward  Where district.id = (Select district.id From Ward where id = :wardId )";
+		TypedQuery<String> query = ss.createQuery(queryStr, String.class);
+		query.setParameter("wardId", id);
+		
+		return query.getResultList();
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<Integer> getRandomWardIdList(int limit) {
 		Session ss = (Session) sessionFactory.getCurrentSession();
+		
 		NativeQuery<?> nativeQuery = ss.createSQLQuery("SELECT ward.id FROM ward ORDER BY RAND() LIMIT :limit");
 
 		nativeQuery.setParameter("limit", limit);

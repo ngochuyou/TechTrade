@@ -39,7 +39,7 @@ js "></script>
 	<div class="container-fluid px-0">
 		<nav class="navbar navbar-expand-lg color-main">
 			<div class="col-1"></div>
-			<div class="col-10">
+			<div class="col-10 text-center">
 				<h1
 					class="text-light font-weight-bold font-italic border-left border-right">Become
 					One Of Us And Make Your Deals.</h1>
@@ -54,7 +54,7 @@ js "></script>
 		<div class="inner-bg">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-8 col-sm-offset-2 m-auto">
+					<div class="text-center col-sm-8 col-sm-offset-2 m-auto">
 						<h1 class="font-weight-bold">Tech Trade</h1>
 						<h3>Register</h3>
 						<div class="description"></div>
@@ -146,7 +146,7 @@ js "></script>
 										id="verify-btn">Verify</button>
 									<p id="code-result" class="text-danger"></p>
 								</div>
-								<button type="submit" class="btn w-100" id="submit-btn">Sign
+								<button type="submit" class="btn w-100 color-main" id="submit-btn">Sign
 									me up!</button>
 							</div>
 						</div>

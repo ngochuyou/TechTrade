@@ -6,7 +6,6 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -68,13 +67,5 @@ public class CategoryDAO {
 		ss.evict(resultCate);
 
 		return resultCate;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Integer> getRandomCategoryIdList() {
-		Session ss = factory.getCurrentSession();
-		NativeQuery<?> nQuery = ss.createSQLQuery("SELECT category.id FROM category ORDER BY RAND()");
-
-		return (List<Integer>) nQuery.getResultList();
 	}
 }

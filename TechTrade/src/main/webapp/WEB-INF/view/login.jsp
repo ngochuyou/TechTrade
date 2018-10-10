@@ -31,7 +31,7 @@
 			<div class="col-1"></div>
 			<div class="col-10">
 				<h1
-					class="text-light font-weight-bold font-italic border-left border-right">Become
+					class="text-center text-light font-weight-bold font-italic border-left border-right">Become
 					One Of Us And Make Your Deals.</h1>
 			</div>
 			<div class="1">

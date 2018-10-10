@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,7 +41,7 @@ public class AccountController {
 	public String createTodoList(Model model) {
 		if (!authenticationTrustResolver.isAnonymous(SecurityContextHolder.getContext().getAuthentication())) {
 
-			return "home";
+			return "redirect:/";
 		}
 
 		AccountModel regisAcc = new AccountModel();
@@ -100,21 +101,28 @@ public class AccountController {
 				"TechTrade - Verify your account");
 	}
 
+	@GetMapping(value = "/avatar/{filename}")
+	public @ResponseBody byte[] getUserAvatarByFilename(@PathVariable(name = "filename") String filename) {
+		
+		return accService.getUserAvaByFilename(filename);
+	}
+	
 	@GetMapping(value = "/avatar")
 	public @ResponseBody byte[] getUserAvatar(@RequestParam(name = "username", defaultValue = "") String username) {
-
+		
 		return accService.getUserAva(username);
 	}
-
+	
 	@GetMapping(value = "/keycheck")
-	public @ResponseBody String keyCheck(@RequestParam(name = "key", defaultValue = "") String key) {
+	public @ResponseBody Account keyCheck(@RequestParam(name = "key") String key) {
+		System.out.println(key);
 		try {
-			return accService.keycheck(key).getUsername();
+			return accService.keycheck(key);
 		} catch (Exception ex) {
 			return null;
 		}
 	}
-
+	
 	@GetMapping(value = "/password/forgot")
 	public String resetPassword(@RequestParam(name = "username", defaultValue = "") String username, Model model) {
 		Account acc = accService.find(username);

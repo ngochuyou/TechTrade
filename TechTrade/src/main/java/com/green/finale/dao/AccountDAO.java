@@ -6,7 +6,6 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -80,15 +79,5 @@ public class AccountDAO {
 			return null;
 		}
 		return account;
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<String> getRandomAccountIdList(int limit) {
-		Session ss = factory.getCurrentSession();
-		NativeQuery<?> nQuery = ss.createSQLQuery("SELECT account.username FROM account ORDER BY RAND() LIMIT :limit");
-
-		nQuery.setParameter("limit", limit);
-
-		return (List<String>) nQuery.getResultList();
 	}
 }

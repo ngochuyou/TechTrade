@@ -18,10 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.green.finale.dao.AccountDAO;
 import com.green.finale.dao.CategoryDAO;
+import com.green.finale.dao.CommentDAO;
 import com.green.finale.dao.ImageDAO;
 import com.green.finale.dao.PostDAO;
 import com.green.finale.dao.WardDAO;
 import com.green.finale.entity.Account;
+import com.green.finale.entity.Category;
+import com.green.finale.entity.Comment;
 import com.green.finale.entity.Image;
 import com.green.finale.entity.Post;
 import com.green.finale.utils.AccountRole;
@@ -44,6 +47,9 @@ public class RandomService {
 
 	@Autowired
 	private ImageDAO imageDao;
+	
+	@Autowired
+	private CommentDAO comDao;
 	
 	@Transactional
 	public void addRandomAccount() {
@@ -85,50 +91,106 @@ public class RandomService {
 	}
 
 	@Transactional
-	public void addRandomPost() {
+	public void addRandomComment() {
 		int n = 10000;
-		Post post[] = new Post[n];
-		String status[] = { "true", "false" };
-		Random ran = new Random();
-		List<String> hashTags = randomHashTags(n);
-		List<String> accountIds = accDao.getRandomAccountIdList(n);
-		List<Integer> categoryIds = cateDao.getRandomCategoryIdList();
-		List<String> desList = randomDescription(n);
-		List<String> titleList = randomNameList(n);
-
-		for (int i = 0; i < n; i++) {
-			post[i] = new Post();
-
-			post[i].setCreateAt(randomDate());
-			post[i].setStatus(Boolean.valueOf(status[ran.nextInt((1 - 0) + 1)]));
-			post[i].setTags(hashTags.get(i));
-			post[i].setCreateBy(accDao.find(accountIds.get(ran.nextInt((999 - 0) + 1) + 0)));
-			post[i].setCategory(cateDao.find(categoryIds.get(ran.nextInt((4 - 0) + 1) + 0)));
-			post[i].setDescription(desList.get(i));
-			post[i].setName(titleList.get(i));
-
-			postDao.insert(post[i]);
+		
+		List<String> des = randomDescription();
+		List<Account> accounts = accDao.getList();
+		List<Post> posts = postDao.getList();
+		List<Post> posts2 = postDao.getList(1000);
+		int accCapa = accounts.size()-1;
+		int desCapa = des.size()-1;
+		Comment c;
+		String list[] = new String[20];
+		StringBuilder sb = new StringBuilder("image");
+		
+		for (int i=0; i<20; i++) {
+			sb = new StringBuilder("image");
+			
+			list[i] = sb.append(String.valueOf(i + 1)).append(".jpg").toString();
 		}
+		
+		for (Post p: posts2) {
+			posts.add(p);
+		}
+		
+		int postsCapa = posts.size()-1;
+		
+		for (int i=0; i<n; i++) {
+			c = new Comment();
+			
+			c.setAccount(accounts.get(randomNumber(accCapa, 0)));
+			c.setCommentedOn(randomDate());
+			c.setContent(des.get(randomNumber(desCapa, 0)));
+			c.setImage(list[randomNumber(19, 0)]);
+			c.setPost(posts.get(randomNumber(postsCapa, 0)));
+			
+			comDao.insert(c);
+		}
+	}
+	
+	@Transactional
+	public void addRandomPost() {
+		String status[] = { "true", "false" };
+		List<String> hashTags = randomHashTags();
+		List<Account> accounts = accDao.getList();
+		List<Category> categories = cateDao.getList();
+		List<String> desList = randomDescription();
+		List<String> titleList = randomNameList();
+		Post p;
+		StringBuilder sb = null;
+		int hashCapa = hashTags.size()-1;
+		int accCapa = accounts.size()-1;
+		int cateCapa = categories.size()-1;
+		int titleCapa = titleList.size()-1;
+		int ranNum;
+		for (String des: desList) {
+			p = new Post();
 
+			p.setCreateAt(randomDate());
+			p.setStatus(Boolean.valueOf(status[randomNumber(1, 0)]));
+			
+			ranNum = randomNumber(2, 1);
+			sb = new StringBuilder(hashTags.get(randomNumber(hashCapa, 0)));
+			
+			for (int i=0; i < ranNum; i++) {
+				sb.append(',');
+				sb.append(hashTags.get(randomNumber(hashCapa, 0)));
+			}
+
+			p.setTags(sb.toString());
+			p.setCreateBy(accounts.get(randomNumber(accCapa, 0)));
+			p.setCategory(categories.get(randomNumber(cateCapa, 0)));
+			p.setDescription(des);
+			p.setName(titleList.get(randomNumber(titleCapa, 0)));
+			p.setUpVote(randomNumber(2000, -100));
+			
+			postDao.insert(p);
+		}
+		
+		addRandomPostImage(desList.size());
 	}
 
 	@Transactional
-	public void addRandomPostImage() {
+	public void addRandomPostImage(int count) {
 		String list[] = new String[20];
 		Random ran = new Random();
 		Image image = null;
+		StringBuilder sb = new StringBuilder("image");
 		
 		for (int i=0; i<20; i++) {
-			list[i] = "image" + (i + 1);
+			sb = new StringBuilder("image");
+			
+			list[i] = sb.append(String.valueOf(i + 1)).append(".jpg").toString();
 		}
 		
-		int n = 11000;
+		int n = 10000;
 		
 		for (int i=0; i<n; i++) {
 			image = new Image();
 			
 			image.setFilename(list[ran.nextInt((19 - 0) + 1) + 0]);
-			image.setPost(postDao.find(ran.nextInt((10000 - 1) + 1) + 1));
+			image.setPost(postDao.find(ran.nextInt((count - 1) + 1) + 1));
 			
 			imageDao.insert(image);
 		}
@@ -155,17 +217,50 @@ public class RandomService {
 		return null;
 	}
 
-	public List<String> randomHashTags(int n) {
-		String[] tagArray = new String[64];
-
+	public List<String> randomHashTags() {
+		List<String> hashtags = new ArrayList<>();
+		
 		try {
-			BufferedReader bf = new BufferedReader(new FileReader("D:\\randomHashTag.txt"));
+			BufferedReader br = new BufferedReader(new FileReader("D:\\#smartphone.txt"));
 			String s;
 
-			for (int i = 0; (s = bf.readLine()) != null; i++) {
-				tagArray[i] = s;
+			while ((s = br.readLine()) != null) {
+				hashtags.add(s);
 			}
-			bf.close();
+			
+			br.close();
+			
+			br = new BufferedReader(new FileReader("D:\\#TV.txt"));
+			
+			while ((s = br.readLine()) != null) {
+				hashtags.add(s);
+			}
+			
+			br.close();
+			
+			br = new BufferedReader(new FileReader("D:\\#laptop.txt"));
+			
+			while ((s = br.readLine()) != null) {
+				hashtags.add(s);
+			}
+
+			br.close();
+			
+			br = new BufferedReader(new FileReader("D:\\#speaker.txt"));
+			
+			while ((s = br.readLine()) != null) {
+				hashtags.add(s);
+			}
+
+			br.close();
+			
+			br = new BufferedReader(new FileReader("D:\\#tablet.txt"));
+			
+			while ((s = br.readLine()) != null) {
+				hashtags.add(s);
+			}
+			
+			br.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -173,37 +268,22 @@ public class RandomService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		Random ran = new Random();
-		int noOfTags;
-		List<String> hashTags = new ArrayList<String>();
-		StringBuffer tag = new StringBuffer();
-
-		for (int i = 0; i < n; i++) {
-			noOfTags = ran.nextInt((5 - 1) + 1) + 1;
-			tag = new StringBuffer();
-
-			for (int j = 0; j < noOfTags; j++) {
-				tag.append(tagArray[ran.nextInt((63 - 0) + 1) + 0]);
-				tag.append(',');
-			}
-			hashTags.add(tag.toString());
-		}
-
-		return hashTags;
+		
+		return hashtags;
 	}
 
-	public List<String> randomDescription(int n) {
-		String[] desArray = new String[41];
-
+	public List<String> randomDescription() {
+		List<String> des = new ArrayList<>();
+		
 		try {
-			BufferedReader bf = new BufferedReader(new FileReader("D:\\description.txt"));
+			BufferedReader br = new BufferedReader(new FileReader("D:\\description - raw.txt"));
 			String s;
 
-			for (int i = 0; (s = bf.readLine()) != null; i++) {
-				desArray[i] = s;
+			while ((s = br.readLine()) != null) {
+				des.add(s);
 			}
-			bf.close();
+			
+			br.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -212,35 +292,23 @@ public class RandomService {
 			e.printStackTrace();
 		}
 
-		Random ran = new Random();
-		int noOfRows;
-		List<String> desList = new ArrayList<String>();
-		StringBuffer des = new StringBuffer();
-
-		for (int i = 0; i < n; i++) {
-			noOfRows = ran.nextInt((10 - 1) + 1) + 1;
-			des = new StringBuffer();
-
-			for (int o = ran.nextInt((30 - 0) + 1) + 0, j = 0; j < noOfRows; j++, o++) {
-				des.append(desArray[o]);
-			}
-			desList.add(des.toString());
-		}
-
-		return desList;
+		return des;
 	}
 
-	public List<String> randomNameList(int n) {
-		String[] titleArray = new String[74];
-
+	public List<String> randomNameList() {
+		List<String> title = new ArrayList<>();
+		
+		
 		try {
-			BufferedReader bf = new BufferedReader(new FileReader("D:\\titles.txt"));
+			BufferedReader br = new BufferedReader(new FileReader("D:\\titles.txt"));
+			
 			String s;
-
-			for (int i = 0; (s = bf.readLine()) != null; i++) {
-				titleArray[i] = s;
+			
+			while ((s = br.readLine()) != null) {
+				title.add(s);
 			}
-			bf.close();
+			
+			br.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -248,14 +316,14 @@ public class RandomService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 
+		return title;
+	}
+	
+	public int randomNumber(int max, int min) {
 		Random ran = new Random();
-		List<String> titleList = new ArrayList<String>();
-
-		for (int i = 0; i < n; i++) {
-			titleList.add(titleArray[ran.nextInt((73 - 0) + 1) + 0]);
-		}
-
-		return titleList;
+		
+		return ran.nextInt((max - min) + 1) + min;
 	}
 }

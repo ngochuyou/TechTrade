@@ -1,7 +1,5 @@
 package com.green.finale.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
@@ -10,13 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.green.finale.entity.Post;
 import com.green.finale.service.CategoryService;
 import com.green.finale.service.PostService;
-import com.green.finale.service.RandomService;
 
 @Controller
 @RequestMapping("/")
@@ -30,20 +24,11 @@ public class HomeController {
 	@Autowired
 	private CategoryService cateService;
 	
-	@Autowired
-	private RandomService ranService;
-	
 	@GetMapping
 	public String index(Model model) {
-//		model.addAttribute("cateList", cateService.getCategoryList());
-//		
-//		List<Post> posts = postService.getNewestList(0);
-//		
-//		model.addAttribute("commentList", postService.getCommentListByPost(posts));
-//		model.addAttribute("postList", posts);
+		model.addAttribute("cateList", cateService.getCategoryList());
+		model.addAttribute("postList", postService.getNewestList(0));
 		
-		ranService.addRandomPostImage();
-
 		return "home";
 	}
 
@@ -59,7 +44,7 @@ public class HomeController {
 		return "redirect:/";
 	}
 
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	@GetMapping(value = "/logout")
 	public String logoutPage() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -67,10 +52,10 @@ public class HomeController {
 			SecurityContextHolder.getContext().setAuthentication(null);
 		}
 
-		return "redirect:/login?logout=true";
+		return "redirect:/";
 	}
 
-	@RequestMapping(value = "/denied", method = RequestMethod.GET)
+	@GetMapping(value = "/denied")
 	public String accessDeniedPage() {
 		return "denied";
 	}

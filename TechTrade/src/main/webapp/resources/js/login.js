@@ -6,17 +6,18 @@ $(document).ready(function() {
 			type : 'GET',
 			url : '/TechTrade/account/keycheck',
 			data : {
-				key : $('#username').val(),
+				key : "" + $('#username').val(),
 			},
 			success : function(result) {
-				if (result.length <= 0) {
-					$('#result').text('Couldn\'t find your account');
-				} else {
-					username = result;
-					$('#welcome').html("Welcome <span class='text-info'>" + result + "</span>");
+				if (result.username.length > 0) {
+					username = result.username;
+					
+					$('#welcome').html("Welcome <span class='text-info'>" + username + "</span>");
 					$('.first-stage').hide("fast");
-					$('#user-info').html("<div class='avatar m-auto'><img src=\"/TechTrade/account/avatar?username=" + result + "\" /></div>");
+					$('#user-info').html("<div class='avatar m-auto'><img src=\"/TechTrade/account/avatar/" + result.avatar + "\" /></div>");
 					$('.second-stage').show("slow");
+				} else {
+					$('#result').text('Couldn\'t find your account');
 				}
 			}
 		});

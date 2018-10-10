@@ -4,7 +4,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
@@ -23,7 +23,7 @@
 <script defer
 	src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"></script>
 <script type="text/javascript"
-	src="<spring:url value="/resources/js/home.js"></spring:url>"></script>
+	src="<spring:url value="/resources/js/viewPost.js"></spring:url>"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script
@@ -106,7 +106,7 @@
 					<sec:authorize access="isAnonymous()">
 						<li class="nav-item active"><a
 							href="<spring:url value="/login"></spring:url>"><button
-									class="btn-blank hpx-70 my-0 my-sm-0 font-weight-bold wpx-100"
+									class="btn-blank hpx-70  my-0 my-sm-0 font-weight-bold wpx-100"
 									type="submit">Sign in</button></a></li>
 						<li class="nav-item active"><a
 							href="<spring:url value="/account/sign-up"></spring:url>"><button
@@ -117,15 +117,17 @@
 						<sec:authentication property="principal" var="user" />
 						<li>
 							<div class="dropdown">
-								<button class="btn-nobg dropdown-toggle text-light" type="button"
-									id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
-									aria-expanded="false">
+								<button class="btn-nobg dropdown-toggle text-light"
+									type="button" id="dropdownMenu2" data-toggle="dropdown"
+									aria-haspopup="true" aria-expanded="false">
 									<img
 										src="<spring:url value="/account/avatar/?username=${user.username }"></spring:url>"
 										class="mr-5 avatar-small">
 								</button>
-								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
-									<a class="dropdown-item font-weight-bold" href="<spring:url value="/logout"></spring:url>">Logout</a>
+								<div class="dropdown-menu dropdown-menu-right"
+									aria-labelledby="dropdownMenu2">
+									<a class="dropdown-item"
+										href="<spring:url value="/logout"></spring:url>">Logout</a>
 								</div>
 							</div>
 						</li>
@@ -137,54 +139,91 @@
 			style="background-image: url('<spring:url value="/resources/img/parallax.jpg"></spring:url>');"
 			class="parallax"></div>
 		<div class="p-5">
-			<h1 class="panel-header">Most Recent</h1>
-			<c:forEach var="post" items="${postList }">
-				<div class="post">
-					<div class="row my-2">
-						<div class="col-10">
-							<h3>
-								<i class="fas fa-map-marker mr-2"></i>${post.createBy.ward.name },
-								${post.createBy.ward.district.name },
-								${post.createBy.ward.district.city.name }
+			<h1 class="panel-header">${post.createBy.username }'s<span
+					class="mx-2">Post</span>
+			</h1>
+			<div class="post">
+				<div class="row m-2">
+					<div class="col-1 m-auto text-center">
+						<div class="w-100">
+							<i class="fas fa-angle-up fa-3x"></i>
+						</div>
+						<div class="w-100">
+							<i class="fas fa-angle-down fa-3x"></i>
+						</div>
+					</div>
+					<div class="col-10">
+						<h3>
+							<i class="fas fa-map-marker mr-2"></i>${post.createBy.ward.name },
+							${post.createBy.ward.district.name },
+							${post.createBy.ward.district.city.name }
+						</h3>
+						<h2 class="font-weight-bold">${post.name }</h2>
+						<p>
+							By <span class="font-italic text-main">${post.createBy.username }</span>
+							on
+							<fmt:formatDate value="${post.createAt }" />
+						</p>
+						<div>
+							<span>Tags <i class="fas fa-hashtag"></i>
+							</span> <span class="tags"
+								style="background-color : ${post.category.tagColor}">${post.category.name }</span>
+							<span class="color-main tags"> ${fn:replace(post.tags, ",", "</span> <span class='color-main tags'>")}
+							</span>
+						</div>
+					</div>
+					<div class="col-1">
+						<img src="/TechTrade/account/avatar/${post.createBy.avatar }"
+							class="avatar position-right mx-3">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col custom-control-description text-size-post p-3">${post.description }</div>
+				</div>
+				<div class="row m-3">
+					<c:forEach var="image" items="${images }" varStatus="level">
+						<c:if test="${(level.index + 1) % 3 eq 0}">
+							<div class="col-4 hpx-350 p-2 text-center">
+								<img src="/TechTrade/post/images/${image }">
+							</div>
+							<c:out value="</div><div class='row m-2'>" escapeXml="false"></c:out>
+						</c:if>
+						<c:if test="${(level.index + 1) % 3 ne 0}">
+							<div class="col-4 hpx-350 p-2 text-center">
+								<img src="/TechTrade/post/images/${image }">
+							</div>
+						</c:if>
+					</c:forEach>
+				</div>
+				<div class="row post-footer">
+					<div class="col">
+						<div class="col-6 float-left border text-center h-100">
+							<h3 class="mt-3">
+								<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
 							</h3>
-							<h2 class="text-truncate font-weight-bold">${post.name }</h2>
-							<p>
-								By <span class="font-italic text-main">${post.createBy.username }</span>
-								on
-								<fmt:formatDate value="${post.createAt }" />
-							</p>
-							<div>
-								<span>Tags <i class="fas fa-hashtag"></i>
-								</span> <span class="tags"
-									style="background-color : ${post.category.tagColor}">${post.category.name }</span>
-								<span class="color-main tags"> ${fn:replace(post.tags, ",", "</span> <span class='color-main tags'>")}
-								</span>
-							</div>
 						</div>
-						<div class="col-2">
-							<img src="/TechTrade/account/avatar/${post.createBy.avatar }"
-								class="avatar position-right mx-3">
-						</div>
-					</div>
-					<div class="row">
-						<div class="col custom-control-description text-size-post">${post.description }</div>
-					</div>
-					<div class="row post-footer">
-						<div class="col">
-							<div class="col-6 float-left border text-center h-100">
-								<h3 class="mt-3">
-									<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
-								</h3>
-							</div>
-							<div class="col-6 float-left border text-center h-100 pointer">
-								<h3 class="mt-3">
-									<i class="fas fa-thumbtack mr-5"></i>Pin
-								</h3>
-							</div>
+						<div class="col-6 float-left border text-center h-100 pointer">
+							<h3 class="mt-3">
+								<i class="fas fa-thumbtack mr-5"></i>Pin
+							</h3>
 						</div>
 					</div>
 				</div>
-			</c:forEach>
+				<div class="panel-header">Comments</div>
+				<div class="row m-2">
+					<c:forEach var="comment" items="${comments }">
+						<div class="m-2">
+							<p class="text-primary">
+								<fmt:formatDate value="${comment.commentedOn }" />
+							</p>
+							<p>
+								<span class="font-italic text-primary">${comment.account.username }</span>
+								: ${comment.content }
+							</p>
+						</div>
+					</c:forEach>
+				</div>
+			</div>
 		</div>
 		<div class="overlay"></div>
 	</div>

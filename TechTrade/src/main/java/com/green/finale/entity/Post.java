@@ -42,6 +42,9 @@ public class Post {
 	@Column(name = "tags")
 	private String tags;
 
+	@Column(name = "vote", nullable = false)
+	private int upVote;
+
 	public long getId() {
 		return id;
 	}
@@ -104,6 +107,14 @@ public class Post {
 
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+
+	public int getUpVote() {
+		return upVote;
+	}
+
+	public void setUpVote(int upVote) {
+		this.upVote = upVote;
 	}
 
 }

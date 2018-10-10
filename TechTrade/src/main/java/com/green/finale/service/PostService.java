@@ -1,6 +1,8 @@
 package com.green.finale.service;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 
@@ -10,12 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.green.finale.dao.CommentDAO;
+import com.green.finale.dao.ImageDAO;
 import com.green.finale.dao.PostDAO;
 import com.green.finale.entity.Account;
 import com.green.finale.entity.Category;
 import com.green.finale.entity.Comment;
 import com.green.finale.entity.Post;
 import com.green.finale.model.PostModel;
+import com.green.finale.utils.Contants;
 
 @Service
 public class PostService {
@@ -25,6 +29,9 @@ public class PostService {
 
 	@Autowired
 	private CommentDAO commentDao;
+	
+	@Autowired
+	private ImageDAO imageDao;
 	
 	@Transactional
 	public List<Post> getPostList() {
@@ -53,10 +60,11 @@ public class PostService {
 	}
 
 	@Transactional
-	public List<Post> getPostListByHobby(int cate, String ward) {
-		return postDao.getListByHobby(cate, ward);
+	public Post find(long postId) {
+		
+		return postDao.find(postId);
 	}
-
+	
 	@Transactional
 	public long createPost(PostModel postMD) {
 		boolean status = true;
@@ -76,17 +84,8 @@ public class PostService {
 	}
 	
 	@Transactional
-	public List<Comment> getCommentListByPost(List<Post> postList) {
-		List<Comment> comments = new ArrayList<>();
-		List<Comment> temp = new ArrayList<>();
-		
-		for (Post p: postList) {
-			temp = commentDao.getListByPost(p.getId());
-			
-			for (Comment c: temp) {
-				comments.add(c);
-			}
-		}
+	public List<Comment> getCommentsByPost(long postId) {
+		List<Comment> comments = commentDao.getListByPost(postId);
 		
 		return comments;
 	}
@@ -104,5 +103,36 @@ public class PostService {
 
 		return true;
 	}
+	
+	@Transactional
+	public List<String> getImageListByPost(long postId) {
+		
+		return imageDao.getList(postId);
+	}
+	
+	@Transactional
+	public List<Object[]> search(String keyword) {
+		List<Object[]> list = postDao.searchByTitle(keyword);
+		
+		return list;
+	}
+	
+	public byte[] getImageBytes(String filename) {
+		File file = new File(Contants.UPLOAD_FILE_DESTINATION + filename);
+		
+		if (!file.exists()) {
+			System.out.println("file doesn't exsit");
+			return null;
+		}
 
+		byte[] data;
+		try {
+			data = Files.readAllBytes(file.toPath());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
+
+		return data;
+	}
 }

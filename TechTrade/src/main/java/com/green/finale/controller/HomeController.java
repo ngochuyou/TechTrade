@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.green.finale.entity.Category;
 import com.green.finale.entity.Post;
 import com.green.finale.service.CategoryService;
-import com.green.finale.service.LocationService;
 import com.green.finale.service.PostService;
-import com.green.finale.service.RandomService;
 
 @Controller
 @RequestMapping("/")
@@ -27,12 +25,6 @@ public class HomeController {
 
 	@Autowired
 	private PostService postService;
-
-	@Autowired
-	private LocationService locaService;
-
-	@Autowired
-	private RandomService ranService;
 
 	@Autowired
 	private CategoryService cateService;
@@ -50,8 +42,6 @@ public class HomeController {
 		} else {
 
 		}
-//		ranService.addRandomPostImage();
-
 		return "home";
 	}
 

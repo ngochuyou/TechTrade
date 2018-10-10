@@ -35,23 +35,17 @@ js "></script>
 			<div class="col-1"></div>
 			<div class="col-10">
 				<h1
-					class="text-light font-weight-bold font-italic border-left border-right">Become
+					class="text-center text-light font-weight-bold font-italic border-left border-right">Become
 					One Of Us And Make Your Deals.</h1>
 			</div>
 			<div class="1">
-				<button
-					class="btn btn-nobg-light text-light collapse navbar-collapse font-weight-bold m-2 hpx-50 wpx-100">Sign
-					in</button>
-				<button
-					class="btn btn-nobg-light text-light navbar-collapse font-weight-bold m-2 hpx-50 wpx-100">Sign
-					up</button>
 			</div>
 		</nav>
 		<p class="hidden" id="code">${code }</p>
 		<div class="top-content">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-8 col-sm-offset-2 m-auto">
+					<div class="text-center col-sm-8 col-sm-offset-2 mx-auto my-3">
 						<h1 class="font-weight-bold">Tech Trade</h1>
 						<h3>Reset Password</h3>
 					</div>

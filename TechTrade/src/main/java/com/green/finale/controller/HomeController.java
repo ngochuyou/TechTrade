@@ -31,17 +31,8 @@ public class HomeController {
 
 	@GetMapping
 	public String index(Model model) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		if (authenticationTrustResolver.isAnonymous(authentication)) {
-			List<Post> post = postService.getNewestPost();
-			List<Category> category = cateService.getCategoryList();
-
-			model.addAttribute("postList", post);
-			model.addAttribute("category", category);
-		} else {
-
-		}
+		model.addAttribute("cateList", cateService.getCategoryList());
+		model.addAttribute("postList", postService.getNewestList(0));
 		return "home";
 	}
 

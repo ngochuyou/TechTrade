@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.green.finale.dao.AccountDAO;
+import com.green.finale.dao.WardDAO;
 import com.green.finale.entity.Account;
 import com.green.finale.model.AccountModel;
 import com.green.finale.utils.AccountRole;
@@ -28,6 +29,9 @@ public class AccountService {
 	@Autowired
 	private AccountDAO accDao;
 
+	@Autowired
+	private WardDAO wardDao;
+
 	@Transactional
 	public Account find(String username) {
 		Account acc = accDao.find(username);
@@ -38,7 +42,7 @@ public class AccountService {
 			return acc;
 		}
 	}
-	
+
 	@Transactional
 	public Account findAccountByEmail(String email) {
 		Account acc = accDao.findByEmail(email);
@@ -78,6 +82,7 @@ public class AccountService {
 				account.setSpentMoney(0);
 				account.setPrestigePoints(0);
 				account.setRole(AccountRole.User);
+				account.setWard(wardDao.find(acc.getWardId()));
 
 				accDao.insert(account);
 			} else {
@@ -91,35 +96,43 @@ public class AccountService {
 	}
 
 	public boolean validateRegistryAccount(AccountModel acc) {
-		Pattern p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+		Pattern p = null;
 		Matcher matcher = null;
 
 		if (StringUtils.isEmpty(acc.getEmail())) {
 			return false;
 		} else {
+			p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 			matcher = p.matcher(acc.getEmail());
+
 			if (!matcher.find()) {
 				return false;
 			}
 		}
+		
 		if (StringUtils.isEmpty(acc.getUsername()) && acc.getUsername().length() < 8) {
 			return false;
 		}
+		
 		if (StringUtils.isEmpty(acc.getPassword()) && acc.getPassword().length() < 8) {
 			return false;
 		}
+		
 		if (StringUtils.isEmpty(acc.getPhone())) {
 			return false;
 		} else {
 			p = Pattern.compile("\\D+");
 			matcher = p.matcher(acc.getPhone());
+
 			if (matcher.find()) {
 				return false;
 			}
 		}
+
 		if (StringUtils.isEmpty(acc.getGender())) {
 			return false;
 		}
+
 		if (StringUtils.isEmpty(acc.getWardId())) {
 			return false;
 		}
@@ -131,7 +144,7 @@ public class AccountService {
 	@Transactional
 	public byte[] getUserAva(String username) {
 		Account acc = accDao.find(username);
-		
+
 		try {
 			return getImageBytes(acc.getAvatar());
 		} catch (Exception ex) {
@@ -140,6 +153,30 @@ public class AccountService {
 	}
 
 	@Transactional
+	public byte[] getUserAvaByFilename(String filename) {
+		try {
+			return getImageBytes(filename + ".jpg");
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	@Transactional
+	public byte[] getUserAvatar(String username) {
+		Account user = accDao.find(username);
+		
+		if (user != null) {
+			try {
+				return getImageBytes(user.getAvatar());
+			} catch (Exception ex) {
+				return null;
+			}
+		}
+		
+		return null;
+	}
+	
+	@Transactional
 	public Account keycheck(String key) {
 		Account acc = accDao.find(key);
 
@@ -147,6 +184,7 @@ public class AccountService {
 			acc = accDao.findByEmail(key);
 
 			if (acc == null) {
+				System.out.println("finding by phone");
 				acc = accDao.findByPhone(key);
 
 				if (acc == null) {
@@ -159,16 +197,15 @@ public class AccountService {
 	}
 
 	public String uploadFile(MultipartFile file) {
-
 		if (file.isEmpty()) {
 			return null;
 		}
 
 		try {
-
-			// Get the file and save it to UPLOADED_FOLDER
+			// Get the file and save it to UPLOAD_FILE_DESTINATION
 			byte[] bytes = file.getBytes();
 			Path path = Paths.get(Contants.UPLOAD_FILE_DESTINATION + file.getOriginalFilename());
+			
 			Files.write(path, bytes);
 
 		} catch (IOException e) {
@@ -189,27 +226,28 @@ public class AccountService {
 
 		return data;
 	}
-	
+
 	@Transactional
 	public String resetPassword(AccountModel accModel) {
 		Account acc = accDao.find(accModel.getUsername());
-		
+
 		if (acc != null) {
 			String newPass = accModel.getNewPassword();
-			
+
 			if (StringUtils.isEmpty(newPass) || newPass.length() < 8) {
+				
 				return Contants.INVALID_FIELDS;
 			}
-			
+
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-			
+
 			acc.setPassword(encoder.encode(newPass));
 			accDao.update(acc);
-			
+
 			return null;
 		}
-		
+
 		return Contants.NONEXSIT;
 	}
-	
+
 }

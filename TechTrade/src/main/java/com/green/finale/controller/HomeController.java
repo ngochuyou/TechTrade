@@ -42,15 +42,15 @@ public class HomeController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		if (authenticationTrustResolver.isAnonymous(authentication)) {
-			List<Post> post = postService.getPostList();
+			List<Post> post = postService.getNewestPost();
 			List<Category> category = cateService.getCategoryList();
 
-			model.addAttribute("post", post);
+			model.addAttribute("postList", post);
 			model.addAttribute("category", category);
 		} else {
 
 		}
-		ranService.addRandomPostImage();
+//		ranService.addRandomPostImage();
 
 		return "home";
 	}
@@ -82,4 +82,4 @@ public class HomeController {
 	public String accessDeniedPage() {
 		return "denied";
 	}
-
+}

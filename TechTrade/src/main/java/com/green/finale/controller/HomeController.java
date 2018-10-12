@@ -1,7 +1,5 @@
 package com.green.finale.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
@@ -12,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.green.finale.entity.Category;
-import com.green.finale.entity.Post;
 import com.green.finale.service.CategoryService;
 import com.green.finale.service.PostService;
 

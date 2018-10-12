@@ -136,7 +136,7 @@
 		<div
 			style="background-image: url('<spring:url value="/resources/img/parallax.jpg"></spring:url>');"
 			class="parallax"></div>
-		<div class="p-5">
+		<div class="p-5" id="post-content">
 			<h1 class="panel-header">Most Recent</h1>
 			<c:forEach var="post" items="${postList }">
 				<div class="post">
@@ -186,7 +186,10 @@
 				</div>
 			</c:forEach>
 		</div>
-		<div class="overlay"></div>
+		<div class="overlay">
+			
+		</div>
+		<div id="duy"></div>
 	</div>
 </body>
 </html>

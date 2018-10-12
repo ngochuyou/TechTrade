@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.green.finale.entity.Post;
 import com.green.finale.service.PostService;
 
 @Controller
@@ -31,10 +32,15 @@ public class PostController {
 		model.addAttribute("post", postService.find(id));
 		model.addAttribute("comments", postService.getCommentsByPost(id));
 		model.addAttribute("images", postService.getImageListByPost(id));
-		
+
 		return "viewPost";
 	}
-	
+
+	@GetMapping
+	public @ResponseBody List<Post> getPostList(@RequestParam(name = "page") long page) {
+		return postService.getNewestList(page);
+	}
+
 	@GetMapping(value = "/images/{filename}")
 	public @ResponseBody byte[] getPostImages(@PathVariable(name = "filename") String filename) {
 

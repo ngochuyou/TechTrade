@@ -25,17 +25,14 @@ public class Account {
 	@Column(name = "password", nullable = false)
 	private String password;
 
-	@Column(name = "fullname", nullable = false)
-	private String fullname;
-
 	@Enumerated(EnumType.STRING)
-	@Column(name = "gender", nullable = false)
+	@Column(name = "gender")
 	private Gender gender;
 
-	@Column(name = "avatar", nullable = false)
+	@Column(name = "avatar")
 	private String avatar;
 
-	@Column(name = "phone", nullable = false)
+	@Column(name = "phone")
 	private String phone;
 
 	@Column(name = "email", nullable = false)
@@ -50,18 +47,15 @@ public class Account {
 	@Column(name = "prestige_points")
 	private int prestigePoints;
 
-	@Column(name = "id", nullable = false)
-	private String id;
-
 	@Enumerated(EnumType.STRING)
 	@Column(name = "role", nullable = false)
 	private AccountRole role;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "ward_id", nullable = false)
+	@JoinColumn(name = "ward_id")
 	private Ward ward;
 
-	@Column(name = "address", nullable = false, length = 500)
+	@Column(name = "address", length = 500)
 	private String address;
 
 	public String getUsername() {
@@ -78,14 +72,6 @@ public class Account {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getFullname() {
-		return fullname;
-	}
-
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
 	}
 
 	public Gender getGender() {
@@ -142,14 +128,6 @@ public class Account {
 
 	public void setPrestigePoints(int prestigePoints) {
 		this.prestigePoints = prestigePoints;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public AccountRole getRole() {

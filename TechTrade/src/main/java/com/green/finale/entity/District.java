@@ -12,14 +12,14 @@ import javax.persistence.Table;
 @Table(name = "district")
 public class District {
 	@Id
-	@Column(name="id", nullable = false)
+	@Column(name = "id", nullable = false)
 	private String id;
-	
-	@Column(name="name", nullable = false)
+
+	@Column(name = "name", nullable = false)
 	private String name;
-	
+
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="city_id")
+	@JoinColumn(name = "city_id")
 	private City city;
 
 	public String getId() {
@@ -45,7 +45,5 @@ public class District {
 	public void setCity(City city) {
 		this.city = city;
 	}
-
-	
 
 }

@@ -2,7 +2,6 @@ package com.green.finale.entity;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,17 +24,17 @@ public class Post {
 	@Column(name = "description", columnDefinition = "TEXT", nullable = false)
 	private String description;
 
-	@Column(name = "create_at", columnDefinition = "DATE", nullable = false)
+	@Column(name = "create_at", columnDefinition = "DATETIME", nullable = false)
 	private Date createAt;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "account_id", nullable = false)
 	private Account createBy;
 
 	@Column(name = "status", nullable = false)
 	private boolean status;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "category_id", nullable = false)
 	private Category category;
 

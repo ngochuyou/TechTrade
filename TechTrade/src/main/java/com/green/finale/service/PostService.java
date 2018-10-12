@@ -3,10 +3,11 @@ package com.green.finale.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,6 @@ import com.green.finale.dao.CommentDAO;
 import com.green.finale.dao.ImageDAO;
 import com.green.finale.dao.PostDAO;
 import com.green.finale.entity.Account;
-import com.green.finale.entity.Category;
 import com.green.finale.entity.Comment;
 import com.green.finale.entity.Post;
 import com.green.finale.model.PostModel;
@@ -31,20 +31,13 @@ public class PostService {
 
 	@Autowired
 	private CommentDAO commentDao;
-	
+
 	@Autowired
 	private ImageDAO imageDao;
-	
+
 	@Transactional
 	public List<Post> getPostList() {
 		return postDao.getList();
-	}
-
-	@Transactional
-	public List<Post> getNewestPost() {
-		List<Post> post = postDao.getList();
-		Collections.reverse(post);
-		return post;
 	}
 
 	@Transactional
@@ -55,12 +48,7 @@ public class PostService {
 
 	@Transactional
 	public List<Post> getPostListByAccount(Account acc) {
-		return postDao.getListByAccount(acc);
-	}
-
-	@Transactional
-	public List<Post> getPostListByCategory(Category cate) {
-		return postDao.getListByCategory(cate);
+		return postDao.getListByAccount(acc.getUsername());
 	}
 
 	@Transactional
@@ -70,10 +58,10 @@ public class PostService {
 
 	@Transactional
 	public Post find(long postId) {
-		
+
 		return postDao.find(postId);
 	}
-	
+
 	@Transactional
 	public long createPost(PostModel postMD) {
 		boolean status = true;
@@ -95,23 +83,90 @@ public class PostService {
 	@Transactional
 	public List<Comment> getCommentsByPost(long postId) {
 		List<Comment> comments = commentDao.getListByPost(postId);
-	
+
 		return comments;
 	}
-	
-	public List<Comment> getCommentListByPost(List<Post> postList) {
-		List<Comment> comments = new ArrayList<>();
-		List<Comment> temp = new ArrayList<>();
 
-		for (Post p : postList) {
-			temp = commentDao.getListByPost(p.getId());
+	@Transactional
+	public List<String> getImageListByPost(long postId) {
 
-			for (Comment c : temp) {
-				comments.add(c);
-			}
+		return imageDao.getList(postId);
+	}
+
+	@Transactional
+	public List<Object[]> search(String keyword) {
+		List<Object[]> list = postDao.getListByTitle(keyword);
+
+		return list;
+	}
+
+	@Transactional
+	public List<Post> search(String categoryId, String keyword, String sortBy, int firstRecord) throws NumberFormatException {
+		Pattern p = Pattern.compile("(createAt|nearest|upVote)(:desc|:asc)");
+		Matcher m = p.matcher(sortBy);
+
+		if (!m.matches()) {
+			throw new NumberFormatException(Contants.INVALID_FIELDS);
 		}
 
-		return comments;
+		try {
+			return postDao.getList(Integer.valueOf(categoryId), keyword, sortBy, firstRecord);
+		} catch (NumberFormatException ex) {
+			throw new NumberFormatException(Contants.INVALID_FIELDS);
+		}
+	}
+
+	@Transactional
+	public String deletePost(long postId, Principal principal) {
+		Post post = postDao.find(postId);
+
+		if (post != null) {
+			String postUsername = post.getCreateBy().getUsername();
+
+			if (postUsername.equals(principal.getName())) {
+				commentDao.deleteByPost(postId);
+				imageDao.deleteByPost(postId);
+				postDao.delete(post);
+
+				return null;
+			}
+
+			return Contants.NOT_BELONG;
+		}
+
+		return Contants.NONEXSIT;
+	}
+
+	@Transactional
+	public String changePostStatus(long postId, String status, Principal principal) {
+		Post post = postDao.find(postId);
+
+		if (post != null) {
+			String postUsername = post.getCreateBy().getUsername();
+
+			if (postUsername.equals(principal.getName())) {
+				if (status.equals("close")) {
+					System.out.println(status);
+					post.setStatus(false);
+					postDao.update(post);
+
+					return null;
+				}
+
+				if (status.equals("restore")) {
+					post.setStatus(true);
+					postDao.update(post);
+
+					return null;
+				}
+
+				return Contants.INVALID_FIELDS;
+			}
+
+			return Contants.NOT_BELONG;
+		}
+
+		return Contants.NONEXSIT;
 	}
 
 	public boolean validatePost(PostModel post) {
@@ -127,23 +182,10 @@ public class PostService {
 
 		return true;
 	}
-	
-	@Transactional
-	public List<String> getImageListByPost(long postId) {
-		
-		return imageDao.getList(postId);
-	}
-	
-	@Transactional
-	public List<Object[]> search(String keyword) {
-		List<Object[]> list = postDao.searchByTitle(keyword);
-		
-		return list;
-	}
-	
+
 	public byte[] getImageBytes(String filename) {
 		File file = new File(Contants.UPLOAD_FILE_DESTINATION + filename);
-		
+
 		if (!file.exists()) {
 			System.out.println("file doesn't exsit");
 			return null;
@@ -160,8 +202,4 @@ public class PostService {
 		return data;
 	}
 
-	public void test() {
-
-	}
-	
 }

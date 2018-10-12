@@ -46,4 +46,13 @@ public class ImageDAO {
 		
 		return hql.getResultList();
 	}
+	
+	public int deleteByPost(long postId) {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<?> hql = ss.createQuery("DELETE FROM Image WHERE post.id = :postId");
+		
+		hql.setParameter("postId", postId);
+		
+		return hql.executeUpdate();
+	}
 }

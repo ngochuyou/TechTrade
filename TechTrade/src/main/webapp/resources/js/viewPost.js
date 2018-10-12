@@ -30,7 +30,7 @@ $(document).ready(function() {
         		$.each(list, function() {
         			string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/post/"+this[1]+"'>"+this[0]+"</a>";
         		});
-        		
+        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$('#search').val()+"'>See more</a>";
         		$('#my-dropdown-container').html(string);
         		$('#my-dropdown-container').show();
         	},

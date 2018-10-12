@@ -22,7 +22,7 @@ $(document).ready(function() {
         	type : 'GET',
         	url : '/TechTrade/post/search',
         	data : {
-        		keyword : $('#search').val(),
+        		keyword :$('#search').val(),
         	},
         	success : function(list) {
         		var string = "";

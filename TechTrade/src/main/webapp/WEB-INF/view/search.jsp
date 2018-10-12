@@ -23,7 +23,7 @@
 <script defer
 	src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"></script>
 <script type="text/javascript"
-	src="<spring:url value="/resources/js/home.js"></spring:url>"></script>
+	src="<spring:url value="/resources/js/viewPost.js"></spring:url>"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script
@@ -38,7 +38,8 @@
 			<div class="sidebar-body hpx-500">
 				<div class="list-group border-bottom">
 					<c:forEach var="cate" items="${cateList }">
-						<a href="<spring:url value="/search?category=${cate.id }"></spring:url>"
+						<a
+							href="<spring:url value="/search?category=${cate.id }"></spring:url>"
 							class="list-group-item list-group-item-action flex-column align-items-start py-3 noborder thumb-medium">
 							<div class="row">
 								<div class="col-4 h-100">
@@ -80,7 +81,9 @@
 				<i class="fas fa-list fa-lg text-light"></i>
 			</button>
 			<form class="form-inline m-3 my-lg-0 w-50 position-relative"
-				id="search-form" action="<spring:url value="/search"></spring:url>" method="get">
+				id="search-form"
+				action="<spring:url value="/search?category=${page.categoryId }"></spring:url>"
+				method="get">
 				<input class="form-control w-100 font-weight-bold" type="search"
 					placeholder="Try something like Category's name or Post"
 					aria-label="Search" id='search' autocomplete="off" name="k">
@@ -117,15 +120,17 @@
 						<sec:authentication property="principal" var="user" />
 						<li>
 							<div class="dropdown">
-								<button class="btn-nobg dropdown-toggle text-light" type="button"
-									id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
-									aria-expanded="false">
+								<button class="btn-nobg dropdown-toggle text-light"
+									type="button" id="dropdownMenu2" data-toggle="dropdown"
+									aria-haspopup="true" aria-expanded="false">
 									<img
 										src="<spring:url value="/account/avatar/?username=${user.username }"></spring:url>"
 										class="mr-5 avatar-small">
 								</button>
-								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
-									<a class="dropdown-item font-weight-bold" href="<spring:url value="/logout"></spring:url>">Logout</a>
+								<div class="dropdown-menu dropdown-menu-right"
+									aria-labelledby="dropdownMenu2">
+									<a class="dropdown-item font-weight-bold"
+										href="<spring:url value="/logout"></spring:url>">Logout</a>
 								</div>
 							</div>
 						</li>
@@ -133,11 +138,52 @@
 				</ul>
 			</div>
 		</nav>
-		<div
-			style="background-image: url('<spring:url value="/resources/img/parallax.jpg"></spring:url>');"
-			class="parallax"></div>
-		<div class="p-5">
-			<h1 class="panel-header">Most Recent</h1>
+		<div class="px-5">
+			<form action="<spring:url value="/search"></spring:url>">
+				<div class="row py-2">
+					<div class="col-8">
+						<input class="form-control font-weight-bold" name="k"
+							placeholder="Search">
+					</div>
+					<div class="col-3">
+						<select name="category" class="form-control">
+							<c:forEach var="cate" items="${cateList }">
+								<option value="${cate.id }">${cate.name }</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="col-1">	
+						<button type="submit" class="btn bg-main">Search</button>
+					</div>
+				</div>
+			</form>
+			<div class="row py-2 panel-header">
+				<div class="col-8" id="pageNumber">Page ${page.pageNumber + 1}
+				</div>
+				<div class="col-4 text-right">
+					<div class="dropdown">
+						<button class="btn-nobg text-main wpx-70 hpx-70" type="button"
+							id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+							aria-expanded="false">
+							<i class="fas fa-sort fa-lg"></i>
+						</button>
+						<div class="dropdown-menu dropdown-menu-right bg-main"
+							aria-labelledby="dropdownMenu2">
+							<a class="dropdown-item text-white"
+								href="<spring:url value="/search?${page.toParameters() }&s=createAt:desc"></spring:url>">Newest</a>
+							<a class="dropdown-item text-white"
+								href="<spring:url value="/search?${page.toParameters() }&s=createAt:asc"></spring:url>">Oldest</a>
+							<a class="dropdown-item text-white"
+								href="<spring:url value="/search?${page.toParameters() }&s=upVote:desc"></spring:url>">Most
+								voted</a> <a class="dropdown-item text-white"
+								href="<spring:url value="/search?${page.toParameters() }&s=upVote:asc"></spring:url>">Least
+								Voted</a> <a class="dropdown-item text-white"
+								href="<spring:url value="/logout"></spring:url>">Closest to
+								you</a>
+						</div>
+					</div>
+				</div>
+			</div>
 			<c:forEach var="post" items="${postList }">
 				<div class="post">
 					<div class="row my-2">

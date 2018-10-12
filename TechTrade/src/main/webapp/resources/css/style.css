@@ -343,6 +343,11 @@ label {
 		rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4);
 }
 
+.box-shadow {
+	box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px
+		rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4);
+}
+
 .hidden {
 	display: none;
 }
@@ -372,10 +377,16 @@ button.btn:hover {
 }
 
 .avatar-small {
-	width: 60px;
-	height: 60px;
+	width: 40px;
+	height: 40px;
 	border-radius: 50% !important;
 	overflow: hidden;
+}
+
+.avatar-large {
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;	
 }
 
 .pointer {
@@ -516,9 +527,10 @@ ul ul a {
 }
 
 .btn-blank-main {
-	color: var(--main-bg-color);
-	background-color: white;
+	background-color: var(--main-bg-color);
+	color: white;
 	cursor: pointer;
+	border: none;	
 }
 
 .btn-blank:hover {
@@ -640,4 +652,13 @@ ul ul a {
 	min-height: 9.5%;
 	z-index : 10000;
 	display: none;
+}
+
+.bg-main {
+	background-color: var(--main-bg-color);
+	color: white;
+}
+
+.text-white:hover {
+	color: var(--main-bg-color) !important;
 }

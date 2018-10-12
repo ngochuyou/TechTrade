@@ -38,7 +38,7 @@
 			<div class="sidebar-body hpx-500">
 				<div class="list-group border-bottom">
 					<c:forEach var="cate" items="${cateList }">
-						<a href="#"
+						<a href="<spring:url value="/search?category=${cate.id }"></spring:url>"
 							class="list-group-item list-group-item-action flex-column align-items-start py-3 noborder thumb-medium">
 							<div class="row">
 								<div class="col-4 h-100">
@@ -80,16 +80,16 @@
 				<i class="fas fa-list fa-lg text-light"></i>
 			</button>
 			<form class="form-inline m-3 my-lg-0 w-50 position-relative"
-				id="search-form">
+				id="search-form" action="<spring:url value="/search"></spring:url>" method="get">
 				<input class="form-control w-100 font-weight-bold" type="search"
 					placeholder="Try something like Category's name or Post"
-					aria-label="Search" id='search'>
+					aria-label="Search" id='search' name="k">
 				<div class="hidden w-100 my-dropdown-container"
 					id="my-dropdown-container">
 					<a class="dropdown-item text-main" href="#">Action</a>
 				</div>
 				<button
-					class="btn btn-blank-main bg-light position-right border-left font-weight-bold"
+					class="btn bg-main position-right border-left font-weight-bold"
 					type="submit">
 					<i class="fas fa-search"></i>
 				</button>
@@ -139,9 +139,47 @@
 			style="background-image: url('<spring:url value="/resources/img/parallax.jpg"></spring:url>');"
 			class="parallax"></div>
 		<div class="p-5">
-			<h1 class="panel-header">${post.createBy.username }'s<span
-					class="mx-2">Post</span>
-			</h1>
+			<div class="row">
+				<sec:authorize access="isAuthenticated()">
+					<sec:authentication property="principal" var="user" />
+					<c:if test="${user.username == post.createBy.username}">
+						<div class="col-6">
+							<h1 class="panel-header">${post.createBy.username }'s<span
+									class="mx-2">Post</span>
+							</h1>
+						</div>
+						<div class="col-6 text-right">
+							<div class="dropdown">
+								<button class="btn-nobg dropdown-toggle text-light"
+									type="button" id="dropdownMenu2" data-toggle="dropdown"
+									aria-haspopup="true" aria-expanded="false">
+									<i class="fas fa-ellipsis-h text-dark fa-2x mr-4"></i>
+								</button>
+								<div class="dropdown-menu dropdown-menu-right box-shadow"
+									aria-labelledby="dropdownMenu2">
+									<a class="dropdown-item"
+										href="<spring:url value="/post/delete/${post.id }"></spring:url>">Delete</a>
+									<c:if test="${post.status == true }">
+										<a class="dropdown-item"
+											href="<spring:url value="/post/${post.id }/status?s=close"></spring:url>">Close</a>
+									</c:if>
+									<c:if test="${post.status == false }">
+										<a class="dropdown-item"
+											href="<spring:url value="/post/${post.id }/status?s=restore"></spring:url>">Restore</a>
+									</c:if>
+								</div>
+							</div>
+						</div>
+					</c:if>
+					<c:if test="${user.username != post.createBy.username}">
+						<div class="col-12">
+							<h1 class="panel-header">${post.createBy.username }'s<span
+									class="mx-2">Post</span>
+							</h1>
+						</div>
+					</c:if>
+				</sec:authorize>
+			</div>
 			<div class="post">
 				<div class="row m-2">
 					<div class="col-1 m-auto text-center">
@@ -158,7 +196,7 @@
 							${post.createBy.ward.district.name },
 							${post.createBy.ward.district.city.name }
 						</h3>
-						<h2 class="font-weight-bold">${post.name }</h2>
+						<h2 class="font-weight-bold">${post.name } <span class="edit">Edit</span></h2>
 						<p>
 							By <span class="font-italic text-main">${post.createBy.username }</span>
 							on
@@ -178,7 +216,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col custom-control-description text-size-post p-3">${post.description }</div>
+					<div class="col custom-control-description text-size-post p-3">${post.description }<span class="edit">Edit</span></div>
 				</div>
 				<div class="row m-3">
 					<c:forEach var="image" items="${images }" varStatus="level">

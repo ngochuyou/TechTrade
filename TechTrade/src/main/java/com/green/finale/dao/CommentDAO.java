@@ -6,6 +6,7 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -32,5 +33,14 @@ public class CommentDAO {
 		Session ss = factory.getCurrentSession();
 		
 		return (long) ss.save(c);
+	}
+	
+	public int deleteByPost(long postId) {
+		Session ss = factory.getCurrentSession();
+		Query<?> hql = ss.createQuery("DELETE FROM Comment WHERE post.id = :postId");
+		
+		hql.setParameter("postId", postId);
+		
+		return hql.executeUpdate();
 	}
 }

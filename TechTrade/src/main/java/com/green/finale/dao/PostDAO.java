@@ -10,8 +10,6 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.green.finale.entity.Account;
-import com.green.finale.entity.Category;
 import com.green.finale.entity.Post;
 
 @Repository
@@ -19,7 +17,7 @@ public class PostDAO {
 	@Autowired
 	private SessionFactory factory;
 
-	private static final int maxResult = 10;
+	private static final int MAX_RESULT = 10;
 
 	public Post find(long id) {
 		Session ss = factory.getCurrentSession();
@@ -29,67 +27,102 @@ public class PostDAO {
 
 	public List<Post> getList() {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<Post> hql = ss.createQuery("FROM Post", Post.class);
+		TypedQuery<Post> hql = ss.createQuery("FROM Post WHERE status=true", Post.class);
 
 		return hql.getResultList();
 	}
-	
+
 	public List<Post> getList(int firstRow) {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<Post> hql = ss.createQuery("FROM Post", Post.class);
+		TypedQuery<Post> hql = ss.createQuery("FROM Post WHERE status=true", Post.class);
 
 		hql.setFirstResult(firstRow);
-		
+
 		return hql.getResultList();
 	}
-	
+
+	public List<Post> getList(int categoryId, String keyword, String sortBy, int firstRecord) {
+		Session ss = factory.getCurrentSession();
+		String query = null;
+		Query<Post> hql = null; 
+		
+		if (categoryId == 0) {
+			query = "FROM Post WHERE category.id IS NOT NULL AND (name LIKE :keyword OR tags LIKE :keyword) AND status = true ORDER BY "
+					+ sortBy.replace(":", " ");
+			hql = ss.createQuery(query, Post.class);
+		} else {
+			query = "FROM Post WHERE category.id = :cateId AND (name LIKE :keyword OR tags LIKE :keyword) AND status = true ORDER BY "
+					+ sortBy.replace(":", " ");
+			hql = ss.createQuery(query, Post.class);
+			hql.setParameter("cateId", categoryId);
+		}
+
+		hql.setParameter("keyword", "%" + keyword + "%");
+		hql.setFirstResult(firstRecord * MAX_RESULT);
+		hql.setMaxResults(MAX_RESULT);
+
+		return hql.getResultList();
+	}
+
 	public List<Post> getNewestList(long page) {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<Post> hql = ss.createQuery("FROM Post ORDER BY createAt desc", Post.class);
+		TypedQuery<Post> hql = ss.createQuery("FROM Post WHERE status=true ORDER BY createAt desc ", Post.class);
 
-		hql.setMaxResults(maxResult);
-		hql.setFirstResult((int) page * maxResult);
-
-		return hql.getResultList();
-	}
-
-	public List<Post> getListByAccount(Account acc) {
-		Session ss = factory.getCurrentSession();
-		TypedQuery<Post> hql = ss.createQuery("FROM Post Where createBy.username = :acc", Post.class);
-
-		hql.setParameter("acc", acc.getUsername());
+		hql.setMaxResults(MAX_RESULT);
+		hql.setFirstResult((int) page * MAX_RESULT);
 
 		return hql.getResultList();
 	}
 
-	public List<Post> getListByCategory(Category cate) {
+	public List<Post> getListByAccount(String username) {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<Post> hql = ss.createQuery("FROM Post Where category.id = :cate", Post.class);
+		TypedQuery<Post> hql = ss.createQuery("FROM Post Where createBy.username = :username AND status=true",
+				Post.class);
 
-		hql.setParameter("cate", cate.getId());
+		hql.setParameter("username", username);
+
+		return hql.getResultList();
+	}
+
+	public List<Post> getListByCategory(int cateId, String sortBy, int firstRecord) {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<Post> hql = ss.createQuery(
+				"FROM Post Where category.id = :cateId AND status=true ORDER BY " + sortBy.replace(":", " "),
+				Post.class);
+
+		hql.setParameter("cateId", cateId);
+		hql.setFirstResult(firstRecord * MAX_RESULT);
+		hql.setMaxResults(MAX_RESULT);
 
 		return hql.getResultList();
 	}
 
 	public List<Post> getListByWard(String ward) {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<Post> hql = ss.createQuery("FROM Post Where createBy.ward.id = :ward", Post.class);
+		TypedQuery<Post> hql = ss.createQuery("FROM Post Where createBy.ward.id = :ward AND status=true", Post.class);
 
 		hql.setParameter("ward", ward);
 
 		return hql.getResultList();
 	}
 
-	public List<Object[]> searchByTitle(String keyword) {
+	public List<Object[]> getListByTitle(String keyword) {
 		Session ss = factory.getCurrentSession();
 		Query<Object[]> hql = ss.createQuery(
-				"SELECT name, id FROM Post WHERE name LIKE :keyword OR tags LIKE :keyword ORDER BY upVote desc",
+				"SELECT name, id FROM Post WHERE (name LIKE :keyword OR tags LIKE :keyword) AND status=true ORDER BY upVote desc",
 				Object[].class);
 
 		hql.setParameter("keyword", "%" + keyword + "%");
-		hql.setMaxResults(maxResult);
+		hql.setMaxResults(MAX_RESULT);
 
 		return hql.list();
+	}
+
+	public long count(String conditionQuery) {
+		Session ss = factory.getCurrentSession();
+		Query<Long> hql = ss.createQuery("SELECT COUNT(*) FROM Post " + conditionQuery, Long.class);
+
+		return hql.getSingleResult();
 	}
 
 	public long insert(Post post) {

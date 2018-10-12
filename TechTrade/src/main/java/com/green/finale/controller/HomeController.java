@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.green.finale.model.SearchPage;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import com.green.finale.service.CategoryService;
 import com.green.finale.service.PostService;
 
@@ -30,7 +32,6 @@ public class HomeController {
 	public String index(Model model) {
 		model.addAttribute("cateList", cateService.getCategoryList());
 		model.addAttribute("postList", postService.getNewestList(0));
-
 		return "home";
 	}
 
@@ -77,7 +78,7 @@ public class HomeController {
 		return "redirect:/";
 	}
 
-	@GetMapping(value = "/logout")
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logoutPage() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -85,10 +86,10 @@ public class HomeController {
 			SecurityContextHolder.getContext().setAuthentication(null);
 		}
 
-		return "redirect:/";
+		return "redirect:/login?logout=true";
 	}
 
-	@GetMapping(value = "/denied")
+	@RequestMapping(value = "/denied", method = RequestMethod.GET)
 	public String accessDeniedPage() {
 		return "denied";
 	}

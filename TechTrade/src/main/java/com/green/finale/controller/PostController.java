@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.green.finale.service.CategoryService;
+import com.green.finale.entity.Post;
 import com.green.finale.service.PostService;
 
 @Controller
@@ -39,6 +40,11 @@ public class PostController {
 		model.addAttribute("cateList", cateService.getCategoryList());
 		
 		return "viewPost";
+	}
+
+	@GetMapping
+	public @ResponseBody List<Post> getPostList(@RequestParam(name = "page") long page) {
+		return postService.getNewestList(page);
 	}
 
 	@GetMapping(value = "/images/{filename}")

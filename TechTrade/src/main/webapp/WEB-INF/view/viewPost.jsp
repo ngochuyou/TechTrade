@@ -355,7 +355,7 @@
 				<div class="panel-header">Comments</div>
 				<div class="row m-2" id="comments">
 					<c:forEach var="comment" items="${comments }">
-						<div class="m-2">
+						<div class="m-2 w-100">
 							<p class="text-primary">
 								<fmt:formatDate value="${comment.commentedOn }" />
 							</p>

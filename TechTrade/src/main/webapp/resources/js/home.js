@@ -92,7 +92,7 @@ $(document).ready(function() {
 		+"						class='avatar position-right mx-3'>"
 		+"				</div>"
 		+"			</div>"
-		+"			<div class='row'>"
+		+"			<div class='row' onclick='window.location.href='/TechTrade/post/"+ this.id +"''>"
 		+"				<div class='col custom-control-description text-size-post'>"+ this.description +"</div>"
 		+"			</div>"
 		+"			<div class='row post-footer'>"

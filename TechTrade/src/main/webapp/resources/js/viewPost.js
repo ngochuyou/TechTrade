@@ -3,6 +3,14 @@ $(document).ready(function() {
 		event.preventDefault();
 	});
 	
+    $('#search').focus(function() {
+    	$(document).keypress(function(event) {
+    		if (event.which == 13) {
+    			$('#search-form').submit()
+    		}
+    	});
+    });
+    	
 	$('#signin').click(function() {
 		window.location.href = "/TechTrade/login";
 	});
@@ -229,9 +237,8 @@ $(document).ready(function() {
     
     $('#comment').focus(function() {
     	$(document).keypress(function(event) {
-    		if (event.which == 13) {			
+    		if (event.which == 13 && $('#comment').val().length > 0) {
     			newComment = "";
-    			
     			$.ajax({
     				type : 'POST',
     				url : '/TechTrade/post/comment',
@@ -241,7 +248,7 @@ $(document).ready(function() {
     					[crfs.attr('name')] : crfs.val()
     				},
     				success : function(username) {
-    					newComment = "<div class='m-2'>"
+    					newComment = "<div class='m-2 w-100'>"
     								+ "<p class='text-primary'>" + formatCurrentDate() + "</p>"
     								+ "<p> <span class='font-italic text-primary'>" + username + "</span>: " + $('#comment').val() + "</p>"
     								+ "</div>";

@@ -166,7 +166,7 @@
 								class="avatar position-right mx-3">
 						</div>
 					</div>
-					<div class="row">
+					<div class="row pointer" onclick="window.location.href='<spring:url value='/post/${post.id }'></spring:url>'">
 						<div class="col custom-control-description text-size-post">${post.description }</div>
 					</div>
 					<div class="row post-footer">

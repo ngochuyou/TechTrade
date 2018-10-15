@@ -7,7 +7,7 @@ public class SearchPage {
 	private String sortBy;
 	private String keyword;
 	private int categoryId;
-	
+
 	public int getPageNumber() {
 		return pageNumber;
 	}
@@ -42,15 +42,16 @@ public class SearchPage {
 
 	public String toParameters() {
 		StringBuilder sb = new StringBuilder("");
-		
-		if(this.categoryId != 0) {
+
+		if (this.categoryId != 0) {
 			sb.append("category=" + this.categoryId);
 		}
-		
-		if(!StringUtils.isEmpty(this.keyword)) {
+
+		if (!StringUtils.isEmpty(this.keyword)) {
 			sb.append("&k=" + this.keyword);
 		}
-		
+
 		return sb.toString();
 	}
+
 }

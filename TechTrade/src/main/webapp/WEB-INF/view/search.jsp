@@ -22,8 +22,6 @@
 	src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"></script>
 <script defer
 	src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"></script>
-<script type="text/javascript"
-	src="<spring:url value="/resources/js/viewPost.js"></spring:url>"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script
@@ -86,7 +84,7 @@
 				method="get">
 				<input class="form-control w-100 font-weight-bold" type="search"
 					placeholder="Try something like Category's name or Post"
-					aria-label="Search" id='search' autocomplete="off" name="k">
+					aria-label="Search" id='search' autocomplete="off" name="k" value="${page.keyword }">
 				<div class="hidden w-100 my-dropdown-container"
 					id="my-dropdown-container">
 					<a class="dropdown-item text-main" href="#">Action</a>
@@ -138,7 +136,7 @@
 				</ul>
 			</div>
 		</nav>
-		<div class="px-5">
+		<div class="px-5" id="post-content">
 			<form action="<spring:url value="/search"></spring:url>">
 				<div class="row py-2">
 					<div class="col-8">
@@ -199,11 +197,11 @@
 								on
 								<fmt:formatDate value="${post.createAt }" />
 							</p>
-							<div>
+							<div class="line-height-large">
 								<span>Tags <i class="fas fa-hashtag"></i>
-								</span> <span class="tags"
+								</span> <span class="tags d-inline-block"
 									style="background-color : ${post.category.tagColor}">${post.category.name }</span>
-								<span class="color-main tags"> ${fn:replace(post.tags, ",", "</span> <span class='color-main tags'>")}
+								<span class="color-main tags d-inline-block"> ${fn:replace(post.tags, ",", "</span> <span class='color-main tags d-inline-block'>")}
 								</span>
 							</div>
 						</div>
@@ -212,7 +210,7 @@
 								class="avatar position-right mx-3">
 						</div>
 					</div>
-					<div class="row">
+					<div class="row pointer" onclick="window.location.href='<spring:url value='/post/${post.id }'></spring:url>'">
 						<div class="col custom-control-description text-size-post">${post.description }</div>
 					</div>
 					<div class="row post-footer">
@@ -235,4 +233,9 @@
 		<div class="overlay"></div>
 	</div>
 </body>
+<script type="text/javascript">
+	var parameters = '${page.toParameters() }&s=${page.sortBy }';
+</script>
+<script type="text/javascript"
+	src="<spring:url value="/resources/js/search.js"></spring:url>"></script>
 </html>

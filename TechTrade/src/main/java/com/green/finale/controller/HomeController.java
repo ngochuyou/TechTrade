@@ -1,5 +1,7 @@
 package com.green.finale.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
@@ -9,7 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.green.finale.entity.Post;
 import com.green.finale.model.SearchPage;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -41,31 +45,46 @@ public class HomeController {
 			@RequestParam(name = "s", defaultValue = "createAt:desc") String sortBy,
 			@RequestParam(name = "p", defaultValue = "0") int page, Model model) throws Exception {
 		model.addAttribute("cateList", cateService.getCategoryList());
-		
+
 		try {
 			model.addAttribute("postList", postService.search(categoryId, keyword, sortBy, page));
 		} catch (NumberFormatException ex) {
 			model.addAttribute("error", ex.getMessage());
-			
+
 			return "error";
 		}
-		
+
 		SearchPage pageModel = new SearchPage();
-		
+
 		try {
 			pageModel.setCategoryId(Integer.parseInt(categoryId));
 		} catch (NumberFormatException ex) {
 			pageModel.setCategoryId(0);
 		}
-		
+
 		pageModel.setKeyword(keyword);
 		pageModel.setPageNumber(page);
 		pageModel.setSortBy(sortBy);
 		model.addAttribute("page", pageModel);
-		
+
 		return "search";
 	}
-	
+
+	@GetMapping(value = "/s")
+	public @ResponseBody List<Post> searchJSON(@RequestParam(name = "category", defaultValue = "0") String categoryId,
+			@RequestParam(name = "k", defaultValue = "") String keyword,
+			@RequestParam(name = "s", defaultValue = "createAt:desc") String sortBy,
+			@RequestParam(name = "p", defaultValue = "0") int page, Model model) throws Exception {
+		System.out.println(page);
+		try {
+			return postService.search(categoryId, keyword, sortBy, page);
+		} catch (NumberFormatException ex) {
+			model.addAttribute("error", ex.getMessage());
+
+			return null;
+		}
+	}
+
 	@GetMapping(value = "/login")
 	public String login() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -74,7 +93,7 @@ public class HomeController {
 
 			return "login";
 		}
-		
+
 		return "redirect:/";
 	}
 

@@ -198,7 +198,7 @@
 			<div class="post">
 				<form:form modelAttribute="post" method="post" id="form"
 					enctype="multipart/form-data">
-					<form:hidden path="id" id="post-id"/>
+					<form:hidden path="id" id="post-id" />
 					<form:hidden path="username" />
 					<div class="row m-2">
 						<div class="col-1 m-auto text-center">
@@ -364,13 +364,15 @@
 								: ${comment.content }
 							</p>
 						</div>
-					</c:forEach>
+					</c:forEach> 
 				</div>
 				<sec:authorize access="isAuthenticated()">
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" id="csrfToken"/>
 					<div class="row m-2">
 						<div class="m-2 w-100">
-							<input class="mycustom-input w-100 form-control" placeholder="Write a comment..."
-								id="comment"/>
+							<input class="mycustom-input w-100 form-control"
+								placeholder="Write a comment..." id="comment" />
 						</div>
 					</div>
 				</sec:authorize>

@@ -124,7 +124,7 @@ public class PostController {
 		return "redirect:/post/" + postId;
 	}
 
-	@PostMapping
+	@PostMapping("/comment")
 	public @ResponseBody String addComment(@RequestParam(name = "comment") String comment,
 			@RequestParam(name = "postId") long postId, Principal principal) {
 		String error = postService.addComment(postId, comment, principal);

@@ -89,6 +89,7 @@ $(document).ready(function() {
     var hashtags = $('#hashtags-container').text().trim();
     var hashtagId;
     var originalHashtag = hashtags;
+    console.log(hashtags);
     var targetHashtag = "";
     
     $('#hashtags-container').on('click', '.hashtags-del', function() {
@@ -224,16 +225,20 @@ $(document).ready(function() {
     });
     
     var newComment = "";
+    var crfs = $('#csrfToken');
     
     $('#comment').focus(function() {
     	$(document).keypress(function(event) {
-    		if (event.which == 13) {
+    		if (event.which == 13) {			
+    			newComment = "";
+    			
     			$.ajax({
     				type : 'POST',
     				url : '/TechTrade/post/comment',
     				data : {
     					postId : $('#post-id').val(),
-    					comment : $('#comment').val()
+    					comment : $('#comment').val(),
+    					[crfs.attr('name')] : crfs.val()
     				},
     				success : function(username) {
     					newComment = "<div class='m-2'>"
@@ -242,6 +247,7 @@ $(document).ready(function() {
     								+ "</div>";
     					
     					$('#comments').html($('#comments').html() + newComment);
+    					$('#comment').val(null);
     				},
     			});
     		}
@@ -255,12 +261,12 @@ $(document).ready(function() {
 		"Nov", "Dec"
     ];
     var currentDate = new Date();
-    var day = date.getDate();
-	var monthIndex = date.getMonth();
-	var year = date.getFullYear();
+    var day = currentDate.getDate();
+	var monthIndex = currentDate.getMonth();
+	var year = currentDate.getFullYear();
 	
     function formatCurrentDate() {
     	
-    	return day + ' ' + monthNames[monthIndex] + ' ' + year;
+    	return monthNames[monthIndex] + ' ' + day + ', ' + year;
     }
 });

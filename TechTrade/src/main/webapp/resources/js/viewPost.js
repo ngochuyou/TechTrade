@@ -1,4 +1,23 @@
 $(document).ready(function() {
+	$('button').click(function(event) {
+		event.preventDefault();
+	});
+	
+	$('#signin').click(function() {
+		window.location.href = "/TechTrade/login";
+	});
+	
+	$('#signup').click(function() {
+		window.location.href = "/TechTrade/account/sign-up";
+	});
+	
+	var tagNumber = $('.hashtags').length;
+	
+	for (var i=0; i<tagNumber; i++) {
+		$($('.hashtags')[i]).attr('id', 'hashtags'+i);
+		$($('.hashtags-del')[i]).attr('id', 'hashtags-del'+i);
+	}
+		
 	$('.overlay').click(function() {
 		$('#sidebar').addClass('sidebar-active');
 		$('.overlay').removeClass('active-overlay');
@@ -39,4 +58,209 @@ $(document).ready(function() {
         	}
         });
     });
+    
+    $('#post-edit').click(function() {
+    	$('.editable').toggleClass('hidden');
+    });
+    
+    var title = $('#post-name').text();
+    var description = $('#post-description').text();
+
+    $('#title-edit').click(function(event) {
+    	$('#post-name').toggleClass('hidden');
+    	$('#title-input').toggleClass('hidden');
+    	$('#title-submit').show();
+    	$('#title-cancel').show();
+    });
+    
+    $('#title-cancel').click(function() {
+    	$('#post-name').toggleClass('hidden');
+    	$('#title-input').toggleClass('hidden');
+    	$('#title-input').val($('#post-name').text());
+    	$('#title-submit').hide();
+    	$('#title-cancel').hide();
+    	console.log($('#title-input').val());
+    });
+
+    $('#hashtags-edit').click(function() {
+    	$('.hashtags-stage2').show();
+    });
+    
+    var hashtags = $('#hashtags-container').text().trim();
+    var hashtagId;
+    var originalHashtag = hashtags;
+    var targetHashtag = "";
+    
+    $('#hashtags-container').on('click', '.hashtags-del', function() {
+    	hashtagId = this.id.match(/\d+/);
+    	targetHashtag = $('#hashtags'+hashtagId);
+    	targetHashtag.remove();
+    	originalHashtag = originalHashtag.replace(targetHashtag.text().trim(), '');
+    });
+    
+    var tagContainer = $('#hashtags-container').html();
+    var tagInput;
+    
+    $('#hashtags-add').click(function() {
+    	tagInput = $('#hashtags-add-input').val();
+    	$($.parseHTML("<span class='color-main tags temptags mx-2 d-inline-block' id='hashtags"+tagNumber+"'>")).html(tagInput + "<span class='hashtags-del' id='hashtags-del"+tagNumber+"'><i class='fas fa-times-circle mx-2'></i></span>").appendTo("#hashtags-container");
+    	originalHashtag += tagInput;
+    	tagNumber++;
+    	$('#hashtags-add-input').val('#');
+    });
+    
+    $('#hashtags-cancel').click(function() {
+    	
+    	$('.hashtags').show();
+    	$('.temptags').remove();
+    	$('.hashtags-stage2').hide();
+    	originalHashtag = hashtags;
+    });
+    
+    $('#content-edit').click(function() {
+    	$('#post-description').toggleClass('hidden');
+    	$('#content-input').toggleClass('hidden');
+    	$('#content-submit').show();
+    	$('#content-cancel').show();
+    });
+    
+    $('#content-cancel').click(function() {
+    	$('#post-description').toggleClass('hidden');
+    	$('#content-input').val($('#post-description'));
+    	$('#content-input').toggleClass('hidden');
+    	$('#content-submit').hide();
+    	$('#content-cancel').hide();
+    });
+    
+    $('#image-edit').click(function() {
+    	$('.image-del').show();
+    	$('#image-add').show();
+    	$('#image-cancel').show();
+    	$('.preview').toggleClass('hidden');
+    });
+    
+    var deletedImage = [];
+    var imageId;
+    
+    $('.image-del').click(function() {
+    	imageId = this.id.match(/\d+/);
+    	$('#image-'+imageId).hide();
+    	deletedImage.push("image-"+imageId);
+    });
+    
+    $('#image-cancel').click(function() {
+    	$('.image-del').hide();
+    	$('#image-add').hide();
+    	$('#image-cancel').hide();
+    	$('.preview').toggleClass('hidden');
+    	$('.preview').empty();
+    	$("#upload-photo").val(null);
+    	$('.image').show();
+    	deletedImage.length = 0;
+    });
+    
+	var count = 0;
+	var temp = "";
+	var reader = null;
+	var filesAmount;
+	
+    function readURL(input, place) {
+    	$('.preview').empty();
+            if (input.files) {
+            	filesAmount = input.files.length;
+
+                for (i = 0; i < filesAmount; i++) {
+                    reader = new FileReader();
+
+                    reader.onload = function(event) {
+                        $($.parseHTML("<img class='float-left w-25 hpx-350 mx-5 my-3'>")).attr('src', event.target.result).appendTo(place);
+                    }
+
+                    reader.readAsDataURL(input.files[i]);
+                	console.log(input.files[i]);
+                }
+            }
+    };
+    
+    $("#upload-photo").change(function() {
+    	readURL(this, "div.preview");
+    	console.log($("#upload-photo").val());
+    });
+    
+    $('#title-submit').click(function() {
+    	$('#post-name').text($('#title-input').val());
+    	$('#post-name').toggleClass('hidden');
+    	$('#title-input').toggleClass('hidden');
+    	$('#title-submit').hide();
+    	$('#title-cancel').hide();
+    });
+    
+    $('#hashtags-submit').click(function() {
+    	$('.temptags').addClass('hashtags');
+    	$('.temptags').removeClass('temptags');
+    	$('.hashtags').show();
+    	$('.hashtags-stage2').hide();
+    	$('.hashtags-del').toggleClass('hidden');
+    	$('#hashtags-input').val(originalHashtag);
+    });
+    
+    $('#content-submit').click(function() {
+    	$('#post-description').text($('#content-input').val());
+    	$('#post-description').toggleClass('hidden');
+    	$('#content-input').toggleClass('hidden');
+    	$('#content-submit').hide();
+    	$('#content-cancel').hide();
+    });
+    
+    $('#submit-all').click(function() {
+    	var stringify = "";
+    	
+    	$.each(deletedImage, function() {
+    		stringify += this.match(/\d+/) + ",";
+    	});
+    	
+    	$('#deleted-image-input').val(stringify);
+    	$('#form').submit();
+    });
+    
+    var newComment = "";
+    
+    $('#comment').focus(function() {
+    	$(document).keypress(function(event) {
+    		if (event.which == 13) {
+    			$.ajax({
+    				type : 'POST',
+    				url : '/TechTrade/post/comment',
+    				data : {
+    					postId : $('#post-id').val(),
+    					comment : $('#comment').val()
+    				},
+    				success : function(username) {
+    					newComment = "<div class='m-2'>"
+    								+ "<p class='text-primary'>" + formatCurrentDate() + "</p>"
+    								+ "<p> <span class='font-italic text-primary'>" + username + "</span>: " + $('#comment').val() + "</p>"
+    								+ "</div>";
+    					
+    					$('#comments').html($('#comments').html() + newComment);
+    				},
+    			});
+    		}
+    	});
+    });
+    
+    var monthNames = [
+		"Jan", "Feb", "Mar",
+		"Apr", "May", "Jun", "Jul",
+		"Aug", "Sep", "Oct",
+		"Nov", "Dec"
+    ];
+    var currentDate = new Date();
+    var day = date.getDate();
+	var monthIndex = date.getMonth();
+	var year = date.getFullYear();
+	
+    function formatCurrentDate() {
+    	
+    	return day + ' ' + monthNames[monthIndex] + ' ' + year;
+    }
 });

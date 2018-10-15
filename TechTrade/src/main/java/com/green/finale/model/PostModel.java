@@ -2,18 +2,25 @@ package com.green.finale.model;
 
 import java.util.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.green.finale.entity.Account;
+import com.green.finale.entity.Category;
 
 public class PostModel {
-
 	private long id;
 	private String name;
 	private String description;
 	private Date createAt;
 	private Account createBy;
+	private Category category;
 	private boolean status;
 	private String tags;
-	private int category;
+	private int categoryId;
+	private MultipartFile[] file;
+	private int upVote;
+	private String deletedImages;
+	private String username;
 
 	public long getId() {
 		return id;
@@ -55,6 +62,14 @@ public class PostModel {
 		this.createBy = createBy;
 	}
 
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
 	public boolean isStatus() {
 		return status;
 	}
@@ -71,14 +86,44 @@ public class PostModel {
 		this.tags = tags;
 	}
 
-	public int getCategory() {
-		return category;
+	public int getCategoryId() {
+		return categoryId;
 	}
 
-	public void setCategory(int category) {
-		this.category = category;
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
 	}
-	
-	
+
+	public MultipartFile[] getFile() {
+		return file;
+	}
+
+	public void setFile(MultipartFile[] file) {
+		this.file = file;
+	}
+
+	public int getUpVote() {
+		return upVote;
+	}
+
+	public void setUpVote(int upVote) {
+		this.upVote = upVote;
+	}
+
+	public String getDeletedImages() {
+		return deletedImages;
+	}
+
+	public void setDeletedImages(String deletedImages) {
+		this.deletedImages = deletedImages;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
 }

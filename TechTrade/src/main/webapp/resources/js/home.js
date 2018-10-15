@@ -42,6 +42,10 @@ $(document).ready(function() {
         });
     });
     
+    var spanTags;
+    var d;
+    var string = "";
+    
     $(window).scroll(function() {
     	   if((($(window).scrollTop() + $(window).height())) == ($(document).height())) {
     	       $.ajax({
@@ -52,16 +56,16 @@ $(document).ready(function() {
     	    	   },
     	    	   contentType: "application/json; charset=utf-8",
     	    	   success: function(result){
-    	    		   var tags = "";
+    	    		   currentPage++;
     	    		   $.each(result, function() {
-    	    			   var spanTags = "";
+    	    			   spanTags = "";
     	    			   $.each(this.tags.split(','),function(){
-    	    				   spanTags += "<span class='color-main tags'>"+this+"</span>";
+    	    				   spanTags += "<span class='color-main tags d-inline-block'>"+this+"</span> ";
     	    			   })
 //    	    			   alert(this.tags.split(','));
-    	    			   var d = new Date(this.createAt);
-    	    			   var string = "";
-    	        			string += "<div class='post'>"
+    	    			   d = new Date(this.createAt);
+    	    			   string = "";	
+    	    			   string += "<div class='post'>"
 		+"			<div class='row my-2'>"
 		+"				<div class='col-10'>"
 		+"					<h3>"
@@ -74,10 +78,10 @@ $(document).ready(function() {
 		+"						By <span class='font-italic text-main'>"+this.createBy.username+"</span>"
 		+"						on "+d.getDate()+", "+(d.getMonth()+1)+", "+d.getFullYear()
 		+"					</p>"
-		+"					<div>"
+		+"					<div class='line-height-large'>"
 		+"						<span>Tags <i class='fas fa-hashtag'></i>"
-		+"						</span> <span class='tags'"
-		+"							style='background-color : "+this.category.tagColor+"'>"+this.category.name+"</span>"
+		+"						</span> <span class='tags d-inline-block'"
+		+"							style='background-color : "+this.category.tagColor+"'>"+this.category.name+"</span> "
 		+ spanTags
 		+"						</span>"
 							
@@ -106,8 +110,7 @@ $(document).ready(function() {
 		+"				</div>"
 		+"			</div>"
 		+"		</div>";
-    	        			$('#post-content').html($('#post-content').html()+string);
-    	        			
+    	        			$('#post-content').html($('#post-content').html()+string);    	        			
     	        		});
     	    	   },
     	    	   

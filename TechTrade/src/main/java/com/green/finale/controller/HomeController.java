@@ -74,7 +74,7 @@ public class HomeController {
 
 			return "login";
 		}
-
+		
 		return "redirect:/";
 	}
 

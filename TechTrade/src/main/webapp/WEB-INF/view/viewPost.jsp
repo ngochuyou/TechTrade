@@ -38,7 +38,8 @@
 			<div class="sidebar-body hpx-500">
 				<div class="list-group border-bottom">
 					<c:forEach var="cate" items="${cateList }">
-						<a href="<spring:url value="/search?category=${cate.id }"></spring:url>"
+						<a
+							href="<spring:url value="/search?category=${cate.id }"></spring:url>"
 							class="list-group-item list-group-item-action flex-column align-items-start py-3 noborder thumb-medium">
 							<div class="row">
 								<div class="col-4 h-100">
@@ -80,16 +81,17 @@
 				<i class="fas fa-list fa-lg text-light"></i>
 			</button>
 			<form class="form-inline m-3 my-lg-0 w-50 position-relative"
-				id="search-form" action="<spring:url value="/search"></spring:url>" method="get">
+				id="search-form" action="<spring:url value="/search"></spring:url>"
+				method="get">
 				<input class="form-control w-100 font-weight-bold" type="search"
 					placeholder="Try something like Category's name or Post"
-					aria-label="Search" id='search' name="k">
+					aria-label="Search" id='search' name="k" autocomplete="off">
 				<div class="hidden w-100 my-dropdown-container"
 					id="my-dropdown-container">
 					<a class="dropdown-item text-main" href="#">Action</a>
 				</div>
 				<button
-					class="btn bg-main position-right border-left font-weight-bold"
+					class="btn bg-white position-right border-left font-weight-bold"
 					type="submit">
 					<i class="fas fa-search"></i>
 				</button>
@@ -107,14 +109,15 @@
 						<li class="nav-item active"><a
 							href="<spring:url value="/login"></spring:url>"><button
 									class="btn-blank hpx-70  my-0 my-sm-0 font-weight-bold wpx-100"
-									type="submit">Sign in</button></a></li>
+									type="submit" id="signin">Sign in</button></a></li>
 						<li class="nav-item active"><a
 							href="<spring:url value="/account/sign-up"></spring:url>"><button
 									class="btn-blank hpx-70 my-2 my-sm-0 font-weight-bold wpx-100"
-									type="submit">Sign up</button></a></li>
+									type="submit" id="signup">Sign up</button></a></li>
 					</sec:authorize>
 					<sec:authorize access="isAuthenticated()">
 						<sec:authentication property="principal" var="user" />
+						<c:set var="flag" value="${user.username == post.username }"></c:set>
 						<li>
 							<div class="dropdown">
 								<button class="btn-nobg dropdown-toggle text-light"
@@ -142,21 +145,33 @@
 			<div class="row">
 				<sec:authorize access="isAuthenticated()">
 					<sec:authentication property="principal" var="user" />
-					<c:if test="${user.username == post.createBy.username}">
+					<c:if test="${user.username == post.username}">
 						<div class="col-6">
-							<h1 class="panel-header">${post.createBy.username }'s<span
+							<h1 class="panel-header">${post.username }'s<span
 									class="mx-2">Post</span>
 							</h1>
 						</div>
-						<div class="col-6 text-right">
+						<div class="col-5">
+							<c:if test="${flag eq true}">
+								<div class="text-right editable hidden">
+									<button class="btn bg-main mx-2 my-1 d-inline-block"
+										id="submit-all">Apply all changes</button>
+									<button
+										class="btn text-main btn-outline-main mx-2 my-1 d-inline-block border-main"
+										onclick="window.location.reload()">Cancel all changes</button>
+								</div>
+							</c:if>
+						</div>
+						<div class="col-1 text-right">
 							<div class="dropdown">
-								<button class="btn-nobg dropdown-toggle text-light"
-									type="button" id="dropdownMenu2" data-toggle="dropdown"
-									aria-haspopup="true" aria-expanded="false">
+								<button class="btn-nobg text-light" type="button"
+									id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+									aria-expanded="false">
 									<i class="fas fa-ellipsis-h text-dark fa-2x mr-4"></i>
 								</button>
 								<div class="dropdown-menu dropdown-menu-right box-shadow"
 									aria-labelledby="dropdownMenu2">
+									<p class="dropdown-item" id="post-edit">Edit</p>
 									<a class="dropdown-item"
 										href="<spring:url value="/post/delete/${post.id }"></spring:url>">Delete</a>
 									<c:if test="${post.status == true }">
@@ -171,9 +186,9 @@
 							</div>
 						</div>
 					</c:if>
-					<c:if test="${user.username != post.createBy.username}">
+					<c:if test="${flag ne true}">
 						<div class="col-12">
-							<h1 class="panel-header">${post.createBy.username }'s<span
+							<h1 class="panel-header">${post.username }'s<span
 									class="mx-2">Post</span>
 							</h1>
 						</div>
@@ -181,74 +196,164 @@
 				</sec:authorize>
 			</div>
 			<div class="post">
-				<div class="row m-2">
-					<div class="col-1 m-auto text-center">
-						<div class="w-100">
-							<i class="fas fa-angle-up fa-3x"></i>
-						</div>
-						<div class="w-100">
-							<i class="fas fa-angle-down fa-3x"></i>
-						</div>
-					</div>
-					<div class="col-10">
-						<h3>
-							<i class="fas fa-map-marker mr-2"></i>${post.createBy.ward.name },
-							${post.createBy.ward.district.name },
-							${post.createBy.ward.district.city.name }
-						</h3>
-						<h2 class="font-weight-bold">${post.name } <span class="edit">Edit</span></h2>
-						<p>
-							By <span class="font-italic text-main">${post.createBy.username }</span>
-							on
-							<fmt:formatDate value="${post.createAt }" />
-						</p>
-						<div>
-							<span>Tags <i class="fas fa-hashtag"></i>
-							</span> <span class="tags"
-								style="background-color : ${post.category.tagColor}">${post.category.name }</span>
-							<span class="color-main tags"> ${fn:replace(post.tags, ",", "</span> <span class='color-main tags'>")}
-							</span>
-						</div>
-					</div>
-					<div class="col-1">
-						<img src="/TechTrade/account/avatar/${post.createBy.avatar }"
-							class="avatar position-right mx-3">
-					</div>
-				</div>
-				<div class="row">
-					<div class="col custom-control-description text-size-post p-3">${post.description }<span class="edit">Edit</span></div>
-				</div>
-				<div class="row m-3">
-					<c:forEach var="image" items="${images }" varStatus="level">
-						<c:if test="${(level.index + 1) % 3 eq 0}">
-							<div class="col-4 hpx-350 p-2 text-center">
-								<img src="/TechTrade/post/images/${image }">
+				<form:form modelAttribute="post" method="post" id="form"
+					enctype="multipart/form-data">
+					<form:hidden path="id" id="post-id"/>
+					<form:hidden path="username" />
+					<div class="row m-2">
+						<div class="col-1 m-auto text-center">
+							<div class="w-100">
+								<i class="fas fa-angle-up fa-3x"></i>
 							</div>
-							<c:out value="</div><div class='row m-2'>" escapeXml="false"></c:out>
-						</c:if>
-						<c:if test="${(level.index + 1) % 3 ne 0}">
-							<div class="col-4 hpx-350 p-2 text-center">
-								<img src="/TechTrade/post/images/${image }">
+							<div class="w-100">
+								<i class="fas fa-angle-down fa-3x"></i>
 							</div>
-						</c:if>
-					</c:forEach>
-				</div>
+						</div>
+						<div class="col-10 px-4">
+							<h3>
+								<i class="fas fa-map-marker mr-2"></i>${post.createBy.ward.name },
+								${post.createBy.ward.district.name },
+								${post.createBy.ward.district.city.name }
+							</h3>
+							<div class="row">
+								<div class="col-11">
+									<h2 class="font-weight-bold" id="post-name">${post.name }</h2>
+									<form:input path="name"
+										class='mr-3 w-100 form-control font-weight-bold text-medium pr-5 hidden'
+										id='title-input' />
+									<button class="btn bg-main hidden top-right" id="title-submit">Edit</button>
+								</div>
+								<div class="col-1">
+									<c:if test="${flag eq true}">
+										<span id="title-edit" class="hidden editable"><i
+											class="fas fa-edit fa-2x text-muted my-4 pointer"></i></span>
+										<button class="btn bg-main hidden py-1" id="title-cancel">Cancel</button>
+									</c:if>
+								</div>
+							</div>
+							<p>
+								By <span class="font-italic text-main">${post.username }</span>
+								on
+								<fmt:formatDate value="${post.createAt }" />
+							</p>
+							<div class="my-2 row">
+								<div class="col-11">
+									<span>Tags <i class="fas fa-hashtag"></i>
+									</span> <span class="tags stage-1 d-inline-block"
+										style="background-color : ${post.category.tagColor}">${post.category.name }</span>
+									<span id="hashtags-container" class="line-height-large"><span
+										class="color-main tags hashtags m-2 d-inline-block">${fn:replace(post.tags, ",", "<span class='hidden hashtags-stage2 hashtags-del'><i class='fas fa-times-circle'></i></span></span><span class='color-main tags hashtags mx-2 d-inline-block'>")}
+											<span class="hidden hashtags-stage2 hashtags-del"><i
+												class="fas fa-times-circle"></i></span>
+									</span> </span><span class="hidden hashtags-stage2"><input type="text"
+										id="hashtags-add-input" value="#" class="p-1 m-2"><span
+										id="hashtags-add"><i class="fas fa-plus mx-2"></i></span></span>
+									<form:hidden path="tags" id="hashtags-input" />
+								</div>
+								<div class="col-1">
+									<c:if test="${flag eq true}">
+										<span id="hashtags-edit" class="hidden editable"><i
+											class="fas fa-edit fa-2x text-muted pointer"></i></span>
+										<button class="btn bg-main hidden hashtags-stage2 my-2"
+											id="hashtags-submit">Edit</button>
+										<button class="btn bg-main hidden py-1 hashtags-stage2"
+											id="hashtags-cancel">Cancel</button>
+									</c:if>
+								</div>
+							</div>
+						</div>
+						<div class="col-1">
+							<img src="/TechTrade/account/avatar/${post.createBy.avatar }"
+								class="avatar position-right mx-3">
+						</div>
+					</div>
+					<div class="row">
+						<div
+							class="col custom-control-description text-size-post p-3 whitespace-wrap"
+							id="post-description">${post.description }</div>
+						<form:textarea path="description"
+							class='hidden my-3 custom-control-description text-size-post p-3 w-100 text-main'
+							rows='15' id='content-input' />
+					</div>
+					<c:if test="${flag eq true}">
+						<div class="row px-2 text-right border-bottom">
+							<button class="btn bg-main hidden mx-2 my-1" id="content-submit">Edit</button>
+							<button class="btn bg-main hidden mx-2 my-1" id="content-cancel">Cancel</button>
+							<span id="content-edit" class="hidden editable"><i
+								class="fas fa-edit fa-2x text-muted pointer mx-2 my-1"></i></span>
+						</div>
+					</c:if>
+					<div class="row m-3">
+						<form:hidden path="deletedImages" id="deleted-image-input" />
+						<c:forEach var="image" items="${images }" varStatus="level">
+							<c:if test="${(level.index + 1) % 3 eq 0}">
+								<div
+									class="col-4 hpx-350 p-2 text-center position-relative image"
+									id="image-${image.id }">
+									<div
+										class="position-absolute wpx-70 hpx-70 hidden image-del pointer"
+										id="image-del-btn${image.id }">
+										<i class="fas fa-times-circle fa-lg text-main"></i>
+									</div>
+									<img src="/TechTrade/post/images/${image.filename }">
+								</div>
+								<c:out value="</div><div class='row m-2'>" escapeXml="false"></c:out>
+							</c:if>
+							<c:if test="${(level.index + 1) % 3 ne 0}">
+								<div
+									class="col-4 hpx-350 p-2 text-center position-relative image"
+									id="image-${image.id }">
+									<div
+										class="position-absolute wpx-70 hpx-70 hidden image-del pointer"
+										id="image-del-btn${image.id }">
+										<i class="fas fa-times-circle fa-lg text-main"></i>
+									</div>
+									<img src="/TechTrade/post/images/${image.filename }">
+								</div>
+							</c:if>
+						</c:forEach>
+					</div>
+					<c:if test="${flag eq true}">
+						<div class="row post-footer">
+							<div class="col-1 float-left">
+								<span id="image-edit" class="hidden editable"><i
+									class="fas fa-edit fa-2x text-muted pointer m-2"></i></span>
+							</div>
+							<div class="col-6 float-left border text-center h-100 hidden"
+								id="image-add">
+								<label for="upload-photo" class="w-100 h-100 text-main mt-3"><h3>
+										<i class="fas fa-plus mr-5"></i>Add more images
+									</h3></label>
+								<form:input path="file" type="file" id="upload-photo"
+									class="uploadFile" multiple="multiple" />
+							</div>
+							<div id="image-cancel"
+								class="col-5 float-left border text-center h-100 pointer hidden">
+								<div class="m-auto text-main">
+									<h3 class="mt-3">
+										<i class="fas fa-trash mr-5"></i>Clear
+									</h3>
+								</div>
+							</div>
+						</div>
+						<div class="row preview border-dashed mx-3 p-3 hidden"></div>
+					</c:if>
+				</form:form>
 				<div class="row post-footer">
-					<div class="col">
-						<div class="col-6 float-left border text-center h-100">
-							<h3 class="mt-3">
-								<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
-							</h3>
-						</div>
-						<div class="col-6 float-left border text-center h-100 pointer">
-							<h3 class="mt-3">
-								<i class="fas fa-thumbtack mr-5"></i>Pin
-							</h3>
-						</div>
+					<div class="col-6 float-left border text-center h-100">
+						<h3 class="mt-3">
+							<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
+						</h3>
+					</div>
+					<div class="col-6 float-left border text-center h-100 pointer">
+						<h3 class="mt-3">
+							<i class="fas fa-thumbtack mr-5"></i>Pin
+						</h3>
 					</div>
 				</div>
+				<div class="hidden stage-2" id="cancel">Cancel</div>
 				<div class="panel-header">Comments</div>
-				<div class="row m-2">
+				<div class="row m-2" id="comments">
 					<c:forEach var="comment" items="${comments }">
 						<div class="m-2">
 							<p class="text-primary">
@@ -261,6 +366,14 @@
 						</div>
 					</c:forEach>
 				</div>
+				<sec:authorize access="isAuthenticated()">
+					<div class="row m-2">
+						<div class="m-2 w-100">
+							<input class="mycustom-input w-100 form-control" placeholder="Write a comment..."
+								id="comment"/>
+						</div>
+					</div>
+				</sec:authorize>
 			</div>
 		</div>
 		<div class="overlay"></div>

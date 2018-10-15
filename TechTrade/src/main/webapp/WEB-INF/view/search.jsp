@@ -92,7 +92,7 @@
 					<a class="dropdown-item text-main" href="#">Action</a>
 				</div>
 				<button
-					class="btn bg-main position-right border-left font-weight-bold"
+					class="btn bg-white position-right border-left font-weight-bold"
 					type="submit">
 					<i class="fas fa-search"></i>
 				</button>

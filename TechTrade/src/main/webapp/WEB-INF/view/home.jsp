@@ -89,7 +89,7 @@
 					<a class="dropdown-item text-main" href="#">Action</a>
 				</div>
 				<button
-					class="btn bg-main position-right border-left font-weight-bold"
+					class="btn bg-white position-right border-left font-weight-bold"
 					type="submit">
 					<i class="fas fa-search"></i>
 				</button>
@@ -153,11 +153,11 @@
 								on
 								<fmt:formatDate value="${post.createAt }" />
 							</p>
-							<div>
+							<div class="line-height-large">
 								<span>Tags <i class="fas fa-hashtag"></i>
-								</span> <span class="tags"
+								</span> <span class="tags d-inline-block"
 									style="background-color : ${post.category.tagColor}">${post.category.name }</span>
-								<span class="color-main tags"> ${fn:replace(post.tags, ",", "</span> <span class='color-main tags'>")}
+								<span class="color-main tags d-inline-block"> ${fn:replace(post.tags, ",", "</span> <span class='color-main tags d-inline-block'>")}
 								</span>
 							</div>
 						</div>

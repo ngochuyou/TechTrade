@@ -23,6 +23,15 @@ public class ImageDAO {
 		return (long) ss.save(image);
 	}
 
+	public int delete(long id) {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<?> hql = ss.createQuery("DELETE FROM Image WHERE id = :id");
+		
+		hql.setParameter("id", id);
+		
+		return hql.executeUpdate();
+	}
+	
 	public String find(long postId, int number) {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<String> hql = ss.createQuery("SELECT filename FROM Image WHERE post.id = :postId", String.class);
@@ -38,9 +47,9 @@ public class ImageDAO {
 		}
 	}
 	
-	public List<String> getList(long postId) {
+	public List<Image> getList(long postId) {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<String> hql = ss.createQuery("SELECT filename FROM Image WHERE post.id = :postId", String.class);
+		TypedQuery<Image> hql = ss.createQuery("FROM Image WHERE post.id = :postId", Image.class);
 		
 		hql.setParameter("postId", postId);
 		
@@ -54,5 +63,14 @@ public class ImageDAO {
 		hql.setParameter("postId", postId);
 		
 		return hql.executeUpdate();
+	}
+	
+	public Image getNewestImage() {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<Image> hql = ss.createQuery("FROM Image ORDER BY id desc", Image.class);
+		
+		hql.setMaxResults(1);
+		
+		return hql.getSingleResult();
 	}
 }

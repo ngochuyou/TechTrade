@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.green.finale.entity.Account;
 import com.green.finale.entity.Category;
+import com.green.finale.entity.Vote;
 
 public class PostModel {
 	private long id;
@@ -21,6 +22,7 @@ public class PostModel {
 	private int upVote;
 	private String deletedImages;
 	private String username;
+	private Vote vote;
 
 	public long getId() {
 		return id;
@@ -124,6 +126,14 @@ public class PostModel {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public Vote getVote() {
+		return vote;
+	}
+
+	public void setVote(Vote vote) {
+		this.vote = vote;
 	}
 
 }

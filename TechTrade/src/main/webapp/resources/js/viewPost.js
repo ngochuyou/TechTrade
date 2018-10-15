@@ -276,4 +276,30 @@ $(document).ready(function() {
     	
     	return monthNames[monthIndex] + ' ' + day + ', ' + year;
     }
+    
+    $('#upvote').click(function() {
+    	$.ajax({
+    		type : 'GET',
+    		url : '/TechTrade/post/vote/' + $('#post-id').val(),
+    		data : {
+    			type : true
+    		},
+    		success : function(result) {
+    			$('#vote-holder').html("<p class='w-100'>You voted this post +1</p>");
+    		}
+    	});
+    });
+    
+    $('#downvote').click(function() {
+    	$.ajax({
+    		type : 'GET',
+    		url : '/TechTrade/post/vote/' + $('#post-id').val(),
+    		data : {
+    			type : false
+    		},
+    		success : function(result) {
+    			$('#vote-holder').html("<p class='w-100'>You voted this post -1</p>");
+    		}
+    	});
+    });
 });

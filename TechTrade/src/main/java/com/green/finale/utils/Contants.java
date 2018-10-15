@@ -9,4 +9,6 @@ public class Contants {
 	public static final String NOT_BELONG = "You cannot change informations that is not yours.";
 	public static final String POST_CLOSED = "This post was closed by its Owner or Moderator.";
 	public static final String POST_NONEXSIT = "This post doesn't exsit.";
+	public static final String POST_VOTED = "You have voted this post.";
+	public static final String POST_ALREADY_VOTED = "You cannot vote a post twice.";
 }

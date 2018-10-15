@@ -201,13 +201,23 @@
 					<form:hidden path="id" id="post-id" />
 					<form:hidden path="username" />
 					<div class="row m-2">
-						<div class="col-1 m-auto text-center">
-							<div class="w-100">
-								<i class="fas fa-angle-up fa-3x"></i>
-							</div>
-							<div class="w-100">
-								<i class="fas fa-angle-down fa-3x"></i>
-							</div>
+						<div class="col-1 m-auto text-center" id="vote-holder">
+							<c:if test="${not empty post.vote }">
+								<c:if test="${post.vote.type eq true }">
+									<p class="w-100">You voted this post +1</p>
+								</c:if>
+								<c:if test="${post.vote.type ne true }">
+									<p class="w-100">You voted this post -1</p>
+								</c:if>
+							</c:if>
+							<c:if test="${empty post.vote }">
+								<div class="w-100 pointer" id="upvote">
+									<i class="fas fa-angle-up fa-3x"></i>
+								</div>
+								<div class="w-100 pointer" id="downvote">
+									<i class="fas fa-angle-down fa-3x"></i>
+								</div>
+							</c:if>
 						</div>
 						<div class="col-10 px-4">
 							<h3>
@@ -364,11 +374,11 @@
 								: ${comment.content }
 							</p>
 						</div>
-					</c:forEach> 
+					</c:forEach>
 				</div>
 				<sec:authorize access="isAuthenticated()">
 					<input type="hidden" name="${_csrf.parameterName}"
-						value="${_csrf.token}" id="csrfToken"/>
+						value="${_csrf.token}" id="csrfToken" />
 					<div class="row m-2">
 						<div class="m-2 w-100">
 							<input class="mycustom-input w-100 form-control"

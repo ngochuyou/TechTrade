@@ -43,7 +43,7 @@ public class PostController {
 
 	@GetMapping(value = "/{postId}")
 	public String viewPost(@PathVariable(name = "postId") long id, Model model, Principal principal) {
-		PostModel postModel = postService.getPostModel(id);
+		PostModel postModel = postService.getPostModel(id, principal);
 
 		if (postModel == null) {
 			model.addAttribute("error", Contants.POST_NONEXSIT);
@@ -128,12 +128,25 @@ public class PostController {
 	public @ResponseBody String addComment(@RequestParam(name = "comment") String comment,
 			@RequestParam(name = "postId") long postId, Principal principal) {
 		String error = postService.addComment(postId, comment, principal);
-		
+
 		if (error != null) {
-			
+
 			return "error";
 		}
-		
+
 		return principal.getName();
+	}
+
+	@GetMapping("/vote/{postId}")
+	public @ResponseBody String vote(@PathVariable(name = "postId") long postId,
+			@RequestParam(name = "type", defaultValue = "true") boolean type, Principal principal) {
+		String error = postService.votePost(postId, type, principal);
+
+		if (error == null) {
+
+			return Contants.POST_VOTED;
+		}
+
+		return error;
 	}
 }

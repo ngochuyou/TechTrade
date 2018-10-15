@@ -23,10 +23,13 @@ import com.green.finale.dao.AccountDAO;
 import com.green.finale.dao.CommentDAO;
 import com.green.finale.dao.ImageDAO;
 import com.green.finale.dao.PostDAO;
+import com.green.finale.dao.VoteDAO;
 import com.green.finale.entity.Account;
 import com.green.finale.entity.Comment;
 import com.green.finale.entity.Image;
 import com.green.finale.entity.Post;
+import com.green.finale.entity.Vote;
+import com.green.finale.entity.VoteId;
 import com.green.finale.model.PostModel;
 import com.green.finale.utils.Contants;
 
@@ -41,10 +44,13 @@ public class PostService {
 
 	@Autowired
 	private ImageDAO imageDao;
-	
+
 	@Autowired
 	private AccountDAO accDao;
-	
+
+	@Autowired
+	private VoteDAO voteDao;
+
 	@Transactional
 	public List<Post> getPostList() {
 		return postDao.getList();
@@ -181,13 +187,13 @@ public class PostService {
 	}
 
 	@Transactional
-	public PostModel getPostModel(long postId) {
+	public PostModel getPostModel(long postId, Principal principal) {
 		Post p = postDao.find(postId);
-
+		
 		if (p == null) {
 			return null;
 		}
-
+		
 		PostModel model = new PostModel();
 
 		model.setId(p.getId());
@@ -200,6 +206,13 @@ public class PostService {
 		model.setTags(p.getTags());
 		model.setUpVote(p.getUpVote());
 		model.setCreateBy(p.getCreateBy());
+		
+		if (principal != null) {
+			model.setVote(voteDao.find(new VoteId(principal.getName(), p.getId())));
+		} else {
+			model.setVote(null);
+		}
+		
 		return model;
 	}
 
@@ -218,50 +231,76 @@ public class PostService {
 			post.setTags(post.getTags().replaceAll("#", ",#").replaceFirst(",", ""));
 			postDao.update(post);
 		}
-		
+
 		Image uploadImage = new Image();
 		ArrayList<String> filenames = uploadImage(model.getFile());
-		
-		for (String name: filenames) {
+
+		for (String name : filenames) {
 			uploadImage = new Image();
 			uploadImage.setFilename(name);
 			uploadImage.setPost(post);
 			imageDao.insert(uploadImage);
 		}
-		
+
 		String deletedImagesIds[] = model.getDeletedImages().split(",");
-		
-		for (String imageId: deletedImagesIds) {
+
+		for (String imageId : deletedImagesIds) {
 			if (imageId.length() == 0) {
 				continue;
 			} else {
 				imageDao.delete(Long.valueOf(imageId));
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	@Transactional
 	public String addComment(long postId, String comment, Principal principal) {
 		Post currentPost = postDao.find(postId);
-		
+
 		if (currentPost == null) {
-			
+
 			return Contants.POST_NONEXSIT;
 		}
-		
+
 		Comment currentComment = new Comment();
-		
+
 		currentComment.setAccount(accDao.find(principal.getName()));
 		currentComment.setCommentedOn(new Date());
 		currentComment.setContent(comment);
 		currentComment.setPost(currentPost);
 		commentDao.insert(currentComment);
-		
+
 		return null;
 	}
-	
+
+	@Transactional
+	public String votePost(long postId, boolean type, Principal principal) {
+		Post currentPost = postDao.find(postId);
+
+		if (currentPost == null) {
+			return Contants.POST_NONEXSIT;
+		}
+
+		VoteId voteId = new VoteId(principal.getName(), postId);
+
+		if (voteDao.find(voteId) == null) {
+			Vote newVote = new Vote();
+
+			newVote.setVoteId(voteId);
+			newVote.setType(type);
+			newVote.setAccount(accDao.find(principal.getName()));
+			newVote.setPost(currentPost);
+			newVote.setVoteDate(new Date());
+			voteDao.insert(newVote);
+
+			return null;
+		} else {
+			return Contants.POST_ALREADY_VOTED;
+		}
+	}
+
 	public boolean validatePost(PostModel post) {
 		if (StringUtils.isEmpty(post.getName())) {
 			return false;
@@ -311,11 +350,11 @@ public class PostService {
 
 		for (MultipartFile file : files) {
 			if (file.isEmpty()) {
-				continue;	
+				continue;
 			}
-			
+
 			newestFilename = ++filenameToLong + "." + FilenameUtils.getExtension(file.getOriginalFilename());
-			
+
 			try {
 				byte[] bytes = file.getBytes();
 				Path path = Paths.get(Contants.UPLOAD_FILE_DESTINATION + newestFilename);
@@ -324,7 +363,7 @@ public class PostService {
 				filenames.add(newestFilename);
 
 			} catch (IOException e) {
-				
+
 				e.printStackTrace();
 			}
 

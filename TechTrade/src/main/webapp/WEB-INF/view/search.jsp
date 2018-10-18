@@ -84,7 +84,8 @@
 				method="get">
 				<input class="form-control w-100 font-weight-bold" type="search"
 					placeholder="Try something like Category's name or Post"
-					aria-label="Search" id='search' autocomplete="off" name="k" value="${page.keyword }">
+					aria-label="Search" id='search' autocomplete="off" name="k"
+					value="${page.keyword }">
 				<div class="hidden w-100 my-dropdown-container"
 					id="my-dropdown-container">
 					<a class="dropdown-item text-main" href="#">Action</a>
@@ -122,13 +123,51 @@
 									type="button" id="dropdownMenu2" data-toggle="dropdown"
 									aria-haspopup="true" aria-expanded="false">
 									<img
-										src="<spring:url value="/account/avatar/?username=${user.username }"></spring:url>"
+										src="<spring:url value="/account/avatar?username=${user.username }"></spring:url>"
 										class="mr-5 avatar-small">
 								</button>
-								<div class="dropdown-menu dropdown-menu-right"
+								<div
+									class="dropdown-menu dropdown-menu-right pointer wpx-200 custom-dropdown"
 									aria-labelledby="dropdownMenu2">
-									<a class="dropdown-item font-weight-bold"
-										href="<spring:url value="/logout"></spring:url>">Logout</a>
+									<div class="dropdown-item border-bottom font-weight-bold">
+										<div class="row">
+											<div class="col-5 pr-0">
+												<img
+													src="<spring:url value="/account/avatar?username=${user.username }"></spring:url>"
+													class="mr-5 avatar-small">
+											</div>
+											<div class="col-7 px-0">
+												<p class="text-main text-truncate">${user.username }</p>
+											</div>
+										</div>
+									</div>
+									<div
+										class="dropdown-item border-bottom text-main font-weight-bold">
+										<div>
+											<i class="fas fa-home mr-4"></i>
+										</div>
+										<div>
+											<span class="text-right">Home</span>
+										</div>
+									</div>
+									<div
+										class="dropdown-item text-main font-weight-bold border-bottom">
+										<div>
+											<i class="fas fa-envelope"></i>
+										</div>
+										<div>
+											<span>Inboxs</span><span class="badge bg-main ml-3">4</span>
+											</button>
+										</div>
+									</div>
+									<div class="dropdown-item text-main font-weight-bold">
+										<div>
+											<i class="fas fa-sign-out-alt mr-4"></i>
+										</div>
+										<div>
+											<a class="font-weight-bold text-right" href="">Logout</a>
+										</div>
+									</div>
 								</div>
 							</div>
 						</li>
@@ -150,7 +189,7 @@
 							</c:forEach>
 						</select>
 					</div>
-					<div class="col-1">	
+					<div class="col-1">
 						<button type="submit" class="btn bg-main">Search</button>
 					</div>
 				</div>
@@ -201,7 +240,8 @@
 								<span>Tags <i class="fas fa-hashtag"></i>
 								</span> <span class="tags d-inline-block"
 									style="background-color : ${post.category.tagColor}">${post.category.name }</span>
-								<span class="color-main tags d-inline-block"> ${fn:replace(post.tags, ",", "</span> <span class='color-main tags d-inline-block'>")}
+								<span class="color-main tags d-inline-block">
+									${fn:replace(post.tags, ",", "</span> <span class='color-main tags d-inline-block'>")}
 								</span>
 							</div>
 						</div>
@@ -210,7 +250,8 @@
 								class="avatar position-right mx-3">
 						</div>
 					</div>
-					<div class="row pointer" onclick="window.location.href='<spring:url value='/post/${post.id }'></spring:url>'">
+					<div class="row pointer"
+						onclick="window.location.href='<spring:url value='/post/${post.id }'></spring:url>'">
 						<div class="col custom-control-description text-size-post">${post.description }</div>
 					</div>
 					<div class="row post-footer">
@@ -229,6 +270,9 @@
 					</div>
 				</div>
 			</c:forEach>
+		</div>
+		<div class="text-center hidden" id="loader">
+			<img src="<spring:url value='/resources/img/loading.gif'></spring:url>" class="avatar-large border">
 		</div>
 		<div class="overlay"></div>
 	</div>

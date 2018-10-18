@@ -44,6 +44,18 @@ public class AccountService {
 	}
 
 	@Transactional
+	public AccountModel findModel(String username) {
+		Account acc = accDao.find(username);
+
+		if (acc == null) {
+			
+			return null;
+		}
+		
+		return injectAccount(acc);
+	}
+
+	@Transactional
 	public Account findAccountByEmail(String email) {
 		Account acc = accDao.findByEmail(email);
 
@@ -95,52 +107,6 @@ public class AccountService {
 		return null;
 	}
 
-	public boolean validateRegistryAccount(AccountModel acc) {
-		Pattern p = null;
-		Matcher matcher = null;
-
-		if (StringUtils.isEmpty(acc.getEmail())) {
-			return false;
-		} else {
-			p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-			matcher = p.matcher(acc.getEmail());
-
-			if (!matcher.find()) {
-				return false;
-			}
-		}
-		
-		if (StringUtils.isEmpty(acc.getUsername()) && acc.getUsername().length() < 8) {
-			return false;
-		}
-		
-		if (StringUtils.isEmpty(acc.getPassword()) && acc.getPassword().length() < 8) {
-			return false;
-		}
-		
-		if (StringUtils.isEmpty(acc.getPhone())) {
-			return false;
-		} else {
-			p = Pattern.compile("\\D+");
-			matcher = p.matcher(acc.getPhone());
-
-			if (matcher.find()) {
-				return false;
-			}
-		}
-
-		if (StringUtils.isEmpty(acc.getGender())) {
-			return false;
-		}
-
-		if (StringUtils.isEmpty(acc.getWardId())) {
-			return false;
-		}
-
-		return true;
-
-	}
-
 	@Transactional
 	public byte[] getUserAva(String username) {
 		Account acc = accDao.find(username);
@@ -164,7 +130,7 @@ public class AccountService {
 	@Transactional
 	public byte[] getUserAvatar(String username) {
 		Account user = accDao.find(username);
-		
+
 		if (user != null) {
 			try {
 				return getImageBytes(user.getAvatar());
@@ -172,28 +138,42 @@ public class AccountService {
 				return null;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	@Transactional
 	public Account keycheck(String key) {
 		Account acc = accDao.find(key);
 
 		if (acc == null) {
 			acc = accDao.findByEmail(key);
-
-			if (acc == null) {
-				System.out.println("finding by phone");
-				acc = accDao.findByPhone(key);
-
-				if (acc == null) {
-					return null;
-				}
-			}
 		}
 
 		return acc;
+	}
+
+	@Transactional
+	public String resetPassword(AccountModel accModel) {
+		Account acc = accDao.find(accModel.getUsername());
+
+		if (acc != null) {
+			String newPass = accModel.getNewPassword();
+
+			if (StringUtils.isEmpty(newPass) || newPass.length() < 8) {
+
+				return Contants.INVALID_FIELDS;
+			}
+
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+			acc.setPassword(encoder.encode(newPass));
+			accDao.update(acc);
+
+			return null;
+		}
+
+		return Contants.NONEXSIT;
 	}
 
 	public String uploadFile(MultipartFile file) {
@@ -205,7 +185,7 @@ public class AccountService {
 			// Get the file and save it to UPLOAD_FILE_DESTINATION
 			byte[] bytes = file.getBytes();
 			Path path = Paths.get(Contants.UPLOAD_FILE_DESTINATION + file.getOriginalFilename());
-			
+
 			Files.write(path, bytes);
 
 		} catch (IOException e) {
@@ -227,27 +207,68 @@ public class AccountService {
 		return data;
 	}
 
-	@Transactional
-	public String resetPassword(AccountModel accModel) {
-		Account acc = accDao.find(accModel.getUsername());
+	public boolean validateRegistryAccount(AccountModel acc) {
+		Pattern p = null;
+		Matcher matcher = null;
 
-		if (acc != null) {
-			String newPass = accModel.getNewPassword();
+		if (StringUtils.isEmpty(acc.getEmail())) {
+			return false;
+		} else {
+			p = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+			matcher = p.matcher(acc.getEmail());
 
-			if (StringUtils.isEmpty(newPass) || newPass.length() < 8) {
-				
-				return Contants.INVALID_FIELDS;
+			if (!matcher.find()) {
+				return false;
 			}
-
-			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-			acc.setPassword(encoder.encode(newPass));
-			accDao.update(acc);
-
-			return null;
 		}
 
-		return Contants.NONEXSIT;
+		if (StringUtils.isEmpty(acc.getUsername()) && acc.getUsername().length() < 8) {
+			return false;
+		}
+
+		if (StringUtils.isEmpty(acc.getPassword()) && acc.getPassword().length() < 8) {
+			return false;
+		}
+
+		if (StringUtils.isEmpty(acc.getPhone())) {
+			return false;
+		} else {
+			p = Pattern.compile("\\D+");
+			matcher = p.matcher(acc.getPhone());
+
+			if (matcher.find()) {
+				return false;
+			}
+		}
+
+		if (StringUtils.isEmpty(acc.getGender())) {
+			return false;
+		}
+
+		if (StringUtils.isEmpty(acc.getWardId())) {
+			return false;
+		}
+
+		return true;
+	}
+	
+	public AccountModel injectAccount(Account acc) {
+		AccountModel model = new AccountModel();
+		
+		model.setUsername(acc.getUsername());
+		model.setPassword(acc.getPassword());
+		model.setEmail(acc.getEmail());
+		model.setPhone(acc.getPhone());
+		model.setAvatar(acc.getAvatar());
+		model.setGender(acc.getGender());
+		model.setRole(acc.getRole());
+		model.setWardId(acc.getWard().getId());
+		model.setSpentMoney(acc.getSpentMoney());
+		model.setPrestigePoints(acc.getPrestigePoints());
+		model.setWallpaper(acc.getWallpaper());
+		model.setWard(acc.getWard());
+		
+		return model;
 	}
 
 }

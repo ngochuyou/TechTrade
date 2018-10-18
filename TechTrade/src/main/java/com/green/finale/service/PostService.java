@@ -24,7 +24,6 @@ import com.green.finale.dao.CommentDAO;
 import com.green.finale.dao.ImageDAO;
 import com.green.finale.dao.PostDAO;
 import com.green.finale.dao.VoteDAO;
-import com.green.finale.entity.Account;
 import com.green.finale.entity.Comment;
 import com.green.finale.entity.Image;
 import com.green.finale.entity.Post;
@@ -63,8 +62,15 @@ public class PostService {
 	}
 
 	@Transactional
-	public List<Post> getPostListByAccount(Account acc) {
-		return postDao.getListByAccount(acc.getUsername());
+	public List<PostModel> getPostListByAccount(String username, int page, String sortBy, Principal principal) {
+		Pattern p = Pattern.compile("(createAt|nearest|upVote)(:desc|:asc)");
+		Matcher m = p.matcher(sortBy);
+
+		if (!m.matches()) {
+			return null;
+		}
+
+		return getPostModelList(postDao.getListByAccount(username, page, sortBy), principal);
 	}
 
 	@Transactional
@@ -189,11 +195,11 @@ public class PostService {
 	@Transactional
 	public PostModel getPostModel(long postId, Principal principal) {
 		Post p = postDao.find(postId);
-		
+
 		if (p == null) {
 			return null;
 		}
-		
+
 		PostModel model = new PostModel();
 
 		model.setId(p.getId());
@@ -206,14 +212,45 @@ public class PostService {
 		model.setTags(p.getTags());
 		model.setUpVote(p.getUpVote());
 		model.setCreateBy(p.getCreateBy());
-		
+
 		if (principal != null) {
 			model.setVote(voteDao.find(new VoteId(principal.getName(), p.getId())));
 		} else {
 			model.setVote(null);
 		}
-		
+
 		return model;
+	}
+
+	@Transactional
+	public List<PostModel> getPostModelList(List<Post> postList, Principal principal) {
+		List<PostModel> modelList = new ArrayList<>();
+		PostModel model;
+		
+		for (Post p : postList) {
+			model = new PostModel();
+
+			model.setId(p.getId());
+			model.setCategory(p.getCategory());
+			model.setCreateAt(p.getCreateAt());
+			model.setUsername(p.getCreateBy().getUsername());
+			model.setDescription(p.getDescription());
+			model.setName(p.getName());
+			model.setStatus(p.isStatus());
+			model.setTags(p.getTags());
+			model.setUpVote(p.getUpVote());
+			model.setCreateBy(p.getCreateBy());
+
+			if (principal != null) {
+				model.setVote(voteDao.find(new VoteId(principal.getName(), p.getId())));
+			} else {
+				model.setVote(null);
+			}
+			
+			modelList.add(model);
+		}
+
+		return modelList;
 	}
 
 	@Transactional
@@ -301,6 +338,7 @@ public class PostService {
 		}
 	}
 
+//	public List<Post>
 	public boolean validatePost(PostModel post) {
 		if (StringUtils.isEmpty(post.getName())) {
 			return false;

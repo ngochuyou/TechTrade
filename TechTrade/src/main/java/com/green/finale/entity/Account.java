@@ -58,6 +58,9 @@ public class Account {
 	@Column(name = "address", length = 500)
 	private String address;
 
+	@Column(name = "wallpaper")
+	private String wallpaper;
+
 	public String getUsername() {
 		return username;
 	}
@@ -152,6 +155,14 @@ public class Account {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getWallpaper() {
+		return wallpaper;
+	}
+
+	public void setWallpaper(String wallpaper) {
+		this.wallpaper = wallpaper;
 	}
 
 }

@@ -77,8 +77,8 @@ $(document).ready(function() {
     $('#title-edit').click(function(event) {
     	$('#post-name').toggleClass('hidden');
     	$('#title-input').toggleClass('hidden');
-    	$('#title-submit').show();
-    	$('#title-cancel').show();
+    	$('#title-submit').toggleClass('hidden');
+    	$('#title-cancel').toggleClass('hidden');
     });
     
     $('#title-cancel').click(function() {
@@ -129,8 +129,8 @@ $(document).ready(function() {
     $('#content-edit').click(function() {
     	$('#post-description').toggleClass('hidden');
     	$('#content-input').toggleClass('hidden');
-    	$('#content-submit').show();
-    	$('#content-cancel').show();
+    	$('#content-submit').toggleClass('hidden')
+    	$('#content-cancel').toggleClass('hidden')
     });
     
     $('#content-cancel').click(function() {
@@ -142,9 +142,9 @@ $(document).ready(function() {
     });
     
     $('#image-edit').click(function() {
-    	$('.image-del').show();
-    	$('#image-add').show();
-    	$('#image-cancel').show();
+    	$('.image-del').toggleClass('hidden');
+    	$('#image-add').toggleClass('hidden');
+    	$('#image-cancel').toggleClass('hidden');
     	$('.preview').toggleClass('hidden');
     });
     
@@ -250,7 +250,7 @@ $(document).ready(function() {
     				success : function(username) {
     					newComment = "<div class='m-2 w-100'>"
     								+ "<p class='text-primary'>" + formatCurrentDate() + "</p>"
-    								+ "<p> <span class='font-italic text-primary'>" + username + "</span>: " + $('#comment').val() + "</p>"
+    								+ "<p> <span class='font-italic text-primary'>" + username + "</span> : " + $('#comment').val() + "</p>"
     								+ "</div>";
     					
     					$('#comments').html($('#comments').html() + newComment);

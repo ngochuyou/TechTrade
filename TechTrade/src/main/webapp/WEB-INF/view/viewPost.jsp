@@ -124,13 +124,51 @@
 									type="button" id="dropdownMenu2" data-toggle="dropdown"
 									aria-haspopup="true" aria-expanded="false">
 									<img
-										src="<spring:url value="/account/avatar/?username=${user.username }"></spring:url>"
+										src="<spring:url value="/account/avatar?username=${user.username }"></spring:url>"
 										class="mr-5 avatar-small">
 								</button>
-								<div class="dropdown-menu dropdown-menu-right"
+								<div
+									class="dropdown-menu dropdown-menu-right pointer wpx-200 custom-dropdown"
 									aria-labelledby="dropdownMenu2">
-									<a class="dropdown-item"
-										href="<spring:url value="/logout"></spring:url>">Logout</a>
+									<div class="dropdown-item border-bottom font-weight-bold">
+										<div class="row">
+											<div class="col-5 pr-0">
+												<img
+													src="<spring:url value="/account/avatar?username=${user.username }"></spring:url>"
+													class="mr-5 avatar-small">
+											</div>
+											<div class="col-7 px-0">
+												<p class="text-main text-truncate">${user.username }</p>
+											</div>
+										</div>
+									</div>
+									<div
+										class="dropdown-item border-bottom text-main font-weight-bold">
+										<div>
+											<i class="fas fa-home mr-4"></i>
+										</div>
+										<div>
+											<span class="text-right">Home</span>
+										</div>
+									</div>
+									<div
+										class="dropdown-item text-main font-weight-bold border-bottom">
+										<div>
+											<i class="fas fa-envelope"></i>
+										</div>
+										<div>
+											<span>Inboxs</span><span class="badge bg-main ml-3">4</span>
+											</button>
+										</div>
+									</div>
+									<div class="dropdown-item text-main font-weight-bold">
+										<div>
+											<i class="fas fa-sign-out-alt mr-4"></i>
+										</div>
+										<div>
+											<a class="font-weight-bold text-right" href="">Logout</a>
+										</div>
+									</div>
 								</div>
 							</div>
 						</li>
@@ -157,7 +195,7 @@
 									<button class="btn bg-main mx-2 my-1 d-inline-block"
 										id="submit-all">Apply all changes</button>
 									<button
-										class="btn text-main btn-outline-main mx-2 my-1 d-inline-block border-main"
+										class="btn btn-outline-main mx-2 my-1 d-inline-block border-main"
 										onclick="window.location.reload()">Cancel all changes</button>
 								</div>
 							</c:if>
@@ -273,13 +311,13 @@
 							</div>
 						</div>
 						<div class="col-1">
-							<img src="/TechTrade/account/avatar/${post.createBy.avatar }"
+							<img
+								src="<spring:url value="/account/avatar/${post.createBy.avatar }"></spring:url>"
 								class="avatar position-right mx-3">
 						</div>
 					</div>
 					<div class="row">
-						<div
-							class="col custom-control-description text-size-post p-3 whitespace-wrap"
+						<div class="col custom-control-description text-size-post p-3"
 							id="post-description">${post.description }</div>
 						<form:textarea path="description"
 							class='hidden my-3 custom-control-description text-size-post p-3 w-100 text-main'

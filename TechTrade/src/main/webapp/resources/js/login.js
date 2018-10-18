@@ -9,7 +9,7 @@ $(document).ready(function() {
 				key : "" + $('#username').val(),
 			},
 			success : function(result) {
-				if (result.username.length > 0) {
+				if (!jQuery.isEmptyObject(result)) {
 					username = result.username;
 					
 					$('#welcome').html("Welcome <span class='text-info'>" + username + "</span>");
@@ -27,7 +27,7 @@ $(document).ready(function() {
 		$('#welcome').text("Enter username or email");
 		$('.second-stage').hide("fast");
 		$('.first-stage').show("slow");
-		$('#result').hide("fast");
+		$('#result').text(null);
 	});
 	
 	$('#forgot').click(function() {

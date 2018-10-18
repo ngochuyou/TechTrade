@@ -1,5 +1,8 @@
 package com.green.finale.controller;
 
+import java.security.Principal;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,9 +20,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.green.finale.entity.Account;
 import com.green.finale.model.AccountModel;
+import com.green.finale.model.PostModel;
 import com.green.finale.service.AccountService;
 import com.green.finale.service.EmailService;
 import com.green.finale.service.LocationService;
+import com.green.finale.service.PostService;
 import com.green.finale.utils.Contants;
 
 @Controller
@@ -35,9 +40,39 @@ public class AccountController {
 	private EmailService mailService;
 
 	@Autowired
+	private PostService postService;
+
+	@Autowired
 	private AuthenticationTrustResolver authenticationTrustResolver;
 
-	@RequestMapping(value = "/sign-up", method = RequestMethod.GET)
+	@GetMapping(value = "/{username}")
+	public String wall(@PathVariable(name = "username") String username,
+			@RequestParam(name = "s", defaultValue = "createAt:desc") String sortBy,
+			@RequestParam(name = "p", defaultValue = "0") int page, Model model, Principal principal) {
+		AccountModel acc = accService.findModel(username);
+
+		if (acc == null) {
+			model.addAttribute("error", Contants.NONEXSIT);
+
+			return "error";
+		}
+
+		model.addAttribute("account", acc);
+		model.addAttribute("postList", postService.getPostListByAccount(username, page, sortBy, principal));
+		model.addAttribute("sortBy", sortBy);
+
+		return "wall";
+	}
+
+	@GetMapping(value = "/api/{username}")
+	public @ResponseBody List<PostModel> wallAPI(@PathVariable(name = "username") String username,
+			@RequestParam(name = "s", defaultValue = "createAt:desc") String sortBy,
+			@RequestParam(name = "p", defaultValue = "0") int page, Principal principal) {
+		
+		return postService.getPostListByAccount(username, page, sortBy, principal);
+	}
+
+	@GetMapping(value = "/sign-up")
 	public String createTodoList(Model model) {
 		if (!authenticationTrustResolver.isAnonymous(SecurityContextHolder.getContext().getAuthentication())) {
 
@@ -103,30 +138,30 @@ public class AccountController {
 
 	@GetMapping(value = "/avatar/{filename}")
 	public @ResponseBody byte[] getUserAvatarByFilename(@PathVariable(name = "filename") String filename) {
-		
+
 		return accService.getUserAvaByFilename(filename);
 	}
-	
+
 	@GetMapping(value = "/avatar")
 	public @ResponseBody byte[] getUserAvatar(@RequestParam(name = "username", defaultValue = "") String username) {
-		
+
 		return accService.getUserAva(username);
 	}
-	
+
 	@GetMapping(value = "/keycheck")
 	public @ResponseBody Account keyCheck(@RequestParam(name = "key") String key) {
-		System.out.println(key);
+
 		try {
 			return accService.keycheck(key);
 		} catch (Exception ex) {
 			return null;
 		}
 	}
-	
+
 	@GetMapping(value = "/password/forgot")
 	public String resetPassword(@RequestParam(name = "username", defaultValue = "") String username, Model model) {
 		Account acc = accService.find(username);
-		
+
 		if (acc != null) {
 			AccountModel accModel = new AccountModel();
 

@@ -45,9 +45,14 @@ $(document).ready(function() {
     var spanTags;
     var d;
     var string = "";
+    var stopPaging = false;
     
     $(window).scroll(function() {
-    	   if((($(window).scrollTop() + $(window).height())) == ($(document).height())) {
+    	if((($(window).scrollTop() + $(window).height())) == ($(document).height())) {
+    		if (stopPaging == true) {
+	 			   return ;
+	 		   }
+    		   $('#loader').fadeIn("fast");
     	       $.ajax({
     	    	   type: 'GET',
     	    	   url: '/TechTrade/post',
@@ -57,14 +62,13 @@ $(document).ready(function() {
     	    	   contentType: "application/json; charset=utf-8",
     	    	   success: function(result){
     	    		   currentPage++;
+	    			   string = "";
     	    		   $.each(result, function() {
     	    			   spanTags = "";
     	    			   $.each(this.tags.split(','),function(){
     	    				   spanTags += "<span class='color-main tags d-inline-block'>"+this+"</span> ";
     	    			   })
-//    	    			   alert(this.tags.split(','));
-    	    			   d = new Date(this.createAt);
-    	    			   string = "";	
+    	    			   date = new Date(this.createAt);	
     	    			   string += "<div class='post'>"
 		+"			<div class='row my-2'>"
 		+"				<div class='col-10'>"
@@ -76,7 +80,7 @@ $(document).ready(function() {
 		+"					<h2 class='text-truncate font-weight-bold'>"+this.name+"</h2>"
 		+"					<p>"
 		+"						By <span class='font-italic text-main'>"+this.createBy.username+"</span>"
-		+"						on "+d.getDate()+", "+(d.getMonth()+1)+", "+d.getFullYear()
+		+"						on " + formatCurrentDate(date)
 		+"					</p>"
 		+"					<div class='line-height-large'>"
 		+"						<span>Tags <i class='fas fa-hashtag'></i>"
@@ -109,12 +113,27 @@ $(document).ready(function() {
 		+"					</div>"
 		+"				</div>"
 		+"			</div>"
-		+"		</div>";
-    	        			$('#post-content').html($('#post-content').html()+string);    	        			
+		+"		</div>";    	        			
     	        		});
-    	    	   },
-    	    	   
+    	    		   $('#post-content').html($('#post-content').html()+string);
+    	    		   $('#loader').fadeOut("fast");
+	 	    		   if (string.length == 0) {
+	 	    			   stopPaging = true;
+	 	    		   }
+    	    	   },    	    	   
     	       });
     	   };
     	});
+    
+    var monthNames = [
+		"Jan", "Feb", "Mar",
+		"Apr", "May", "Jun", "Jul",
+		"Aug", "Sep", "Oct",
+		"Nov", "Dec"
+    ];
+    
+    function formatCurrentDate(date) {
+    	
+    	return monthNames[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
+    }
 });

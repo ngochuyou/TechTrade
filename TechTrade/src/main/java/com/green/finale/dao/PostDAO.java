@@ -44,8 +44,8 @@ public class PostDAO {
 	public List<Post> getList(int categoryId, String keyword, String sortBy, int firstRecord) {
 		Session ss = factory.getCurrentSession();
 		String query = null;
-		Query<Post> hql = null; 
-		
+		Query<Post> hql = null;
+
 		if (categoryId == 0) {
 			query = "FROM Post WHERE category.id IS NOT NULL AND (name LIKE :keyword OR tags LIKE :keyword) AND status = true ORDER BY "
 					+ sortBy.replace(":", " ");
@@ -74,12 +74,15 @@ public class PostDAO {
 		return hql.getResultList();
 	}
 
-	public List<Post> getListByAccount(String username) {
+	public List<Post> getListByAccount(String username, int firstRecord, String sortBy) {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<Post> hql = ss.createQuery("FROM Post Where createBy.username = :username AND status=true",
+		TypedQuery<Post> hql = ss.createQuery(
+				"FROM Post Where createBy.username = :username AND status=true ORDER BY " + sortBy.replace(":", " "),
 				Post.class);
 
 		hql.setParameter("username", username);
+		hql.setFirstResult(firstRecord * MAX_RESULT);
+		hql.setMaxResults(MAX_RESULT);
 
 		return hql.getResultList();
 	}

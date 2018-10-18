@@ -1,5 +1,6 @@
 package com.green.finale.model;
 
+import com.green.finale.entity.Ward;
 import com.green.finale.utils.AccountRole;
 import com.green.finale.utils.Gender;
 
@@ -7,12 +8,16 @@ public class AccountModel {
 	private String username;
 	private String password;
 	private String email;
-	private String fullname;
 	private String phone;
+	private String avatar;
 	private Gender gender;
 	private AccountRole role;
 	private String wardId;
 	private String newPassword;
+	private long spentMoney;
+	private int prestigePoints;
+	private String wallpaper;
+	private Ward ward;
 
 	public String getUsername() {
 		return username;
@@ -54,14 +59,6 @@ public class AccountModel {
 		this.wardId = wardId;
 	}
 
-	public String getFullname() {
-		return fullname;
-	}
-
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -84,6 +81,46 @@ public class AccountModel {
 
 	public void setNewPassword(String newPassword) {
 		this.newPassword = newPassword;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public long getSpentMoney() {
+		return spentMoney;
+	}
+
+	public void setSpentMoney(long spentMoney) {
+		this.spentMoney = spentMoney;
+	}
+
+	public int getPrestigePoints() {
+		return prestigePoints;
+	}
+
+	public void setPrestigePoints(int prestigePoints) {
+		this.prestigePoints = prestigePoints;
+	}
+
+	public String getWallpaper() {
+		return wallpaper;
+	}
+
+	public void setWallpaper(String wallpaper) {
+		this.wallpaper = wallpaper;
+	}
+
+	public Ward getWard() {
+		return ward;
+	}
+
+	public void setWard(Ward ward) {
+		this.ward = ward;
 	}
 
 }

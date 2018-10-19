@@ -20,11 +20,11 @@ public class Pin {
 	private long id;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="account_id")
+	@JoinColumn(name = "account_id")
 	private Account account;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="post_id")
+	@JoinColumn(name = "post_id")
 	private Post post;
 	
 	@Column(name="create_at", nullable=false)

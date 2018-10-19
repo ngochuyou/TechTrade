@@ -73,7 +73,20 @@ public class PostDAO {
 
 		return hql.getResultList();
 	}
+	
+	public List<Post> getAllListByAccount(String username, int firstRecord, String sortBy) {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<Post> hql = ss.createQuery(
+				"FROM Post Where createBy.username = :username ORDER BY " + sortBy.replace(":", " "),
+				Post.class);
 
+		hql.setParameter("username", username);
+		hql.setFirstResult(firstRecord * MAX_RESULT);
+		hql.setMaxResults(MAX_RESULT);
+
+		return hql.getResultList();
+	}
+	
 	public List<Post> getListByAccount(String username, int firstRecord, String sortBy) {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<Post> hql = ss.createQuery(

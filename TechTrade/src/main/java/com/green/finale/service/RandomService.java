@@ -20,12 +20,14 @@ import com.green.finale.dao.AccountDAO;
 import com.green.finale.dao.CategoryDAO;
 import com.green.finale.dao.CommentDAO;
 import com.green.finale.dao.ImageDAO;
+import com.green.finale.dao.MessageDAO;
 import com.green.finale.dao.PostDAO;
 import com.green.finale.dao.WardDAO;
 import com.green.finale.entity.Account;
 import com.green.finale.entity.Category;
 import com.green.finale.entity.Comment;
 import com.green.finale.entity.Image;
+import com.green.finale.entity.Message;
 import com.green.finale.entity.Post;
 import com.green.finale.utils.AccountRole;
 import com.green.finale.utils.Gender;
@@ -44,7 +46,9 @@ public class RandomService {
 
 	@Autowired
 	private PostDAO postDao;
-
+	
+	@Autowired
+	private MessageDAO messDao;
 	@Autowired
 	private ImageDAO imageDao;
 	
@@ -194,6 +198,30 @@ public class RandomService {
 			image.setPost(postDao.find(ran.nextInt((count - 1) + 1) + 1));
 			
 			imageDao.insert(image);
+		}
+	}
+	
+	@Transactional
+	public void addRandomMessages() {
+		int n = 3000;
+		
+		List<Account> accounts = accDao.getList();
+		List<String> contents = randomDescription();
+		int accountsMax = accounts.size()-1;
+		int contentsMax = contents.size()-1;
+		Message mess;
+		String s[] = {"true", "false"};
+		
+		for (int i=0; i<n; i++) {
+			mess = new Message();
+			
+			mess.setSender(accounts.get(randomNumber(accountsMax, 0)));
+			mess.setReceiver(accounts.get(randomNumber(accountsMax, 0)));
+			mess.setContent(contents.get(randomNumber(contentsMax, 0)));
+			mess.setSentAt(new Date());
+			mess.setRead(Boolean.valueOf(s[randomNumber(1, 0)]));
+			
+			messDao.insert(mess);
 		}
 	}
 	

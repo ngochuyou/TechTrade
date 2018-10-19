@@ -60,17 +60,12 @@ img {
 	text-shadow: none;
 }
 
-.bg-white {
-	margin-right: .03rem;
-}
-
 .bg-eee {
 	background-color: #eee;
 }
 
 .bg-noti {
 	background-color: #efefef;
-	margin-right: .03rem;
 }
 
 ::selection {
@@ -262,8 +257,8 @@ footer a:hover, footer a:focus {
 	}
 }
 
-.m-auto {
-	margin: auto;
+.text-small {
+	font-size: 15px;
 }
 
 .text-medium {
@@ -512,10 +507,6 @@ ul ul a {
 	opacity: .2;
 }
 
-.border-bottom-dashed {
-	border-bottom: 1px dashed white;
-}
-
 .thumb-medium {
 	height: 100px;
 	background-color: var(--main-bg-color);
@@ -683,7 +674,6 @@ ul ul a {
 .bg-main {
 	background-color: var(--main-bg-color);
 	color: white;
-	margin-right: .03rem;
 }
 
 .text-white:hover {
@@ -786,6 +776,82 @@ label {
 
 .custom-control-description {
 	white-space: pre-wrap;
+	word-break: break-word; 
+}
+
+.border-curve {
+	border-radius: 50px;
+}
+
+.half-left-curve {
+	border-top-left-radius: 50px;
+	border-bottom-left-radius: 50px;
+}
+
+.half-right-curve {
+	border-top-right-radius: 50px;
+	border-bottom-right-radius: 50px;
+}
+
+.half-top-curve {
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+.fixed-container {
+	position: fixed;
+	width: 800px;
+	height: 500px;
+	top: 50%;
+	left: 50%;
+	margin-top: -250px;
+	margin-left: -400px;
+	background-color: white;
+	overflow: hidden;
+}
+
+.inbox-header {
+	width: 100%;
+	height: 10%;
+	background-color: rgba(2, 2, 2, 0.77);
+}
+
+.inbox-content {
+	width: 100%;
+	height: 90%;
+	overflow-x: hidden;
+	overflow-y: auto; 
+}
+
+.inbox-content figure {
+	width: 200%;
+	height: 100%;
+	position: relative;
+	left: 0;
+	margin: 0;
+	text-align: left;
+}
+
+.inbox-content figure > div {
+	width: 50%;
+	float: left;
+}
+
+.icon-small {
+	width: 40px;
+	height: 40px;
+	border-radius: 50% !important;
+	overflow: hidden;
+	text-align: center;
+	padding-top: .25rem !important;
+	margin-top: .5rem;
+	transition: all .3s;
+	cursor: pointer;
+}
+
+.icon-small:hover {
+	background-color: #efefef; 
+	border: 1px solid #dee2e6 !important;
 }
 /*
 .actionbar {

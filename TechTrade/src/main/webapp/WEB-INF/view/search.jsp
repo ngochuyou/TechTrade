@@ -232,7 +232,7 @@
 							</h3>
 							<h2 class="text-truncate font-weight-bold">${post.name }</h2>
 							<p>
-								By <span class="font-italic text-main">${post.createBy.username }</span>
+								By <span class="font-italic text-main pointer" onclick="window.location.href='<spring:url value='/account/${post.createBy.username }'></spring:url>'">${post.createBy.username }</span>
 								on
 								<fmt:formatDate value="${post.createAt }" />
 							</p>

@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,9 +19,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.green.finale.dao.AccountDAO;
+import com.green.finale.dao.MessageDAO;
 import com.green.finale.dao.WardDAO;
 import com.green.finale.entity.Account;
+import com.green.finale.entity.Message;
 import com.green.finale.model.AccountModel;
+import com.green.finale.model.InboxModel;
+import com.green.finale.model.MessageModel;
 import com.green.finale.utils.AccountRole;
 import com.green.finale.utils.Contants;
 
@@ -32,6 +38,9 @@ public class AccountService {
 	@Autowired
 	private WardDAO wardDao;
 
+	@Autowired
+	private MessageDAO messDao;
+	
 	@Transactional
 	public Account find(String username) {
 		Account acc = accDao.find(username);
@@ -176,6 +185,18 @@ public class AccountService {
 		return Contants.NONEXSIT;
 	}
 
+	@Transactional
+	public InboxModel getInboxModel(String username) {
+		InboxModel model = new InboxModel();
+		List<Message> unreadMessages = messDao.getList(username, false);
+		
+		model.setUnreadMessages(getMessageModelList(unreadMessages));
+		model.setReadMessages(getMessageModelList(messDao.getList(username, true)));
+		model.setUnreadQty(unreadMessages.size());
+		
+		return model;
+	}
+	
 	public String uploadFile(MultipartFile file) {
 		if (file.isEmpty()) {
 			return null;
@@ -270,5 +291,25 @@ public class AccountService {
 		
 		return model;
 	}
-
+	
+	public List<MessageModel> getMessageModelList(List<Message> messages) {
+		List<MessageModel> models = new ArrayList<>();
+		MessageModel model;
+		
+		for (Message mess: messages) {
+			model = new MessageModel();
+			
+			model.setId(mess.getId());
+			model.setSender(mess.getSender());
+			model.setReceiver(mess.getReceiver());
+			model.setSentAt(mess.getSentAt());
+			model.setRead(mess.isRead());
+			model.setContent(mess.getContent());
+			
+			models.add(model);
+		}
+		
+		return models;
+	}
+	
 }

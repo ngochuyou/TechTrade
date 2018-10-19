@@ -192,7 +192,7 @@
 					</h4>
 				</div>
 			</div>
-			<div class="row sticky-top bg-noti border-bottom">
+			<div class="row bg-noti border-bottom" style="margin-right: .03rem;">
 				<div
 					class="col-2 pt-4 pb-3 border-right box-shadow-hover pointer boxshadow-hover"
 					id="profile-posts">
@@ -231,10 +231,16 @@
 						</div>
 					</div>
 				</div>
-				<div id="post-content">
+				<div id="post-content" class="bg-noti p-3">
 					<span id="sort" class="hidden">${sortBy }</span>
+					<p class="panel-header">Posts</p>
 					<c:forEach var="post" items="${postList }">
-						<div class="border-bottom py-4">
+						<div class="py-2 my-2 bg-white border-curve">
+							<c:if test="${post.status eq false }">
+								<h3 class="text-main">
+									<span class="tags text-light bg-main">Closed</span>
+								</h3>
+							</c:if>
 							<div class="row my-4 px-4">
 								<div class="col-1 py-3">
 									<div class="col-1 m-auto text-center"
@@ -278,12 +284,12 @@
 								<p class="col custom-control-description text-size-post">${post.description }</p>
 							</div>
 							<div class="row px-4">
-								<div class="col-6 pointer border">
+								<div class="col-6 pointer border half-left-curve">
 									<h3 class="mt-3 text-center">
 										<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
 									</h3>
 								</div>
-								<div class="col-6 pointer border">
+								<div class="col-6 pointer border half-right-curve">
 									<h3 class="mt-3 text-center">
 										<i class="fas fa-thumbtack mr-5"></i>Pin
 									</h3>
@@ -299,6 +305,89 @@
 				src="<spring:url value='/resources/img/loading.gif'></spring:url>"
 				class="avatar-large border">
 		</div>
+		<sec:authorize access="isAuthenticated()">
+			<div class="fixed-container half-top-curve box-shadow">
+				<div class="inbox-header">
+					<div class="row mx-1 p-1">
+						<div class="col-4 pt-1">
+							<p class="m-0 text-light">
+								<i class="fas fa-envelope fa-2x"></i>
+							</p>
+						</div>
+						<div class="col-8 pt-2">
+							<h3 class="m-0 text-light text-right">
+								Inbox<span class="ml-4 badge badge-light d-inline-block">${inbox.unreadQty }</span>
+							</h3>
+						</div>
+					</div>
+				</div>
+				<div class="inbox-content">
+					<figure id="inbox">
+						<div class="h-100">
+							<c:forEach var="mess" items="${inbox.unreadMessages }">
+								<div class="row h-25 mx-2 py-2 bg-noti pointer message">
+									<div class="col-2 pl-4">
+										<img
+											src="<spring:url value='/account/avatar?username=${mess.sender.username }'></spring:url>"
+											class="avatar-medium m-auto">
+									</div>
+									<div class="col-9">
+										<h5 class="font-weight-bold">${mess.sender.username }</h5>
+										<p class="text-truncate my-1">${mess.content }</p>
+										<p>
+											<fmt:formatDate value="${mess.sentAt }" type="both"></fmt:formatDate>
+										</p>
+									</div>
+									<div class="col-1"></div>
+								</div>
+							</c:forEach>
+							<c:forEach var="mess" items="${inbox.readMessages }">
+								<div class="row h-25 mx-2 py-2 bg-white pointer message">
+									<div class="col-2 pl-4">
+										<img
+											src="<spring:url value='/account/avatar?username=${mess.sender.username }'></spring:url>"
+											class="avatar-medium m-auto">
+									</div>
+									<div class="col-9">
+										<h5 class="font-weight-bold">${mess.sender.username }</h5>
+										<p class="text-truncate my-1">${mess.content }</p>
+										<p>
+											<fmt:formatDate value="${mess.sentAt }" type="both"></fmt:formatDate>
+										</p>
+									</div>
+									<div class="col-1"></div>
+								</div>
+							</c:forEach>
+						</div>
+						<div class="h-100">
+							<div class="row h-25 mx-2 py-2 border-bottom">
+								<div class="col-2">
+									<img src="" class="avatar-medium m-auto" id="sender-ava">
+								</div>
+								<div class="col-8">
+									<h5 class="mb-2" id="sender-username"></h5>
+									<p class="mb-2 text-small" id="sent-at"></p>
+								</div>
+								<div class="col-2">
+									<div class="icon-small m-auto">
+										<i class="fas fa-trash text-right"></i>
+									</div>
+									<div class="icon-small m-auto">
+										<i class="fas fa-reply text-right"></i>
+									</div>
+								</div>
+							</div>
+							<div class="row h-50 mx-2 py-2 flow-auto">
+								<p class="custom-control-description" id="message-content"></p>
+							</div>
+							<div class="row h-25 mx-2 py-2">
+								<input class="form-control">
+							</div>
+						</div>
+					</figure>
+				</div>
+			</div>
+		</sec:authorize>
 		<div class="overlay"></div>
 	</div>
 </html>

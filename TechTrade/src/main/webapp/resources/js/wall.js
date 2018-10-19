@@ -1,5 +1,4 @@
 $(document).ready(function() {
-	
 		$('.overlay').click(function() {
 			$('#sidebar').addClass('sidebar-active');
 			$('.overlay').removeClass('active-overlay');
@@ -179,4 +178,19 @@ $(document).ready(function() {
 	    	
 	    	return monthNames[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
 	    }
+	    
+	    var sender;
+	    var inbox = $('#inbox');
+	    
+	    $('.message').click(function() {
+	    	sender = $(this).find('h5').text();
+	    	$('#sender-ava').attr('src', '/TechTrade/account/avatar?username=' + sender.split(" ")[0]);
+	    	$('#sender-username').text(sender);
+	    	$('#sent-at').text($(this).find(':not([class])').text());
+	    	$('#message-content').text($(this).find('.text-truncate').text());
+	    	
+	    	$(inbox).animate({
+	    		'left' : '-100%'
+	    	}, 300);
+	    });
 });

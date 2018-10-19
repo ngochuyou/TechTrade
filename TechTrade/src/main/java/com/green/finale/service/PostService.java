@@ -69,8 +69,12 @@ public class PostService {
 		if (!m.matches()) {
 			return null;
 		}
-
-		return getPostModelList(postDao.getListByAccount(username, page, sortBy), principal);
+		
+		if (principal != null && principal.getName().equals(username)) {
+			return getPostModelList(postDao.getAllListByAccount(username, page, sortBy), principal);
+		} else {
+			return getPostModelList(postDao.getListByAccount(username, page, sortBy), principal);
+		}
 	}
 
 	@Transactional

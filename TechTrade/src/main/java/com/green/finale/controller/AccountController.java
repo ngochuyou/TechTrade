@@ -41,7 +41,7 @@ public class AccountController {
 
 	@Autowired
 	private PostService postService;
-
+	
 	@Autowired
 	private AuthenticationTrustResolver authenticationTrustResolver;
 
@@ -60,6 +60,10 @@ public class AccountController {
 		model.addAttribute("account", acc);
 		model.addAttribute("postList", postService.getPostListByAccount(username, page, sortBy, principal));
 		model.addAttribute("sortBy", sortBy);
+		
+		if (principal != null) {
+			model.addAttribute("inbox", accService.getInboxModel(principal.getName()));
+		}
 
 		return "wall";
 	}
@@ -192,4 +196,5 @@ public class AccountController {
 
 		return "/login";
 	}
+	
 }

@@ -142,6 +142,7 @@
 										</div>
 									</div>
 									<div
+										onclick="window.location.href='<spring:url value='/account/${user.username }'></spring:url>'"
 										class="dropdown-item border-bottom text-main font-weight-bold">
 										<div>
 											<i class="fas fa-home mr-4"></i>

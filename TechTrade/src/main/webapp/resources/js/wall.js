@@ -193,4 +193,8 @@ $(document).ready(function() {
 	    		'left' : '-100%'
 	    	}, 300);
 	    });
+	    
+	    $('#inbox-open').click(function() {
+	    	$('#inbox-container').toggleClass('hidden');
+	    });
 });

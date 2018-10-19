@@ -111,6 +111,7 @@
 										</div>
 									</div>
 									<div
+										onclick="window.location.href='<spring:url value='/account/${user.username }'></spring:url>'"
 										class="dropdown-item border-bottom text-main font-weight-bold">
 										<div>
 											<i class="fas fa-home mr-4"></i>
@@ -120,6 +121,7 @@
 										</div>
 									</div>
 									<div
+										id="inbox-open"
 										class="dropdown-item text-main font-weight-bold border-bottom">
 										<div>
 											<i class="fas fa-envelope"></i>
@@ -306,7 +308,7 @@
 				class="avatar-large border">
 		</div>
 		<sec:authorize access="isAuthenticated()">
-			<div class="fixed-container half-top-curve box-shadow">
+			<div class="fixed-container half-top-curve box-shadow hidden" id="inbox-container">
 				<div class="inbox-header">
 					<div class="row mx-1 p-1">
 						<div class="col-4 pt-1">

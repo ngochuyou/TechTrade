@@ -85,60 +85,60 @@ $(document).ready(function() {
     	$('#post-name').toggleClass('hidden');
     	$('#title-input').toggleClass('hidden');
     	$('#title-input').val($('#post-name').text());
-    	$('#title-submit').hide();
-    	$('#title-cancel').hide();
+    	$('#title-submit').toggleClass('hidden');
+    	$('#title-cancel').toggleClass('hidden');
     	console.log($('#title-input').val());
     });
 
     $('#hashtags-edit').click(function() {
-    	$('.hashtags-stage2').show();
+    	$('.hashtags-stage2').toggleClass('hidden');
     });
     
     var hashtags = $('#hashtags-container').text().trim();
     var hashtagId;
     var originalHashtag = hashtags;
-    console.log(hashtags);
-    var targetHashtag = "";
+    var targetHashtag;
     
+    $('#hashtags-input').val(originalHashtag.replace(',', ""));
     $('#hashtags-container').on('click', '.hashtags-del', function() {
     	hashtagId = this.id.match(/\d+/);
     	targetHashtag = $('#hashtags'+hashtagId);
-    	targetHashtag.remove();
-    	originalHashtag = originalHashtag.replace(targetHashtag.text().trim(), '');
+    	targetHashtag.addClass('deltags');
+    	targetHashtag.hide();
+    	originalHashtag = originalHashtag.replace(targetHashtag.text().trim(), "");
     });
     
     var tagContainer = $('#hashtags-container').html();
-    var tagInput;
+    var tagInput;	
     
     $('#hashtags-add').click(function() {
     	tagInput = $('#hashtags-add-input').val();
-    	$($.parseHTML("<span class='color-main tags temptags mx-2 d-inline-block' id='hashtags"+tagNumber+"'>")).html(tagInput + "<span class='hashtags-del' id='hashtags-del"+tagNumber+"'><i class='fas fa-times-circle mx-2'></i></span>").appendTo("#hashtags-container");
+    	$($.parseHTML("<span class='color-main tags temptags mx-2' id='hashtags"+tagNumber+"'>")).html(tagInput + "<span class='hashtags-stage2 hashtags-del' id='hashtags-del"+tagNumber+"'><i class='fas fa-times-circle mx-2'></i></span>").appendTo("#hashtags-container");
     	originalHashtag += tagInput;
     	tagNumber++;
     	$('#hashtags-add-input').val('#');
     });
     
     $('#hashtags-cancel').click(function() {
-    	
     	$('.hashtags').show();
     	$('.temptags').remove();
-    	$('.hashtags-stage2').hide();
+    	$('.hashtags-stage2').toggleClass('hidden');
     	originalHashtag = hashtags;
     });
     
     $('#content-edit').click(function() {
     	$('#post-description').toggleClass('hidden');
     	$('#content-input').toggleClass('hidden');
-    	$('#content-submit').toggleClass('hidden')
-    	$('#content-cancel').toggleClass('hidden')
+    	$('#content-submit').toggleClass('hidden');
+    	$('#content-cancel').toggleClass('hidden');
     });
-    
+     
     $('#content-cancel').click(function() {
     	$('#post-description').toggleClass('hidden');
-    	$('#content-input').val($('#post-description'));
+    	$('#content-input').val($('#post-description').text());
     	$('#content-input').toggleClass('hidden');
-    	$('#content-submit').hide();
-    	$('#content-cancel').hide();
+    	$('#content-submit').toggleClass('hidden');
+    	$('#content-cancel').toggleClass('hidden');
     });
     
     $('#image-edit').click(function() {
@@ -158,9 +158,9 @@ $(document).ready(function() {
     });
     
     $('#image-cancel').click(function() {
-    	$('.image-del').hide();
-    	$('#image-add').hide();
-    	$('#image-cancel').hide();
+    	$('.image-del').toggleClass('hidden');
+    	$('#image-add').toggleClass('hidden');
+    	$('#image-cancel').toggleClass('hidden');
     	$('.preview').toggleClass('hidden');
     	$('.preview').empty();
     	$("#upload-photo").val(null);
@@ -182,7 +182,7 @@ $(document).ready(function() {
                     reader = new FileReader();
 
                     reader.onload = function(event) {
-                        $($.parseHTML("<img class='float-left w-25 hpx-350 mx-5 my-3'>")).attr('src', event.target.result).appendTo(place);
+                        $($.parseHTML("<img class='float-left w-25 hpx-350 mx-4 my-3'>")).attr('src', event.target.result).appendTo(place);
                     }
 
                     reader.readAsDataURL(input.files[i]);
@@ -200,25 +200,26 @@ $(document).ready(function() {
     	$('#post-name').text($('#title-input').val());
     	$('#post-name').toggleClass('hidden');
     	$('#title-input').toggleClass('hidden');
-    	$('#title-submit').hide();
-    	$('#title-cancel').hide();
+    	$('#title-submit').toggleClass('hidden');
+    	$('#title-cancel').toggleClass('hidden');
     });
     
     $('#hashtags-submit').click(function() {
+    	console.log(originalHashtag);
     	$('.temptags').addClass('hashtags');
     	$('.temptags').removeClass('temptags');
     	$('.hashtags').show();
-    	$('.hashtags-stage2').hide();
-    	$('.hashtags-del').toggleClass('hidden');
+    	$('.deltags').remove();
     	$('#hashtags-input').val(originalHashtag);
+    	$('.hashtags-stage2').toggleClass('hidden');
     });
     
     $('#content-submit').click(function() {
     	$('#post-description').text($('#content-input').val());
     	$('#post-description').toggleClass('hidden');
     	$('#content-input').toggleClass('hidden');
-    	$('#content-submit').hide();
-    	$('#content-cancel').hide();
+    	$('#content-submit').toggleClass('hidden');
+    	$('#content-cancel').toggleClass('hidden');
     });
     
     $('#submit-all').click(function() {

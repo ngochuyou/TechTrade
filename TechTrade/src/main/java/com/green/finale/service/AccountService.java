@@ -40,7 +40,7 @@ public class AccountService {
 
 	@Autowired
 	private MessageDAO messDao;
-	
+
 	@Transactional
 	public Account find(String username) {
 		Account acc = accDao.find(username);
@@ -57,10 +57,10 @@ public class AccountService {
 		Account acc = accDao.find(username);
 
 		if (acc == null) {
-			
+
 			return null;
 		}
-		
+
 		return injectAccount(acc);
 	}
 
@@ -186,15 +186,95 @@ public class AccountService {
 	}
 
 	@Transactional
-	public InboxModel getInboxModel(String username) {
+	public InboxModel getInboxModel(String username, int page) {
 		InboxModel model = new InboxModel();
-		List<Message> unreadMessages = messDao.getList(username, false);
-		
+		List<Message> unreadMessages = messDao.getReceivedList(username, false, page);
+
 		model.setUnreadMessages(getMessageModelList(unreadMessages));
-		model.setReadMessages(getMessageModelList(messDao.getList(username, true)));
+		model.setReadMessages(getMessageModelList(messDao.getReceivedList(username, true, page)));
 		model.setUnreadQty(unreadMessages.size());
-		
+
 		return model;
+	}
+
+	@Transactional
+	public List<MessageModel> getReceivedMessage(String username, int page) {
+		
+		return getMessageModelList(messDao.getReceivedList(username, true, page));	
+	}
+	
+	@Transactional
+	public String createMessage(String username, String receiverId, String content) {
+		Account receiver = accDao.find(receiverId);
+
+		if (receiver == null) {
+			return Contants.USER_NONEXSIT;
+		}
+
+		Message mess = new Message();
+
+		mess.setSender(accDao.find(username));
+		mess.setReceiver(receiver);
+		mess.setContent(content);
+		mess.setRead(false);
+		mess.setSentAt(new Date());
+		mess.setDeletedByReceiver(false);
+		mess.setDeletedBySender(false);
+
+		messDao.insert(mess);
+
+		return "Sent!";
+	}
+
+	@Transactional
+	public String deleteMessage(String username, long messId) {
+		Message mess = messDao.find(messId);
+		
+		if (mess == null) {
+			return Contants.NONEXSIT;
+		}
+		
+		String receiver = mess.getReceiver().getUsername();
+		String sender = mess.getSender().getUsername();
+		
+		if (!receiver.equals(username) && !sender.equals(username)) {
+			return Contants.NOT_BELONG;
+		}
+		
+		if (mess.isDeletedByReceiver() == true || mess.isDeletedBySender() == true) {
+			messDao.delete(mess);
+			
+			return "Message deleted.";
+		} else {
+			if (username.equals(sender)) {
+				messDao.deleteBySender(messId);
+			} else {
+				messDao.deleteByReceiver(messId);
+			}
+ 		}
+		
+		return "Message deleted.";
+	}
+
+	@Transactional
+	public String markMessage(String username, long messId, boolean type) {
+		Message mess = messDao.find(messId);
+		
+		if (mess == null) {
+			return Contants.NONEXSIT;
+		}
+			
+		String receiver = mess.getReceiver().getUsername();
+		String sender = mess.getSender().getUsername();
+		
+		if (!receiver.equals(username) && !sender.equals(username)) {
+			return Contants.NOT_BELONG;
+		}
+		
+		mess.setRead(type);
+		messDao.update(mess);
+		
+		return "";
 	}
 	
 	public String uploadFile(MultipartFile file) {
@@ -272,10 +352,10 @@ public class AccountService {
 
 		return true;
 	}
-	
+
 	public AccountModel injectAccount(Account acc) {
 		AccountModel model = new AccountModel();
-		
+
 		model.setUsername(acc.getUsername());
 		model.setPassword(acc.getPassword());
 		model.setEmail(acc.getEmail());
@@ -288,17 +368,17 @@ public class AccountService {
 		model.setPrestigePoints(acc.getPrestigePoints());
 		model.setWallpaper(acc.getWallpaper());
 		model.setWard(acc.getWard());
-		
+
 		return model;
 	}
-	
+
 	public List<MessageModel> getMessageModelList(List<Message> messages) {
 		List<MessageModel> models = new ArrayList<>();
 		MessageModel model;
-		
-		for (Message mess: messages) {
+
+		for (Message mess : messages) {
 			model = new MessageModel();
-			
+
 			model.setId(mess.getId());
 			model.setSender(mess.getSender());
 			model.setReceiver(mess.getReceiver());
@@ -308,8 +388,8 @@ public class AccountService {
 			
 			models.add(model);
 		}
-		
+
 		return models;
 	}
-	
+
 }

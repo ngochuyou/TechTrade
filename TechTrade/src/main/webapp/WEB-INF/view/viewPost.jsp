@@ -280,17 +280,18 @@
 								</div>
 							</div>
 							<p>
-								By <span class="font-italic text-main">${post.username }</span>
+								By <span class="font-italic text-main pointer"
+									onclick="window.location.href='<spring:url value='/account/${post.createBy.username }'></spring:url>'">${post.username }</span>
 								on
 								<fmt:formatDate value="${post.createAt }" />
 							</p>
 							<div class="my-2 row">
 								<div class="col-11">
 									<span>Tags <i class="fas fa-hashtag"></i>
-									</span> <span class="tags stage-1 d-inline-block"
+									</span> <span class="tags stage-1"
 										style="background-color : ${post.category.tagColor}">${post.category.name }</span>
 									<span id="hashtags-container" class="line-height-large"><span
-										class="color-main tags hashtags m-2 d-inline-block">${fn:replace(post.tags, ",", "<span class='hidden hashtags-stage2 hashtags-del'><i class='fas fa-times-circle'></i></span></span><span class='color-main tags hashtags mx-2 d-inline-block'>")}
+										class="color-main tags hashtags m-2">${fn:replace(post.tags, ",", "<span class='hidden hashtags-stage2 hashtags-del'><i class='fas fa-times-circle'></i></span></span><span class='color-main tags hashtags mx-2'>")}
 											<span class="hidden hashtags-stage2 hashtags-del"><i
 												class="fas fa-times-circle"></i></span>
 									</span> </span><span class="hidden hashtags-stage2"><input type="text"
@@ -408,7 +409,8 @@
 								<fmt:formatDate value="${comment.commentedOn }" />
 							</p>
 							<p>
-								<span class="font-italic text-primary">${comment.account.username }</span>
+								<span class="font-italic text-primary pointer"
+									onclick="window.location.href='<spring:url value='/account/${comment.account.username }'></spring:url>'">${comment.account.username }</span>
 								: ${comment.content }
 							</p>
 						</div>

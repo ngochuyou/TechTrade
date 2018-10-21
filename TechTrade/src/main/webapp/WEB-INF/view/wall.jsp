@@ -86,6 +86,7 @@
 			<div class="collapse navbar-collapse" id="navbarTogglerDemo03">
 				<ul class="navbar-nav mt-lg-0 position-right">
 					<sec:authorize access="isAuthenticated()">
+						<sec:authentication property="principal" var="user" />
 						<li>
 							<div class="dropdown">
 								<button class="btn-nobg dropdown-toggle text-light"
@@ -121,22 +122,22 @@
 										</div>
 									</div>
 									<div
-										id="inbox-open"
-										class="dropdown-item text-main font-weight-bold border-bottom">
+										class="dropdown-item text-main font-weight-bold border-bottom inbox-open">
 										<div>
 											<i class="fas fa-envelope"></i>
 										</div>
 										<div>
-											<span>Inboxs</span><span class="badge bg-main ml-3">4</span>
+											<span>Inboxs</span><span class="badge bg-main ml-3">${inbox.unreadQty }</span>
 											</button>
 										</div>
 									</div>
-									<div class="dropdown-item text-main font-weight-bold">
+									<div class="dropdown-item text-main font-weight-bold"
+										onclick="window.location.href='<spring:url value='/logout'></spring:url>'">
 										<div>
 											<i class="fas fa-sign-out-alt mr-4"></i>
 										</div>
 										<div>
-											<a class="font-weight-bold text-right" href="">Logout</a>
+											<span class="font-weight-bold text-right">Logout</span>
 										</div>
 									</div>
 								</div>
@@ -163,7 +164,7 @@
 				<p class="background-opacity m-0">
 					<img
 						src="<spring:url value="/account/avatar?username=${account.username }"></spring:url>"
-						class="avatar-large">
+						class="avatar-large box-shadow">
 				</p>
 			</div>
 		</div>
@@ -237,7 +238,7 @@
 					<span id="sort" class="hidden">${sortBy }</span>
 					<p class="panel-header">Posts</p>
 					<c:forEach var="post" items="${postList }">
-						<div class="py-2 my-2 bg-white border-curve">
+						<div class="py-2 my-2 bg-white">
 							<c:if test="${post.status eq false }">
 								<h3 class="text-main">
 									<span class="tags text-light bg-main">Closed</span>
@@ -302,94 +303,132 @@
 				</div>
 			</div>
 		</div>
-		<div class="text-center hidden" id="loader">
-			<img
-				src="<spring:url value='/resources/img/loading.gif'></spring:url>"
-				class="avatar-large border">
-		</div>
 		<sec:authorize access="isAuthenticated()">
-			<div class="fixed-container half-top-curve box-shadow hidden" id="inbox-container">
-				<div class="inbox-header">
-					<div class="row mx-1 p-1">
-						<div class="col-4 pt-1">
-							<p class="m-0 text-light">
-								<i class="fas fa-envelope fa-2x"></i>
-							</p>
+			<div class="fixed-fullscreen" id="inbox">
+				<div class="absolute inbox-composer">
+					<div class="row py-3 pl-4 border-bottom header bg-white">
+						<div class="col-1 pointer" id="inbox-back">
+							<span><i class="fas fa-angle-left fa-2x mt-3"></i></span>
 						</div>
-						<div class="col-8 pt-2">
-							<h3 class="m-0 text-light text-right">
-								Inbox<span class="ml-4 badge badge-light d-inline-block">${inbox.unreadQty }</span>
-							</h3>
+						<div class="col-2">
+							<img src="" id="composer-avatar" class="m-auto avatar-medium">
+						</div>
+						<div class="col-7">
+							<h3 class="text-truncate" id="composer-username"></h3>
+							<p class="m-0 text-small text-truncate" id="composer-sentAt"></p>
+							<p class="m-0 text-small text-truncate" id="composer-location"></p>
+						</div>
+						<div class="col-2 p-0">
+							<div class="icon icon-small composer-delete" id="composer-delete">
+								<i class="fas fa-trash text-right"></i>
+							</div>
+							<div class="icon icon-small">
+								<i class="fas fa-dot-circle"></i>
+							</div>
+						</div>
+					</div>
+					<div class="row p-3 border-bottom">
+						<div class="col .custom-control-description" id="composer-content"></div>
+					</div>
+					<div class="row py-3 px-4">
+						<textarea class="form-control" placeholder="Reply" rows="5"
+							id="reply"></textarea>
+						<div class="my-3">
+							<button class="btn btn-outline-main float-left mr-4"
+								id="message-send">Send</button>
+							<div class="icon icon-small m-0">
+								<i class="fas fa-paperclip"></i>
+							</div>
+						</div>
+					</div>
+					<div class="row h-25 mb-5 message-result hidden">
+						<div class="text-center m-auto">
+							<img
+								src="<spring:url value="/resources/img/loading.gif"></spring:url>"
+								class="avatar-large border fit-cover" id="message-loader">
+							<span id="message-info" class="font-weight-bold"></span>
 						</div>
 					</div>
 				</div>
-				<div class="inbox-content">
-					<figure id="inbox">
-						<div class="h-100">
-							<c:forEach var="mess" items="${inbox.unreadMessages }">
-								<div class="row h-25 mx-2 py-2 bg-noti pointer message">
-									<div class="col-2 pl-4">
+				<div class="absolute inbox-main">
+					<div class="row border-bottom">
+						<div class="col-2 pt-1 border-right inbox-open pointer">
+							<i class="fas fa-bars fa-2x mt-2 ml-2"></i>
+						</div>
+						<div class="col-10"></div>
+					</div>
+					<div class="flow-auto" style="height: 85%;">
+						<div id="messages-container">
+							<c:forEach var="message" items="${inbox.unreadMessages }">
+								<div class="row bg-noti message pointer">
+									<input type="hidden" value="${message.id }" class="message-id">
+									<span class="message-location hidden">${message.sender.ward.name },
+										${message.sender.ward.district.name },
+										${message.sender.ward.district.city.name }</span>
+									<div class="col-2 border-right">
 										<img
-											src="<spring:url value='/account/avatar?username=${mess.sender.username }'></spring:url>"
-											class="avatar-medium m-auto">
+											src="<spring:url value='/account/avatar?username=${message.sender.username }'></spring:url>"
+											class="m-auto avatar-medium">
 									</div>
 									<div class="col-9">
-										<h5 class="font-weight-bold">${mess.sender.username }</h5>
-										<p class="text-truncate my-1">${mess.content }</p>
-										<p>
-											<fmt:formatDate value="${mess.sentAt }" type="both"></fmt:formatDate>
+										<h3 class="text-truncate message-username">${message.sender.username }</h3>
+										<p class="text-truncate mb-1 message-content">${message.content }</p>
+										<p class="text-truncate text-small message-sentAt">
+											<fmt:formatDate value="${message.sentAt }" type="both"></fmt:formatDate>
 										</p>
 									</div>
-									<div class="col-1"></div>
+									<div class="col-1 p-0">
+										<div class="icon icon-small m-auto message-delete"
+											id="message-delete-${message.id }">
+											<i class="fas fa-trash text-right hidden"></i>
+										</div>
+										<div class="icon icon-small m-auto">
+											<i class="fas fa-reply text-right hidden"></i>
+										</div>
+									</div>
 								</div>
 							</c:forEach>
-							<c:forEach var="mess" items="${inbox.readMessages }">
-								<div class="row h-25 mx-2 py-2 bg-white pointer message">
-									<div class="col-2 pl-4">
+							<c:forEach var="message" items="${inbox.readMessages }">
+								<div class="row message pointer">
+									<span class="message-location hidden">${message.sender.ward.name },
+										${message.sender.ward.district.name },
+										${message.sender.ward.district.city.name }</span>
+									<div class="col-2 border-right">
 										<img
-											src="<spring:url value='/account/avatar?username=${mess.sender.username }'></spring:url>"
-											class="avatar-medium m-auto">
+											src="<spring:url value='/account/avatar?username=${message.sender.username }'></spring:url>"
+											class="m-auto avatar-medium">
 									</div>
 									<div class="col-9">
-										<h5 class="font-weight-bold">${mess.sender.username }</h5>
-										<p class="text-truncate my-1">${mess.content }</p>
-										<p>
-											<fmt:formatDate value="${mess.sentAt }" type="both"></fmt:formatDate>
+										<h3 class="text-truncate message-username">${message.sender.username }</h3>
+										<p class="text-truncate mb-1 message-content">${message.content }</p>
+										<p class="text-truncate text-small message-sentAt">
+											<fmt:formatDate value="${message.sentAt }" type="both"></fmt:formatDate>
 										</p>
 									</div>
-									<div class="col-1"></div>
+									<div class="col-1 p-0">
+										<div class="icon icon-small m-auto message-delete"
+											id="message-delete-${message.id }">
+											<i class="fas fa-trash text-right hidden"></i>
+										</div>
+										<div class="icon icon-small m-auto">
+											<i class="fas fa-reply text-right hidden"></i>
+										</div>
+									</div>
 								</div>
 							</c:forEach>
 						</div>
-						<div class="h-100">
-							<div class="row h-25 mx-2 py-2 border-bottom">
-								<div class="col-2">
-									<img src="" class="avatar-medium m-auto" id="sender-ava">
-								</div>
-								<div class="col-8">
-									<h5 class="mb-2" id="sender-username"></h5>
-									<p class="mb-2 text-small" id="sent-at"></p>
-								</div>
-								<div class="col-2">
-									<div class="icon-small m-auto">
-										<i class="fas fa-trash text-right"></i>
-									</div>
-									<div class="icon-small m-auto">
-										<i class="fas fa-reply text-right"></i>
-									</div>
-								</div>
-							</div>
-							<div class="row h-50 mx-2 py-2 flow-auto">
-								<p class="custom-control-description" id="message-content"></p>
-							</div>
-							<div class="row h-25 mx-2 py-2">
-								<input class="form-control">
+						<div class="row">
+							<div class="col">
+								<p class="pointer text-center font-italic m-0"
+									id="inbox-showmore">Show more</p>
 							</div>
 						</div>
-					</figure>
+					</div>
 				</div>
 			</div>
 		</sec:authorize>
+		<input type="hidden" name="${_csrf.parameterName}"
+			value="${_csrf.token}" id="csrfToken" />
 		<div class="overlay"></div>
 	</div>
 </html>

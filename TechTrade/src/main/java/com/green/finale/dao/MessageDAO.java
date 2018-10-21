@@ -17,17 +17,48 @@ public class MessageDAO {
 	private SessionFactory factory;
 	private static final int MAX_RESULT = 4;
 
-	public List<Message> getList(String username, boolean isRead) {
+	public List<Message> getReceivedList(String username, boolean isRead, int page) {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<Message> hql = ss.createQuery("FROM Message WHERE receiver.id = :username AND read = :read", Message.class);
+		TypedQuery<Message> hql = ss.createQuery("FROM Message WHERE receiver.id = :username AND read = :read AND deletedByReceiver = :deleted", Message.class);
 
 		hql.setParameter("username", username);
 		hql.setParameter("read", isRead);
-		hql.setMaxResults(MAX_RESULT);
+		hql.setParameter("deleted", false);
+		
+		if (isRead == true) {
+			hql.setFirstResult(page * MAX_RESULT);
+			hql.setMaxResults(MAX_RESULT);
+		}
 
 		return hql.getResultList();
 	}
-
+	
+	public int deleteBySender(long id) {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<?> hql = ss.createQuery("UPDATE Message SET deletedBySender = :deleted WHERE id = :id");
+		
+		hql.setParameter("deleted", true);
+		hql.setParameter("id", id);
+		
+		return hql.executeUpdate();
+	}
+	
+	public int deleteByReceiver(long id) {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<?> hql = ss.createQuery("UPDATE Message SET deletedByReceiver = :deleted WHERE id = :id");
+		
+		hql.setParameter("deleted", true);
+		hql.setParameter("id", id);
+		
+		return hql.executeUpdate();
+	}
+	
+	public Message find(long id) {
+		Session ss = factory.getCurrentSession();
+		
+		return ss.get(Message.class, id);
+	}
+	
 	public long insert(Message mess) {
 		Session ss = factory.getCurrentSession();
 

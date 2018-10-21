@@ -244,7 +244,7 @@ public class PostService {
 			model.setTags(p.getTags());
 			model.setUpVote(p.getUpVote());
 			model.setCreateBy(p.getCreateBy());
-
+			
 			if (principal != null) {
 				model.setVote(voteDao.find(new VoteId(principal.getName(), p.getId())));
 			} else {

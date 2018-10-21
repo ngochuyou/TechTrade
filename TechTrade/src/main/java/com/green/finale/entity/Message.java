@@ -34,6 +34,12 @@ public class Message {
 	@Column(name = "content", columnDefinition = "TEXT", nullable = false)
 	private String content;
 
+	@Column(name = "deleted_by_sender", nullable = false)
+	private boolean deletedBySender;
+
+	@Column(name = "deleted_by_receiver", nullable = false)
+	private boolean deletedByReceiver;
+
 	public long getId() {
 		return id;
 	}
@@ -82,4 +88,19 @@ public class Message {
 		this.content = content;
 	}
 
+	public boolean isDeletedBySender() {
+		return deletedBySender;
+	}
+
+	public void setDeletedBySender(boolean deletedBySender) {
+		this.deletedBySender = deletedBySender;
+	}
+
+	public boolean isDeletedByReceiver() {
+		return deletedByReceiver;
+	}
+
+	public void setDeletedByReceiver(boolean deletedByReceiver) {
+		this.deletedByReceiver = deletedByReceiver;
+	}
 }

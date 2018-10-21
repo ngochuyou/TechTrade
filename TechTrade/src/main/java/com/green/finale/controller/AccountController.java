@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.green.finale.entity.Account;
 import com.green.finale.model.AccountModel;
+import com.green.finale.model.MessageModel;
 import com.green.finale.model.PostModel;
 import com.green.finale.service.AccountService;
 import com.green.finale.service.EmailService;
@@ -41,7 +42,7 @@ public class AccountController {
 
 	@Autowired
 	private PostService postService;
-	
+
 	@Autowired
 	private AuthenticationTrustResolver authenticationTrustResolver;
 
@@ -60,9 +61,9 @@ public class AccountController {
 		model.addAttribute("account", acc);
 		model.addAttribute("postList", postService.getPostListByAccount(username, page, sortBy, principal));
 		model.addAttribute("sortBy", sortBy);
-		
+
 		if (principal != null) {
-			model.addAttribute("inbox", accService.getInboxModel(principal.getName()));
+			model.addAttribute("inbox", accService.getInboxModel(principal.getName(), page));
 		}
 
 		return "wall";
@@ -72,7 +73,7 @@ public class AccountController {
 	public @ResponseBody List<PostModel> wallAPI(@PathVariable(name = "username") String username,
 			@RequestParam(name = "s", defaultValue = "createAt:desc") String sortBy,
 			@RequestParam(name = "p", defaultValue = "0") int page, Principal principal) {
-		
+
 		return postService.getPostListByAccount(username, page, sortBy, principal);
 	}
 
@@ -196,5 +197,30 @@ public class AccountController {
 
 		return "/login";
 	}
-	
+
+	@GetMapping(value = "/message")
+	public @ResponseBody List<MessageModel> getMessages(@RequestParam(name = "page") int page, Principal principal) {
+
+		return accService.getReceivedMessage(principal.getName(), page);
+	}
+
+	@PostMapping(value = "/message/send")
+	public @ResponseBody String sendMessage(@RequestParam(name = "receiver") String receiverId,
+			@RequestParam(name = "content") String content, Principal principal) {
+
+		return accService.createMessage(principal.getName(), receiverId, content);
+	}
+
+	@GetMapping(value = "/message/remove")
+	public @ResponseBody String deleteMessage(@RequestParam(name = "messageId") long messId, Principal principal) {
+
+		return accService.deleteMessage(principal.getName(), messId);
+	}
+
+	@GetMapping(value = "/message/mark")
+	public @ResponseBody String markMessage(@RequestParam(name = "messageId") long messId,
+			@RequestParam(name = "type") boolean type, Principal principal) {
+
+		return accService.markMessage(principal.getName(), messId, type);
+	}
 }

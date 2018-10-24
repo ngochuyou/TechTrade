@@ -127,7 +127,8 @@
 											<i class="fas fa-envelope"></i>
 										</div>
 										<div>
-											<span>Inboxs</span><span class="badge bg-main ml-3">${inbox.unreadQty }</span>
+											<span>Inboxs</span><span
+												class="badge bg-main ml-3 unread-qty">${inbox.unreadQty }</span>
 											</button>
 										</div>
 									</div>
@@ -319,10 +320,10 @@
 							<p class="m-0 text-small text-truncate" id="composer-location"></p>
 						</div>
 						<div class="col-2 p-0">
-							<div class="icon icon-small composer-delete" id="composer-delete">
+							<div class="icon icon-small composer-delete">
 								<i class="fas fa-trash text-right"></i>
 							</div>
-							<div class="icon icon-small">
+							<div class="icon icon-small composer-mark">
 								<i class="fas fa-dot-circle"></i>
 							</div>
 						</div>
@@ -355,7 +356,14 @@
 						<div class="col-2 pt-1 border-right inbox-open pointer">
 							<i class="fas fa-bars fa-2x mt-2 ml-2"></i>
 						</div>
-						<div class="col-10"></div>
+						<div class="col-10">
+							<div class="w-25 h-100 py-3 pointer outbox-open float-left">
+								<p class="text-center">Outbox</p>
+							</div>
+							<div class="w-25 h-100 py-3 pointer inbox-main-open float-left">
+								<p class="text-center">Inbox</p>
+							</div>
+						</div>
 					</div>
 					<div class="flow-auto" style="height: 85%;">
 						<div id="messages-container">
@@ -390,6 +398,7 @@
 							</c:forEach>
 							<c:forEach var="message" items="${inbox.readMessages }">
 								<div class="row message pointer">
+									<input type="hidden" value="${message.id }" class="message-id">
 									<span class="message-location hidden">${message.sender.ward.name },
 										${message.sender.ward.district.name },
 										${message.sender.ward.district.city.name }</span>

@@ -166,7 +166,7 @@
 											<i class="fas fa-sign-out-alt mr-4"></i>
 										</div>
 										<div>
-											<a class="font-weight-bold text-right" href="">Logout</a>
+											<a class="font-weight-bold text-right" href="<spring:url value='/logout'></spring:url>">Logout</a>
 										</div>
 									</div>
 								</div>

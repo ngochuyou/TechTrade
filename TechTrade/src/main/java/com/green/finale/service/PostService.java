@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.green.finale.dao.AccountDAO;
+import com.green.finale.dao.CategoryDAO;
 import com.green.finale.dao.CommentDAO;
 import com.green.finale.dao.ImageDAO;
 import com.green.finale.dao.PostDAO;
@@ -37,7 +38,10 @@ public class PostService {
 
 	@Autowired
 	private PostDAO postDao;
-
+	
+	@Autowired
+	private CategoryDAO cateDao;
+	
 	@Autowired
 	private CommentDAO commentDao;
 
@@ -89,21 +93,33 @@ public class PostService {
 	}
 
 	@Transactional
-	public long createPost(PostModel postMD) {
-		boolean status = true;
-		if (validatePost(postMD)) {
-			Post post = new Post();
-
-			post.setName(postMD.getName());
-			post.setDescription(postMD.getDescription());
-			post.setStatus(status);
-			post.setCreateAt(new Date());
-			post.setTags("");
-
-			postDao.insert(post);
-		} else {
+	public String createPost(PostModel model, String username) {
+		if (!validatePost(model)) {	
+			return Contants.INVALID_FIELDS;
 		}
-		return 0;
+		
+		Post newPost = extractPost(model, new Post());
+		
+		newPost.setCreateBy(accDao.find(username));
+		newPost.setCreateAt(new Date());
+		newPost.setCategory(cateDao.find(model.getCategoryId()));
+		newPost.setStatus(true);
+		newPost.setUpVote(0);
+		
+		postDao.insert(newPost);
+		
+		List<String> filenames = uploadImage(model.getFile());
+		Image newImage = null;
+		
+		for (String filename: filenames) {
+			newImage = new Image();
+			
+			newImage.setFilename(filename);
+			newImage.setPost(newPost);
+			imageDao.insert(newImage);
+		}
+		
+		return "";
 	}
 
 	@Transactional
@@ -153,6 +169,7 @@ public class PostService {
 			if (postUsername.equals(principal.getName())) {
 				commentDao.deleteByPost(postId);
 				imageDao.deleteByPost(postId);
+				voteDao.deleteByPost(postId);
 				postDao.delete(post);
 
 				return null;
@@ -195,7 +212,7 @@ public class PostService {
 
 		return Contants.NONEXSIT;
 	}
-
+	
 	@Transactional
 	public PostModel getPostModel(long postId, Principal principal) {
 		Post p = postDao.find(postId);
@@ -269,7 +286,6 @@ public class PostService {
 			return Contants.NONEXSIT;
 		} else {
 			post = extractPost(model, post);
-			post.setTags(post.getTags().replaceAll("#", ",#").replaceFirst(",", ""));
 			postDao.update(post);
 		}
 
@@ -323,7 +339,15 @@ public class PostService {
 		if (currentPost == null) {
 			return Contants.POST_NONEXSIT;
 		}
-
+		
+		if (type == true) {
+			currentPost.setUpVote(currentPost.getUpVote() + 1);	
+		} else {
+			currentPost.setUpVote(currentPost.getUpVote() - 1);
+		}
+		
+		postDao.update(currentPost);
+		
 		VoteId voteId = new VoteId(principal.getName(), postId);
 
 		if (voteDao.find(voteId) == null) {
@@ -342,15 +366,36 @@ public class PostService {
 		}
 	}
 
-//	public List<Post>
+	@Transactional
+	public PostModel getNewPostModel(String username) {
+		PostModel model = new PostModel();
+		
+		model.setUsername(username);
+		model.setCreateBy(accDao.find(username));
+		model.setStatus(true);
+		model.setUpVote(0);
+		
+		return model;
+	}
+	
+	@Transactional
+	public double rateHashtag(String hashtag) {
+		long counted = postDao.countHashtag(hashtag);
+		long totalPost = postDao.count("");
+		
+		return Math.ceil((counted * 1.0 / totalPost) * 10000) / 100;
+	}
+	
 	public boolean validatePost(PostModel post) {
 		if (StringUtils.isEmpty(post.getName())) {
 			return false;
 		}
+		
 		if (StringUtils.isEmpty(post.getDescription())) {
 			return false;
 		}
-		if (StringUtils.isEmpty(post.getCategory())) {
+		
+		if (StringUtils.isEmpty(post.getCategoryId())) {
 			return false;
 		}
 
@@ -375,13 +420,13 @@ public class PostService {
 
 		return data;
 	}
-
+	
 	public Post extractPost(PostModel model, Post target) {
 		target.setId(model.getId());
 		target.setName(model.getName());
 		target.setDescription(model.getDescription());
-		target.setTags(model.getTags());
-
+		target.setTags(model.getTags().replaceAll("#", ",#").replaceFirst(",", ""));
+		
 		return target;
 	}
 

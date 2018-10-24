@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="ISO-8859-1" isELIgnored="false"%>
+	pageEncoding="UTF-8" isELIgnored="false"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -390,8 +390,8 @@
 				</form:form>
 				<div class="row post-footer">
 					<div class="col-6 float-left border text-center h-100">
-						<h3 class="mt-3">
-							<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
+						<h3 class="mt-3" id="vote">
+							<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Voted
 						</h3>
 					</div>
 					<div class="col-6 float-left border text-center h-100 pointer">

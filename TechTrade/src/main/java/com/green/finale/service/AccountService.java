@@ -199,8 +199,14 @@ public class AccountService {
 
 	@Transactional
 	public List<MessageModel> getReceivedMessage(String username, int page) {
+
+		return getMessageModelList(messDao.getReceivedList(username, true, page));
+	}
+	
+	@Transactional
+	public List<MessageModel> getSentMessage(String username, int page) {
 		
-		return getMessageModelList(messDao.getReceivedList(username, true, page));	
+		return getMessageModelList(messDao.getSentList(username, page));
 	}
 	
 	@Transactional
@@ -229,21 +235,21 @@ public class AccountService {
 	@Transactional
 	public String deleteMessage(String username, long messId) {
 		Message mess = messDao.find(messId);
-		
+
 		if (mess == null) {
 			return Contants.NONEXSIT;
 		}
-		
+
 		String receiver = mess.getReceiver().getUsername();
 		String sender = mess.getSender().getUsername();
-		
+
 		if (!receiver.equals(username) && !sender.equals(username)) {
 			return Contants.NOT_BELONG;
 		}
-		
+
 		if (mess.isDeletedByReceiver() == true || mess.isDeletedBySender() == true) {
 			messDao.delete(mess);
-			
+
 			return "Message deleted.";
 		} else {
 			if (username.equals(sender)) {
@@ -251,32 +257,37 @@ public class AccountService {
 			} else {
 				messDao.deleteByReceiver(messId);
 			}
- 		}
-		
+		}
+
 		return "Message deleted.";
 	}
 
 	@Transactional
-	public String markMessage(String username, long messId, boolean type) {
+	public String markMessage(String username, long messId) {
 		Message mess = messDao.find(messId);
-		
+
 		if (mess == null) {
 			return Contants.NONEXSIT;
 		}
-			
+
 		String receiver = mess.getReceiver().getUsername();
 		String sender = mess.getSender().getUsername();
-		
+
 		if (!receiver.equals(username) && !sender.equals(username)) {
 			return Contants.NOT_BELONG;
 		}
-		
-		mess.setRead(type);
-		messDao.update(mess);
-		
-		return "";
+
+		if (mess.isRead() == true) {
+			messDao.markMessage(messId, false);
+
+			return "Marked as unread.";
+		} else {
+			messDao.markMessage(messId, true);
+
+			return "Marked as read.";
+		}
 	}
-	
+
 	public String uploadFile(MultipartFile file) {
 		if (file.isEmpty()) {
 			return null;
@@ -385,7 +396,7 @@ public class AccountService {
 			model.setSentAt(mess.getSentAt());
 			model.setRead(mess.isRead());
 			model.setContent(mess.getContent());
-			
+
 			models.add(model);
 		}
 

@@ -41,132 +41,6 @@ $(document).ready(function() {
 	        	}
 	        });
 	    });
-
-		$('#profile-posts').click(function() {
-			$('html, body').animate({
-				scrollTop: $(this).parent().offset().top -100
-			}, 200);
-		});
-		
-		var postId;
-		
-		$('.upvote').click(function() {
-			postId = this.id.match(/\d+/);
-			
-	    	$.ajax({
-	    		type : 'GET',
-	    		url : '/TechTrade/post/vote/' + postId,
-	    		data : {
-	    			type : true
-	    		},
-	    		success : function(result) {
-	    			$('#vote-holder-' + postId).html("<p class='w-100'>You voted this post +1</p>");
-	    		}
-	    	});
-	    });
-	    
-	    $('.downvote').click(function() {
-	    	postId = this.id.match(/\d+/);
-	    	
-	    	$.ajax({
-	    		type : 'GET',
-	    		url : '/TechTrade/post/vote/' + postId,
-	    		data : {
-	    			type : false
-	    		},
-	    		success : function(result) {
-	    			$('#vote-holder-' + postId).html("<p class='w-100'>You voted this post -1</p>");
-	    		}
-	    	});
-	    });
-	    
-	    var currentPage = 0;
-	    var stopPaging = false;
-	    
-	    $(window).scroll(function() {
-	  	   if((($(window).scrollTop() + $(window).height())) == ($(document).height())) {
-	 		   if (stopPaging == true) {
-	 			   return ;
-	 		   }
-	  		   $('#loader').fadeIn("fast");
-	  	       $.ajax({
-	  	    	   type: 'GET',
-	  	    	   url: '/TechTrade/account/api/' + $('#username').text(),
-	  	    	   data:{
-	  	    		   p: currentPage + 1,
-	  	    		   s: $('#sort').text()
-	  	    	   },
-	  	    	   contentType: "application/json; charset=utf-8",
-	  	    	   success: function(result){
-	  	    		   currentPage++;
-  	    			   string = "";
-	  	    		   $.each(result, function() {
-	  	    			   spanTags = "";
-	  	    			   $.each(this.tags.split(','), function(){
-	  	    				   spanTags += "<span class='color-main tags d-inline-block'>"+this+"</span> ";
-	  	    			   });
-	  	    			   date = new Date(this.createAt);	
-	  	    			   string += "<div class='post'>"
-	 		+"			<div class='row my-2'>"
-	 		+"				<div class='col-10'>"
-	 		+"					<h3>"
-	 		+"						<i class='fas fa-map-marker mr-2'></i>"+this.createBy.ward.name+","
-	 		+"						"+this.createBy.ward.district.name+','
-	 		+"						"+this.createBy.ward.district.city.name
-	 		+"					</h3>"
-	 		+"					<h2 class='text-truncate font-weight-bold'>"+this.name+"</h2>"
-	 		+"					<p>"
-	 		+"						By <span class='font-italic text-main'>"+this.createBy.username+"</span>"
-	 		+"						on " + formatCurrentDate(date)
-	 		+"					</p>"
-	 		+"					<div class='line-height-large'>"
-	 		+"						<span>Tags <i class='fas fa-hashtag'></i>"
-	 		+"						</span> <span class='tags d-inline-block'"
-	 		+"							style='background-color : "+this.category.tagColor+"'>"+this.category.name+"</span> "
-	 		+ spanTags
-	 		+"						</span>"					
-	 		+"					</div>"
-	 		+"				</div>"
-	 		+"				<div class='col-2'>"
-	 		+"					<img src='/TechTrade/account/avatar/"+this.createBy.avatar +"'"
-	 		+"						class='avatar position-right mx-3'>"
-	 		+"				</div>"
-	 		+"			</div>"
-	 		+"			<div class='row pointer' onclick='window.location.href=\"/TechTrade/post/"+ this.id +"\"'>"
-	 		+"				<div class='col custom-control-description text-size-post'>"+ this.description +"</div>"
-	 		+"			</div>"
-	 		+"			<div class='row post-footer'>"
-	 		+"				<div class='col'>"
-	 		+"					<div class='col-6 float-left border text-center h-100'>"
-	 		+"						<h3 class='mt-3'>"
-	 		+"							<i class='fas fa-arrows-alt-v mr-5'></i>"+this.upVote+" Votes"
-	 		+"						</h3>"
-	 		+"					</div>"
-	 		+"					<div class='col-6 float-left border text-center h-100 pointer'>"
-	 		+"						<h3 class='mt-3'>"
-	 		+"							<i class='fas fa-thumbtack mr-5'></i>Pin"
-	 		+"						</h3>"
-	 		+"					</div>"
-	 		+"				</div>"
-	 		+"			</div>"
-	 		+"		</div>";
-	  	        		});
-	  	    		   $('#post-content').html($('#post-content').html()+string);
-	  	    		   $('#loader').fadeOut("fast");
-	 	    		   if (string.length == 0) {
-	 	    			   stopPaging = true;
-	 	    		   }
-	  	    	   }
-	  	       });
-	  	   };
-	  	});
-	    
-	    var monthNames = [
-			"Jan", "Feb", "Mar",
-			"Apr", "May", "Jun", "Jul",
-			"Aug", "Sep", "Oct",
-			"Nov", "Dec"
-	    ];
 	    
 	    function formatCurrentDate(date) {
 	    	
@@ -284,6 +158,7 @@ $(document).ready(function() {
 	    	});
     		if ($(message_root).hasClass('bg-noti')) {
     			$('.unread-qty').text(--unread_qty);
+    	
     			$(message_root).remove();
     		}
     		$(message_root).remove();
@@ -440,4 +315,175 @@ $(document).ready(function() {
 	    		}
 	    	});
 	    });
+	    
+	    var slider = $('#form-container');
+	    var slider_left = 0; 
+	    var slider_left_btn = $('#slider-left');
+	    var slider_right_btn = $('#slider-right');
+	    var slider_progress = $('#post-progress');
+	    var slider_progress_width = 25;
+	    
+	    $('.slider-right').click(function() {
+	    	$(slider).css({
+	    		'left' : slider_left - 100 + '%'
+	    	});
+	    	slider_progress_width += 25;
+	    	$(slider_progress).css({
+	    		'width' : slider_progress_width + "%"
+	    	});
+	    	slider_left -= 100;
+	    });
+	    
+	    $('.slider-left').click(function() {
+	    	$(slider).css({
+	    		'left' : slider_left + 100  + '%'
+	    	});
+	    	slider_progress_width -= 25;
+	    	$(slider_progress).css({
+	    		'width' : slider_progress_width + "%"
+	    	});
+	    	slider_left += 100;
+	    });
+	    
+	    var tagInput;
+	    var finalTags = "";
+	    var hashtagsInput = $('#hashtags-input');
+	    var hashtagId;
+	    var form_hashtags = $('#form-hashtags');
+	    var tagNumber = 0;
+	    
+	    $('#hashtags-add').click(function() {
+	    	tagInput = $(hashtagsInput).val();
+	    	$($.parseHTML("<span class='color-main tags m-2 d-inline-block' id='hashtags"+tagNumber+"'>")).html(tagInput + "<span class='hashtags-del' id='hashtags-del"+tagNumber+"'><i class='fas fa-times-circle mx-2'></i></span>").appendTo("#hashtags-container");
+	    	tagNumber++;
+	    	$(hashtagsInput).val('#');
+	    	finalTags += tagInput;  
+	    	$(form_hashtags).val(finalTags);
+	    });
+	    
+	    var targetHashtag;
+	    
+	    $('.stage-hashtags').on('click', '.hashtags-del', function() {
+	    	hashtagId = this.id.match(/\d+/);
+	    	targetHashtag = $('#hashtags'+hashtagId);
+	    	finalTags = finalTags.replace(targetHashtag.text().trim(), "");
+	    	$(targetHashtag).remove();
+	    	$(form_hashtags).val(finalTags);
+	    	console.log(finalTags);
+	    });
+	    
+	    var hashtags_rate_result = $('#hashtags-rate-result');
+	    var hashtags_rate_message = $('#hashtags-rate-message');
+	    var hashtags_input_value;
+	    
+	    $(hashtagsInput).keyup(function() {
+	    	hashtags_input_value = $(hashtagsInput).val();
+	    	if (hashtags_input_value.length <= 1) {
+	    		return ;
+	    	}
+	    	$.ajax({
+	    		type : 'GET',
+	    		url : '/TechTrade/post/hashtags/rate',
+	    		data : {
+	    			keyword : hashtags_input_value
+	    		},
+	    		success : function(result) {
+	    			$(hashtags_rate_result).css({
+	    				'width' : result + '%'
+	    			});
+	    			$(hashtags_rate_message).html(result + "% of the posts in community has <span class='font-weight-bold font-italic'>" + hashtags_input_value + "</span> Tag.");
+	    		}
+	    	});
+	    });
+	    
+	    var count = 0;
+		var temp = "";
+		var reader = null;
+		var filesAmount;
+		
+	    $('#files-cancel').click(function() {
+	    	$('.preview').empty();
+	    	$("#files").val(null);
+	    });
+	    
+	    var validated = true;
+	    var name_message = $('#name-forgot');
+	    var cate_message = $('#categoy-forgot');
+	    var des_message = $('#description-forgot');
+	    
+	    $('#post-form').submit(function(event) {
+	    	if ($('#name').val().length == 0) {
+	    		validated = false;
+	    		handleInvalid(0, 25, name_message);
+	    		
+	    		return false;
+	    	}
+	    	
+	    	if ($('#categoryId').val() == null) {
+	    		validated = false;
+	    		handleInvalid(-100, 50, cate_message);
+	    		
+	    		return false;
+	    	}
+	    	
+	    	if ($('#form-description').val().length == 0) {
+	    		validated = false;
+	    		handleInvalid(-200, 75, des_message);
+	    		
+	    		return false;
+	    	}
+	    	return true;
+	    });
+	    
+	    function handleInvalid(position, progress, target_message) {
+	    	$(slider).css({
+	    		'left' : position + '%'
+	    	});
+	    	$(slider_progress).css({
+	    		'width' : progress + "%"
+	    	});
+	    	slider_left = position;
+	    	slider_progress_width = progress; 
+	    	$(target_message.show());
+	    }
+	    
+	    $("#dropzone").on("dragover", function(event) {
+    		event.preventDefault();  
+    		event.stopPropagation();
+    		$(this).addClass('dragging');
+		});
+
+		$("#dropzone").on("dragleave", function(event) {
+    		event.preventDefault();  
+    		event.stopPropagation();
+		    $(this).removeClass('dragging');
+		});
+
+		$('#dropzone').on("drop", function(event) {
+			event.preventDefault();  
+    		event.stopPropagation();
+    		$('#files').prop('files', event.originalEvent.dataTransfer.files);
+		});
+		
+		function readURL(input, place) {
+			$('.preview').empty();
+            if (input.files) {
+            	filesAmount = input.files.length;
+            	console.log(filesAmount);
+                for (i = 0; i < filesAmount; i++) {
+                	reader = new FileReader();
+
+                    reader.onload = function(event) {
+                        $($.parseHTML("<img class='float-left w-25 hpx-350 mx-5 my-3'>")).attr('src', event.target.result).appendTo(place);
+                    }
+
+                    reader.readAsDataURL(input.files[i]);
+                	console.log(input.files[i]);
+                }
+            }
+		};
+    
+    $("#files").change(function() {
+    	readURL(this, "div.preview");
+    });
 });

@@ -258,11 +258,15 @@ footer a:hover, footer a:focus {
 }
 
 .text-small {
-	font-size: 15px;
+	font-size: 15px !important;
 }
 
 .text-medium {
-	font-size: 20px;
+	font-size: 20px !important;
+}
+
+.text-large {
+	font-size: 38px !important;	
 }
 
 .color-main {
@@ -320,6 +324,10 @@ footer a:hover, footer a:focus {
 
 .hpx-100 {
 	height: 100px;
+}
+
+.hpx-1000 {
+	height: 1000px;
 }
 
 .wpx-70 {
@@ -902,4 +910,18 @@ label {
 	text-overflow: ellipsis;
 	overflow: hidden;	
 	transition: all .3s;
+}
+
+.dropzone {
+	height: 100px;
+	width: 100%;
+	min-height: 100px;
+	position: absolute;
+	z-index: 10;
+	margin: 0;
+	line-height: 100px;
+	color: var(--main-bg-color);
+	background-color: #efefef;
+	font-size: 20px !important;   
+	text-align: center;
 }

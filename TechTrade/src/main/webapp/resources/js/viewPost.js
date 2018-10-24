@@ -279,6 +279,7 @@ $(document).ready(function() {
     }
     
     $('#upvote').click(function() {
+    	$('#vote').text((parseInt($('#vote').text()) + 1) + " Voted");
     	$.ajax({
     		type : 'GET',
     		url : '/TechTrade/post/vote/' + $('#post-id').val(),
@@ -292,6 +293,7 @@ $(document).ready(function() {
     });
     
     $('#downvote').click(function() {
+    	$('#vote').text((parseInt($('#vote').text()) - 1) + " Voted");
     	$.ajax({
     		type : 'GET',
     		url : '/TechTrade/post/vote/' + $('#post-id').val(),

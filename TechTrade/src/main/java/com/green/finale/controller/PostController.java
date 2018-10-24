@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.green.finale.service.AccountService;
 import com.green.finale.service.CategoryService;
 import com.green.finale.entity.Post;
 import com.green.finale.model.PostModel;
@@ -34,6 +35,9 @@ public class PostController {
 
 	@Autowired
 	private CategoryService cateService;
+
+	@Autowired
+	private AccountService accService;
 
 	@GetMapping(value = "/search")
 	public @ResponseBody List<Object[]> search(@RequestParam(name = "keyword", defaultValue = "") String keyword) {
@@ -65,6 +69,34 @@ public class PostController {
 		model.addAttribute("cateList", cateService.getCategoryList());
 
 		return "viewPost";
+	}
+
+	@GetMapping(value = "/upload")
+	public String uploadPost(Model model, Principal principal) {
+		model.addAttribute("model", postService.getNewPostModel(principal.getName()));
+		model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
+		model.addAttribute("account", accService.find(principal.getName()));
+		model.addAttribute("cateList", cateService.getCategoryList());
+
+		return "uploadPost";
+	}
+
+	@PostMapping(value = "/upload")
+	public String uploadPost(@ModelAttribute(name = "model") PostModel postModel, BindingResult result, Model model,
+			Principal principal) {
+		String error = postService.createPost(postModel, principal.getName());
+		
+		if (error.length() != 0) {
+			model.addAttribute("error", error);
+			
+			return "error";
+		}
+		System.out.println("name " + postModel.getName());
+		System.out.println("description " + postModel.getDescription());
+		System.out.println("tags " + postModel.getTags());
+		
+//		return "redirect:/account/" + principal.getName();
+		return "";
 	}
 
 	@PostMapping(value = "/{postId}")
@@ -124,7 +156,7 @@ public class PostController {
 		return "redirect:/post/" + postId;
 	}
 
-	@PostMapping("/comment")
+	@PostMapping(value = "/comment")
 	public @ResponseBody String addComment(@RequestParam(name = "comment") String comment,
 			@RequestParam(name = "postId") long postId, Principal principal) {
 		String error = postService.addComment(postId, comment, principal);
@@ -137,7 +169,7 @@ public class PostController {
 		return principal.getName();
 	}
 
-	@GetMapping("/vote/{postId}")
+	@GetMapping(value = "/vote/{postId}")
 	public @ResponseBody String vote(@PathVariable(name = "postId") long postId,
 			@RequestParam(name = "type", defaultValue = "true") boolean type, Principal principal) {
 		String error = postService.votePost(postId, type, principal);
@@ -148,5 +180,16 @@ public class PostController {
 		}
 
 		return error;
+	}
+
+	@GetMapping(value = "/hashtags/rate")
+	public @ResponseBody double rateHashtags(@RequestParam(name = "keyword") String hashtag) {
+
+		return postService.rateHashtag(hashtag);
+	}
+	
+	@GetMapping(value = "/test")
+	public void test(@RequestParam(name = "test") String test) {
+		System.out.println(test);
 	}
 }

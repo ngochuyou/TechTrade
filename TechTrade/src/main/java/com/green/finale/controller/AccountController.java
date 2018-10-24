@@ -199,28 +199,37 @@ public class AccountController {
 	}
 
 	@GetMapping(value = "/message")
-	public @ResponseBody List<MessageModel> getMessages(@RequestParam(name = "page") int page, Principal principal) {
+	public @ResponseBody List<MessageModel> getMessages(@RequestParam(name = "page", defaultValue = "0") int page,
+			Principal principal) {
 
 		return accService.getReceivedMessage(principal.getName(), page);
 	}
 
+	@GetMapping(value = "/message/outbox")
+	public @ResponseBody List<MessageModel> getOutBox(@RequestParam(name = "page", defaultValue = "0") int page,
+			Principal principal) {
+
+		return accService.getSentMessage(principal.getName(), page);
+	}
+
 	@PostMapping(value = "/message/send")
-	public @ResponseBody String sendMessage(@RequestParam(name = "receiver") String receiverId,
+	public @ResponseBody String sendMessage(@RequestParam(name = "receiver", defaultValue = "") String receiverId,
 			@RequestParam(name = "content") String content, Principal principal) {
 
 		return accService.createMessage(principal.getName(), receiverId, content);
 	}
 
 	@GetMapping(value = "/message/remove")
-	public @ResponseBody String deleteMessage(@RequestParam(name = "messageId") long messId, Principal principal) {
+	public @ResponseBody String deleteMessage(@RequestParam(name = "messageId", defaultValue = "") long messId,
+			Principal principal) {
 
 		return accService.deleteMessage(principal.getName(), messId);
 	}
 
 	@GetMapping(value = "/message/mark")
-	public @ResponseBody String markMessage(@RequestParam(name = "messageId") long messId,
-			@RequestParam(name = "type") boolean type, Principal principal) {
+	public @ResponseBody String markMessage(@RequestParam(name = "messageId", defaultValue = "") long messId,
+			Principal principal) {
 
-		return accService.markMessage(principal.getName(), messId, type);
+		return accService.markMessage(principal.getName(), messId);
 	}
 }

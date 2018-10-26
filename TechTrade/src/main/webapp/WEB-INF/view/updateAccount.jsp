@@ -193,13 +193,32 @@
 				<h1 class="text-center">${account.username }</h1>
 			</div>
 			<div class="row mx-1 p-5 bg-noti" id="info">
+
+				<!-- <input type="button" value="Edit" /> -->
+
 				<div class="col-6">
 					<h4 class="text-left my-4">
-						<i class="fas fa-phone mr-4"></i><input type="number" id="phone"  />
+						<i class="fas fa-phone mr-4"></i><input type="number" id="phone" />
 					</h4>
 					<h4 class="text-left my-4">
-						<i class="fas fa-map-marker-alt mr-4"></i> ${account.ward.name },
-						${account.ward.district.name }, ${account.ward.district.city.name }
+						<i class="fas fa-map-marker-alt mr-4"></i> <select
+							id="city-select" class="custom-select hpx-50">
+							<c:forEach var="city" items="${cityList }">
+								<option style="width:33%" value="${city.id }">${city.name }</option>
+							</c:forEach>
+						</select> <select id="district-select" class="custom-select hpx-50">
+							<c:forEach var="district" items="${districtList }">
+								<option style="width:33%" value="${district.id }">${district.name }</option>
+							</c:forEach>
+						</select>
+						<%-- <form:select path="wardId" id="ward-select"
+							class="custom-select hpx-50">
+							<c:forEach var="ward" items="${wardList }">
+								<option style="width:33%" value="${ward.id }">${ward.name }</option>
+							</c:forEach>
+						</form:select> --%>
+						<%-- ${account.ward.name },
+						${account.ward.district.name }, ${account.ward.district.city.name } --%>
 					</h4>
 				</div>
 				<div class="col-6">

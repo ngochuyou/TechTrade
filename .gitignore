@@ -5,3 +5,4 @@ example/.idea
 */.settings
 */target
 */pom.xml
+.DS_Store

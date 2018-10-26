@@ -221,12 +221,12 @@
 					id="profile-info">
 					<h3 class="text-main text-center font-weight-bold">Informations</h3>
 				</div>
-				<div
-					class="col-2 pt-4 pb-3 border-right box-shadow-hover pointer boxshadow-hover"
-					id="profile-messages">
-					<h3 class="text-main text-center font-weight-bold">Message</h3>
-				</div>
 				<c:if test="${user.username eq account.username }">
+					<div
+						class="col-2 pt-4 pb-3 border-right box-shadow-hover pointer boxshadow-hover"
+						id="profile-messages">
+						<h3 class="text-main text-center font-weight-bold">Message</h3>
+					</div>
 					<div
 						class="col-2 pt-4 pb-3 border-right box-shadow-hover pointer boxshadow-hover"
 						onclick="window.location.href='<spring:url value='/post/upload'></spring:url>'">
@@ -267,27 +267,33 @@
 								</h3>
 							</c:if>
 							<div class="row my-4 px-4">
-								<div class="col-1 py-3">
-									<div class="col-1 m-auto text-center"
-										id="vote-holder-${post.id }">
-										<c:if test="${not empty post.vote }">
-											<c:if test="${post.vote.type eq true }">
-												<p class="w-100">You voted this post +1</p>
+								<sec:authorize access="isAuthenticated()">
+									<div class="col-1 py-3">
+										<div class="col-1 m-auto text-center"
+											id="vote-holder-${post.id }">
+											<c:if test="${not empty post.vote }">
+												<c:if test="${post.vote.type eq true }">
+													<p class="w-100">You voted this post +1</p>
+												</c:if>
+												<c:if test="${post.vote.type ne true }">
+													<p class="w-100">You voted this post -1</p>
+												</c:if>
 											</c:if>
-											<c:if test="${post.vote.type ne true }">
-												<p class="w-100">You voted this post -1</p>
+											<c:if test="${empty post.vote }">
+												<div class="w-100 pointer upvote" id="upvote-${post.id }">
+													<i class="fas fa-angle-up fa-3x"></i>
+												</div>
+												<div class="w-100 pointer downvote"
+													id="downvote-${post.id }">
+													<i class="fas fa-angle-down fa-3x"></i>
+												</div>
 											</c:if>
-										</c:if>
-										<c:if test="${empty post.vote }">
-											<div class="w-100 pointer upvote" id="upvote-${post.id }">
-												<i class="fas fa-angle-up fa-3x"></i>
-											</div>
-											<div class="w-100 pointer downvote" id="downvote-${post.id }">
-												<i class="fas fa-angle-down fa-3x"></i>
-											</div>
-										</c:if>
+										</div>
 									</div>
-								</div>
+								</sec:authorize>
+								<sec:authorize access="isAuthenticated()">
+									<div class="col-1 py-3"></div>
+								</sec:authorize>
 								<div class="col-10">
 									<h2 class="text-truncate font-weight-bold">${post.name }</h2>
 									<p>

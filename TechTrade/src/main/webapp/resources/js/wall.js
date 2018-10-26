@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var username = $('#username').text();
+	var username = $('#username');
 	
 		$('.overlay').click(function() {
 			$('#sidebar').addClass('sidebar-active');

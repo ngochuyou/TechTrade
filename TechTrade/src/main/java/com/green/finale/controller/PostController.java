@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.green.finale.service.AccountService;
 import com.green.finale.service.CategoryService;
-import com.green.finale.entity.Post;
 import com.green.finale.model.PostModel;
 import com.green.finale.service.PostService;
 import com.green.finale.utils.Contants;
@@ -118,11 +117,6 @@ public class PostController {
 		return "redirect:/post/" + postId;
 	}
 
-	@GetMapping
-	public @ResponseBody List<Post> getPostList(@RequestParam(name = "page") long page) {
-		return postService.getNewestList(page);
-	}
-
 	@GetMapping(value = "/images/{filename}")
 	public @ResponseBody byte[] getPostImages(@PathVariable(name = "filename") String filename) {
 
@@ -139,7 +133,7 @@ public class PostController {
 			return "error";
 		}
 
-		return "redirect:/";
+		return "redirect:/account/" + principal.getName();
 	}
 
 	@GetMapping(value = "/{postId}/status")
@@ -186,10 +180,5 @@ public class PostController {
 	public @ResponseBody double rateHashtags(@RequestParam(name = "keyword") String hashtag) {
 
 		return postService.rateHashtag(hashtag);
-	}
-	
-	@GetMapping(value = "/test")
-	public void test(@RequestParam(name = "test") String test) {
-		System.out.println(test);
 	}
 }

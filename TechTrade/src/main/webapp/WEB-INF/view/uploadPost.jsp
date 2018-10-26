@@ -242,7 +242,7 @@
 								</div>
 							</div>
 							<form:input path="name"
-								class="form-control h-25 font-weight-bold text-center text-large py-5"
+								class="form-control h-25 font-weight-bold text-center text-large text-main py-5"
 								autocomplete="off" style="background: none; border:none" />
 							<h3 class="my-3">
 								<i class="fas fa-comment-dots mr-3"></i>Search box searches

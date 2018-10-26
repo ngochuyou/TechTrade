@@ -44,11 +44,6 @@ public class LocationController {
 			model.addAttribute("wardList", locaService.getWardByIdDistrict(idDistrict));
 		}
 
-//		if (idDistrict != null || idCity != null) {
-//			model.addAttribute("districtList", locaService.getDistrictByIdCity(idCity));
-//			model.addAttribute("wardList", locaService.getWardByIdDistrict(idDistrict));
-//		}
-
 		return "location";
 	}
 	

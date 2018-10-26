@@ -133,6 +133,18 @@ public class PostDAO {
 
 		return hql.list();
 	}
+	
+//	public Post getListByTitle(String keyword) {
+//		Session ss = factory.getCurrentSession();
+//		Query<Object[]> hql = ss.createQuery(
+//				"SELECT name, id FROM Post WHERE (name LIKE :keyword OR tags LIKE :keyword) AND status=true ORDER BY upVote desc",
+//				Object[].class);
+//
+//		hql.setParameter("keyword", "%" + keyword + "%");
+//		hql.setMaxResults(MAX_RESULT);
+//
+//		return (Post) hql.list();
+//	}
 
 	public long count(String conditionQuery) {
 		Session ss = factory.getCurrentSession();

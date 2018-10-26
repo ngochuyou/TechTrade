@@ -67,6 +67,10 @@ public class AccountController {
 
 		return "wall";
 	}
+	@GetMapping(value="/update/{username}")
+	public String update(@PathVariable(name = "username") String username,Model model, Principal principal) {
+		return "updateAccount";
+	}
 
 	@GetMapping(value = "/api/{username}")
 	public @ResponseBody List<PostModel> wallAPI(@PathVariable(name = "username") String username,

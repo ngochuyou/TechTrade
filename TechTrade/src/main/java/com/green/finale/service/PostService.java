@@ -22,10 +22,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.green.finale.dao.AccountDAO;
 import com.green.finale.dao.CommentDAO;
 import com.green.finale.dao.ImageDAO;
+import com.green.finale.dao.PinDAO;
 import com.green.finale.dao.PostDAO;
 import com.green.finale.dao.VoteDAO;
+import com.green.finale.entity.Account;
 import com.green.finale.entity.Comment;
 import com.green.finale.entity.Image;
+import com.green.finale.entity.Pin;
+import com.green.finale.entity.PinId;
 import com.green.finale.entity.Post;
 import com.green.finale.entity.Vote;
 import com.green.finale.entity.VoteId;
@@ -50,15 +54,18 @@ public class PostService {
 	@Autowired
 	private VoteDAO voteDao;
 
+	@Autowired
+	private PinDAO pinDao;
+
 	@Transactional
 	public List<Post> getPostList() {
 		return postDao.getList();
 	}
 
 	@Transactional
-	public List<Post> getNewestList(long page) {
+	public List<PostModel> getNewestPostModel(Principal principal, long page) {
 
-		return postDao.getNewestList(page);
+		return getPostModelList(postDao.getNewestList(page), principal);
 	}
 
 	@Transactional
@@ -69,7 +76,7 @@ public class PostService {
 		if (!m.matches()) {
 			return null;
 		}
-		
+
 		if (principal != null && principal.getName().equals(username)) {
 			return getPostModelList(postDao.getAllListByAccount(username, page, sortBy), principal);
 		} else {
@@ -127,8 +134,8 @@ public class PostService {
 	}
 
 	@Transactional
-	public List<Post> search(String categoryId, String keyword, String sortBy, int firstRecord)
-			throws NumberFormatException {
+	public List<PostModel> search(String categoryId, String keyword, String sortBy, int firstRecord,
+			Principal principal) throws NumberFormatException {
 		Pattern p = Pattern.compile("(createAt|nearest|upVote)(:desc|:asc)");
 		Matcher m = p.matcher(sortBy);
 
@@ -137,7 +144,8 @@ public class PostService {
 		}
 
 		try {
-			return postDao.getList(Integer.valueOf(categoryId), keyword, sortBy, firstRecord);
+			return getPostModelList(postDao.getList(Integer.valueOf(categoryId), keyword, sortBy, firstRecord),
+					principal);
 		} catch (NumberFormatException ex) {
 			throw new NumberFormatException(Contants.INVALID_FIELDS);
 		}
@@ -219,8 +227,10 @@ public class PostService {
 
 		if (principal != null) {
 			model.setVote(voteDao.find(new VoteId(principal.getName(), p.getId())));
+			model.setPin(pinDao.find(new PinId(principal.getName(), p.getId())));
 		} else {
 			model.setVote(null);
+			model.setPin(null);
 		}
 
 		return model;
@@ -230,7 +240,7 @@ public class PostService {
 	public List<PostModel> getPostModelList(List<Post> postList, Principal principal) {
 		List<PostModel> modelList = new ArrayList<>();
 		PostModel model;
-		
+
 		for (Post p : postList) {
 			model = new PostModel();
 
@@ -247,10 +257,13 @@ public class PostService {
 
 			if (principal != null) {
 				model.setVote(voteDao.find(new VoteId(principal.getName(), p.getId())));
+				model.setPin(pinDao.find(new PinId(principal.getName(), p.getId())));
+
 			} else {
 				model.setVote(null);
+				model.setPin(null);
 			}
-			
+
 			modelList.add(model);
 		}
 
@@ -342,7 +355,37 @@ public class PostService {
 		}
 	}
 
-//	public List<Post>
+	@Transactional
+	public boolean pinPost(String username, long postId) {
+		PinId pinId = new PinId();
+		pinId.setAccountId(username);
+		pinId.setPostId(postId);
+
+		Pin pin = pinDao.find(pinId);
+		System.out.println(username);
+		System.out.println(postId);
+		if (pin != null) {
+			System.out.println("da ton tai pin");
+			pinDao.delete(pin);
+			return false;
+		} else {
+			System.out.println("chua ton tai pin");
+			pin = new Pin();
+			pin.setPinId(pinId);
+
+			pin.setCreateAt(new Date());
+
+			Account acc = accDao.find(username);
+			pin.setAccount(acc);
+
+			Post post = postDao.find(postId);
+			pin.setPost(post);
+
+			pinDao.insert(pin);
+			return true;
+		}
+	}
+
 	public boolean validatePost(PostModel post) {
 		if (StringUtils.isEmpty(post.getName())) {
 			return false;

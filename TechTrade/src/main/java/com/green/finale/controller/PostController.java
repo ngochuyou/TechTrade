@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.green.finale.service.CategoryService;
-import com.green.finale.entity.Post;
 import com.green.finale.model.PostModel;
+import com.green.finale.service.CategoryService;
 import com.green.finale.service.PostService;
 import com.green.finale.utils.Contants;
 
@@ -87,8 +86,9 @@ public class PostController {
 	}
 
 	@GetMapping
-	public @ResponseBody List<Post> getPostList(@RequestParam(name = "page") long page) {
-		return postService.getNewestList(page);
+	public @ResponseBody List<PostModel> getPostList(@RequestParam(name = "page") long page, Principal principal) {
+		System.out.println(page);
+		return postService.getNewestPostModel(principal, page);
 	}
 
 	@GetMapping(value = "/images/{filename}")
@@ -148,5 +148,10 @@ public class PostController {
 		}
 
 		return error;
+	}
+
+	@GetMapping(value = "/pin")
+	public @ResponseBody boolean pinPost(Principal principal, @RequestParam(name = "post") long post) {
+		return postService.pinPost(principal.getName(), post);
 	}
 }

@@ -1,5 +1,6 @@
 package com.green.finale.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,16 @@ import com.green.finale.entity.Post;
 import com.green.finale.model.SearchPage;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.green.finale.service.AccountService;
 import com.green.finale.service.CategoryService;
 import com.green.finale.service.PostService;
 
 @Controller
 @RequestMapping("/")
 public class HomeController {
+	@Autowired
+	private AccountService accService;
+
 	@Autowired
 	private AuthenticationTrustResolver authenticationTrustResolver;
 
@@ -33,9 +38,14 @@ public class HomeController {
 	private CategoryService cateService;
 
 	@GetMapping
-	public String index(Model model) {
+	public String index(Model model, Principal principal) {
 		model.addAttribute("cateList", cateService.getCategoryList());
 		model.addAttribute("postList", postService.getNewestList(0));
+
+		if (principal != null) {
+			model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
+		}
+
 		return "home";
 	}
 
@@ -43,7 +53,7 @@ public class HomeController {
 	public String search(@RequestParam(name = "category", defaultValue = "0") String categoryId,
 			@RequestParam(name = "k", defaultValue = "") String keyword,
 			@RequestParam(name = "s", defaultValue = "createAt:desc") String sortBy,
-			@RequestParam(name = "p", defaultValue = "0") int page, Model model) throws Exception {
+			@RequestParam(name = "p", defaultValue = "0") int page, Model model, Principal principal) throws Exception {
 		model.addAttribute("cateList", cateService.getCategoryList());
 
 		try {
@@ -66,6 +76,10 @@ public class HomeController {
 		pageModel.setPageNumber(page);
 		pageModel.setSortBy(sortBy);
 		model.addAttribute("page", pageModel);
+
+		if (principal != null) {
+			model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
+		}
 
 		return "search";
 	}

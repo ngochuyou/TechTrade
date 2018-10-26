@@ -17,13 +17,16 @@ $(document).ready(function() {
     		$('#my-dropdown-container').hide();
     	}
     });
-  
-    $('#search').keyup(function() {
+
+    var search = $('#search');
+    var search_dropdown = $('#my-dropdown-container');
+    
+    $(search).keyup(function() {
         $.ajax({
         	type : 'GET',
         	url : '/TechTrade/post/search',
         	data : {
-        		keyword : $('#search').val(),
+        		keyword :$(search).val(),
         	},
         	success : function(list) {
         		var string = "";
@@ -31,13 +34,12 @@ $(document).ready(function() {
         		$.each(list, function() {
         			string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/post/"+this[1]+"'>"+this[0]+"</a>";
         		});
-        		
-        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$('#search').val()+"'>See more</a>";
-        		$('#my-dropdown-container').html(string);
-        		$('#my-dropdown-container').show();
+        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$(search).val()+"'>See more</a>";
+        		$(search_dropdown).html(string);
+        		$(search_dropdown).show();
         	},
         	error : function() {
-        		$('#my-dropdown-container').hide();
+        		$(search_dropdown).hide();
         	}
         });
     });
@@ -46,6 +48,7 @@ $(document).ready(function() {
     var d;
     var string = "";
     var stopPaging = false;
+    var post_content = $('#post-content');
     
     $(window).scroll(function() {
     	if((($(window).scrollTop() + $(window).height())) == ($(document).height())) {
@@ -96,7 +99,7 @@ $(document).ready(function() {
 		+"						class='avatar position-right mx-3'>"
 		+"				</div>"
 		+"			</div>"
-		+"			<div class='row' onclick='window.location.href='/TechTrade/post/"+ this.id +"''>"
+		+"			<div class='row pointer' onclick='window.location.href=\"/TechTrade/post/"+ this.id +"\"'>"
 		+"				<div class='col custom-control-description text-size-post'>"+ this.description +"</div>"
 		+"			</div>"
 		+"			<div class='row post-footer'>"
@@ -115,7 +118,7 @@ $(document).ready(function() {
 		+"			</div>"
 		+"		</div>";    	        			
     	        		});
-    	    		   $('#post-content').html($('#post-content').html()+string);
+    	    		   $(post_content).append(string);
     	    		   $('#loader').fadeOut("fast");
 	 	    		   if (string.length == 0) {
 	 	    			   stopPaging = true;

@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	var username = $('#username').text();
+	
 		$('.overlay').click(function() {
 			$('#sidebar').addClass('sidebar-active');
 			$('.overlay').removeClass('active-overlay');
@@ -18,26 +20,28 @@ $(document).ready(function() {
 	    });
 		
 		var string = "";
-		
-	    $('#search').keyup(function() {
+		var search = $('#search');
+	    var search_dropdown = $('#my-dropdown-container');
+	    
+	    $(search).keyup(function() {
 	        $.ajax({
 	        	type : 'GET',
 	        	url : '/TechTrade/post/search',
 	        	data : {
-	        		keyword : $('#search').val(),
+	        		keyword :$(search).val(),
 	        	},
 	        	success : function(list) {
-	        		string = "";
+	        		var string = "";
+	        		
 	        		$.each(list, function() {
 	        			string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/post/"+this[1]+"'>"+this[0]+"</a>";
 	        		});
-	        		
-	        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$('#search').val()+"'>See more</a>";
-	        		$('#my-dropdown-container').html(string);
-	        		$('#my-dropdown-container').show();
+	        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$(search).val()+"'>See more</a>";
+	        		$(search_dropdown).html(string);
+	        		$(search_dropdown).show();
 	        	},
 	        	error : function() {
-	        		$('#my-dropdown-container').hide();
+	        		$(search_dropdown).hide();
 	        	}
 	        });
 	    });
@@ -49,8 +53,9 @@ $(document).ready(function() {
 		});
 		
 		var postId;
+		var main = $('.main').first();
 		
-		$('.upvote').click(function() {
+		$(main).on('click', '.upvote', function() {
 			postId = this.id.match(/\d+/);
 			
 	    	$.ajax({
@@ -65,7 +70,7 @@ $(document).ready(function() {
 	    	});
 	    });
 	    
-	    $('.downvote').click(function() {
+		$(main).on('click', '.downvote', function() {
 	    	postId = this.id.match(/\d+/);
 	    	
 	    	$.ajax({
@@ -82,6 +87,8 @@ $(document).ready(function() {
 	    
 	    var currentPage = 0;
 	    var stopPaging = false;
+	    var voteHTML = "";
+	    var post_content = $('#post-content');
 	    
 	    $(window).scroll(function() {
 	  	   if((($(window).scrollTop() + $(window).height())) == ($(document).height())) {
@@ -91,7 +98,7 @@ $(document).ready(function() {
 	  		   $('#loader').fadeIn("fast");
 	  	       $.ajax({
 	  	    	   type: 'GET',
-	  	    	   url: '/TechTrade/account/api/' + $('#username').text(),
+	  	    	   url: '/TechTrade/account/api/' + $(username).text(),
 	  	    	   data:{
 	  	    		   p: currentPage + 1,
 	  	    		   s: $('#sort').text()
@@ -105,9 +112,28 @@ $(document).ready(function() {
 	  	    			   $.each(this.tags.split(','), function(){
 	  	    				   spanTags += "<span class='color-main tags d-inline-block'>"+this+"</span> ";
 	  	    			   });
-	  	    			   date = new Date(this.createAt);	
-	  	    			   string += "<div class='post'>"
-	 		+"			<div class='row my-2'>"
+	  	    			   date = new Date(this.createAt);
+	  	    			   if (this.vote == null) {
+	  	    				   voteHTML = " <div class='w-100 pointer upvote' id='upvote-" + this.id + "'>"
+										+"		<i class='fas fa-angle-up fa-3x'></i>"
+										+"	</div> "
+										+"	<div class='w-100 pointer downvote' id='downvote-" + this.id + "'>"
+										+"		<i class='fas fa-angle-down fa-3x'></i>"
+										+"	</div>";
+	  	    			   } else {
+	  	    				   if (this.vote.type == true) {
+	  	    					   voteHTML = "<p class='w-100'>You voted this post +1</p>";
+	  	    				   } else {
+	  	    					   voteHTML = "<p class='w-100'>You voted this post -1</p>";
+	  	    				   }
+	  	    			   }
+	  	    			   string += "<div class='my-2 py-2 bg-white'>"
+	 		+"				<div class='row my-4 px-4'>"
+			+"					<div class='col-1 py-3'>"
+			+"						<div class='col-1 m-auto text-center'"
+			+"							id='vote-holder-" + this.id + "'>" 
+			+ voteHTML
+			+"						</div></div>"
 	 		+"				<div class='col-10'>"
 	 		+"					<h3>"
 	 		+"						<i class='fas fa-map-marker mr-2'></i>"+this.createBy.ward.name+","
@@ -127,31 +153,27 @@ $(document).ready(function() {
 	 		+"						</span>"					
 	 		+"					</div>"
 	 		+"				</div>"
-	 		+"				<div class='col-2'>"
-	 		+"					<img src='/TechTrade/account/avatar/"+this.createBy.avatar +"'"
-	 		+"						class='avatar position-right mx-3'>"
-	 		+"				</div>"
+	 		+"				<div class='col-1'></div>"
 	 		+"			</div>"
-	 		+"			<div class='row pointer' onclick='window.location.href=\"/TechTrade/post/"+ this.id +"\"'>"
+	 		+"			<div class='row pointer my-2 px-4' onclick='window.location.href=\"/TechTrade/post/"+ this.id +"\"'>"
 	 		+"				<div class='col custom-control-description text-size-post'>"+ this.description +"</div>"
 	 		+"			</div>"
-	 		+"			<div class='row post-footer'>"
+	 		+"			<div class='row px-4'>"
 	 		+"				<div class='col'>"
-	 		+"					<div class='col-6 float-left border text-center h-100'>"
-	 		+"						<h3 class='mt-3'>"
+	 		+"					<div class='col-6 float-left border half-left-curve pointer'>"
+	 		+"						<h3 class='mt-3 text-center'>"
 	 		+"							<i class='fas fa-arrows-alt-v mr-5'></i>"+this.upVote+" Votes"
 	 		+"						</h3>"
 	 		+"					</div>"
-	 		+"					<div class='col-6 float-left border text-center h-100 pointer'>"
-	 		+"						<h3 class='mt-3'>"
+	 		+"					<div class='col-6 float-left border half-right-curve pointer'>"
+	 		+"						<h3 class='mt-3 text-center'>"
 	 		+"							<i class='fas fa-thumbtack mr-5'></i>Pin"
 	 		+"						</h3>"
 	 		+"					</div>"
 	 		+"				</div>"
-	 		+"			</div>"
-	 		+"		</div>";
+	 		+"			</div></div>";
 	  	        		});
-	  	    		   $('#post-content').html($('#post-content').html()+string);
+	  	    		   $(post_content).append(string);
 	  	    		   $('#loader').fadeOut("fast");
 	 	    		   if (string.length == 0) {
 	 	    			   stopPaging = true;
@@ -175,6 +197,7 @@ $(document).ready(function() {
 	    
 	    var overTime = "AM";
 	    var hour;
+	    var minute; 
 	    var dateObject;
 	    
 	    function formatCurrentDateTime(date) {
@@ -187,257 +210,16 @@ $(document).ready(function() {
 	    		overTime = "PM";
 	    	}
 	    	
-			return monthNames[dateObject.getMonth()] + ' ' + dateObject.getDate() + ', ' + dateObject.getFullYear() + ':' + hour + ':' + dateObject.getMinutes() + ':' + dateObject.getSeconds() + ' ' + overTime;
+	    	if (hour < 10) {
+    			hour = "0" + hour;
+    		}
+	    	
+	    	minute = dateObject.getMinutes();
+	    	
+	    	if (minute < 10) {
+	    		minute = "0" + minute;
+	    	}
+	    	
+			return monthNames[dateObject.getMonth()] + ' ' + dateObject.getDate() + ', ' + dateObject.getFullYear() + ' ' + hour + ':' + minute + " " + overTime;
 	    }
-	    
-	    var unread_qty = parseInt($('.unread-qty').first().text());
-	    var inbox = $('#inbox');
-	    var currentInboxPage = 0;
-	    var messagesContainer = $('#messages-container');
-	    var messagesContainerHTML = $(messagesContainer).html();
-	    var stopPagingMessages = false;
-	    
-	    $('.inbox-open').click(function() {
-	    	$(inbox).toggleClass('fixed-fullscreen-active');
-	    });
-	    
-	    $('#inbox-showmore').click(function() {
-	    	if (stopPagingMessages == true) {
-	    		return ;
-	    	}
-	    	
-	    	$.ajax({
-	    		type : 'GET',
-	    		url : '/TechTrade/account/message',
-	    		contentType: "application/json; charset=utf-8",
-	    		data : {
-	    			page : currentInboxPage + 1
-	    		},
-	    		success : function(result) {
-	    			if (result.length <= 0) {
-	    				stopPagingMessages = true; 
-	    				$('#inbox-showmore').text("Nothing left.");
-	    				return ;
-	    			}
-	    			currentInboxPage += 1;
-	    			$.each(result, function() {
-	    				messagesContainerHTML += "<div class='row message pointer'>"
-	    								+ "<input type='hidden' value='" + this.id + "' class='message-id'>"
-	    								+ "<span class='message-location hidden'>" + this.sender.ward.name + ","
-	    								+ this.sender.ward.district.name + ","
-	    								+ this.sender.ward.district.city.name + "</span>"
-	    								+ "<div class='col-2 border-right'>"
-	    								+ "<img src='/TechTrade/account/avatar?username="+ this.sender.username + "' class='m-auto avatar-medium'>"
-	    								+ "</div>"
-	    								+ "<div class='col-9'>"
-	    								+ "<h3 class='text-truncate message-username'>" + this.sender.username + "</h3>"
-	    								+ "<p class='text-truncate mb-1 message-content'>" + this.content + "</p>"
-	    								+ "<p class='text-truncate text-small message-sentAt'>"
-	    								+ formatCurrentDateTime(this.sentAt) + "</p>"
-	    								+ "</div>"
-	    								+ "<div class='col-1 p-0'>"
-	    								+ "<div class='icon icon-small m-auto message-delete' id='message-delete-" + this.id + "'>"
-	    								+ "<i class='fas fa-trash text-right hidden'></i>"
-	    								+ "</div>"
-	    								+ "<div class='icon icon-small m-auto'>"
-	    								+ "<i class='fas fa-reply text-right hidden'></i>"
-	    								+ "</div></div></div>";
-	    			});
-	    			$(messagesContainer).html(messagesContainerHTML);
-	    		}
-	    	});
-	    });
-	    
-	    $('.inbox-main').on('mouseenter', '.message', function() {
-	    	$(this).find('svg').removeClass('hidden');
-	    });
-	    
-	    $('.inbox-main').on('mouseleave', '.message', function() {
-	    	$(this).find('svg').addClass('hidden');
-	    });
-	    
-	    var delete_noti = $('#delete-noti');
-	    var message_id;
-	    var message_root;
-	    var inbox_main = $('.inbox-main');
-	    var inbox_composer = $('.inbox-composer');
-	    
-	    $(inbox_main).on('click', '.message-delete', function() {
-	    	$('.delete-noti').remove();
-	    	message_root = $(this).parents().eq(1);
-	    	message_id = this.id.match(/\d+/).toString();
-	    	$(inbox_main).append("<div class='fixed-noti delete-noti' id='delete-noti'>Are you sure you want to delete this message from <span class='font-weight-bold'>"+ $(message_root).find('.message-username').text() +"</span>? Action can not be undo. <button class='btn bg-main mx-4' id='noti-yes'>Yes!</button><button class='btn btn-outline-main' id='noti-no'>Don't do it</button></div>");
-	    	delete_noti = $('#delete-noti');
-	    });
-	    
-    	$(inbox_main).on('click', '#noti-yes', function() {
-    		$(delete_noti).html("<img src='/TechTrade/resources/img/loading.gif' class='mr-3' style='height : 50px;'> Please wait...");
-    		$.ajax({
-	    		type : 'GET',
-	    		url : '/TechTrade/account/message/remove',
-	    		data : {
-	    			messageId : message_id
-	    		},
-	    		success : function(result) {
-	    			$(delete_noti).text(result);
-	    		}
-	    	});
-    		if ($(message_root).hasClass('bg-noti')) {
-    			$('.unread-qty').text(--unread_qty);
-    			$(message_root).remove();
-    		}
-    		$(message_root).remove();
-    		setTimeout(function() {
-    			  $(delete_noti).remove();
-    		}, 3000);
-    	});
-    	
-    	$(inbox_main).on('click', '#noti-no', function() {
-    		$('#delete-noti').remove();
-	    	return ;
-    	});
-    	
-	    var sender; 
-	    var reply = $('#reply');
-	    var inbox_back = $('#inbox-back');
-	    
-	    $(inbox).on('click', '.message .col-9', function() {
-	    	sender = $(this).find('.message-username').text();
-	    	message_root = $(this).parent();
-	    	message_id = $(message_root).find('.message-id').val();
-	    	if ($(message_root).hasClass('bg-noti')) {
-	    		console.log('marking');
-	    		$.ajax({
-		    		type : 'GET',
-		    		url : '/TechTrade/account/message/mark',
-		    		data : {
-		    			messageId : message_id
-		    		},
-		    		success : function(result) {
-		    			if (result == "Marked as unread.") {
-		    				$('.unread-qty').text(++unread_qty);
-		    				$('.message-id[value="' + message_id + '"]').parent().addClass('bg-noti');
-		    			} else {
-		    				$('.unread-qty').text(--unread_qty);
-		    				$('.message-id[value="' + message_id + '"]').parent().removeClass('bg-noti');
-		    			}
-		    		}
-		    	});
-	    	}
-	    	
-	    	$('#composer-avatar').attr('src', '/TechTrade/account/avatar?username=' + sender);
-	    	$('#composer-username').text(sender);
-	    	$('#composer-sentAt').text($(this).find('.message-sentAt').text());
-	    	$('#composer-location').text($(this).find('.message-location').text());
-	    	$('#composer-content').text($(this).find('.message-content').text());
-	    	$(inbox_main).fadeOut("fast");
-	    	$(inbox_composer).fadeIn("fast");
-	    });
-	    
-	    $('.composer-delete').click(function() {
-	    	$('.delete-noti').remove();
-	    	$(inbox_composer).append("<div class='fixed-noti delete-noti' id='delete-noti'>Are you sure you want to delete this message? Action can not be undo. <button class='btn bg-main mx-4' id='noti-yes'>Yes!</button><button class='btn btn-outline-main' id='noti-no'>Don't do it</button></div>");
-	    	delete_noti = $('#delete-noti');
-	    });
-	    
-	    $('.composer-mark').click(function() {
-	    	$.ajax({
-	    		type : 'GET',
-	    		url : '/TechTrade/account/message/mark',
-	    		data : {
-	    			messageId : message_id
-	    		},
-	    		success : function(result) {
-	    			$(inbox_composer).append("<div class='fixed-noti mark-noti'>" + result + "</div>");
-	    			setTimeout(function() {
-	    				$('.mark-noti').remove();
-	    			}, 3000);
-	    			
-	    			if (result == "Marked as unread.") {
-	    				$('.unread-qty').text(++unread_qty);	
-	    				$('.message-id[value="' + message_id + '"]').parent().addClass('bg-noti');
-	    			} else {
-	    				$('.unread-qty').text(--unread_qty);
-	    				$('.message-id[value="' + message_id + '"]').parent().removeClass('bg-noti');
-	    			}
-	    		}
-	    	});
-	    });
-	    
-	    $(inbox_composer).on('click', '#noti-yes', function() {
-    		$(delete_noti).html("<img src='/TechTrade/resources/img/loading.gif' class='mr-3' style='height : 50px;'> Please wait...");
-    		$.ajax({
-	    		type : 'GET',
-	    		url : '/TechTrade/account/message/remove',
-	    		data : {
-	    			messageId : message_id
-	    		},
-	    		success : function(result) {
-	    			$(delete_noti).text(result);
-	    		}
-	    	});
-    		message_root = $('#message-delete-' + message_id).parents().eq(1);
-    		
-    		if ($(message_root).hasClass('bg-noti')) {
-    			$('.unread-qty').text(--unread_qty);
-    		}
-    		
-			$(message_root).remove();
-    		setTimeout(function() {
-    			  $(delete_noti).remove();
-    		}, 3000);
-    		$(inbox_back).click();
-    	});
-    	
-    	$(inbox_composer).on('click', '#noti-no', function() {
-    		$('#delete-noti').remove();
-	    	return ;
-    	});
-    	
-	    $(inbox_back).click(function() {
-	    	$('.inbox-main').fadeIn("fast");
-	    	$('.inbox-composer').fadeOut("fast");
-	    	$('.message-result').addClass('hidden');
-	    	$(reply).val(null);
-	    });	
-	    
-	    var outmessages_container = $('#outmessages-container');
-	    var outmessages_containerHTML = $(outmessages_container).html(); 
-	    var currentOutboxPage = 0;
-	    
-	    $('.inbox-main-open').click(function() {
-	    	$('.absolute:not(.inbox-main)').fadeOut("fast");
-	    	$('.inbox-main').fadeIn("fast");
-	    });
-	    
-	    var send_result = $('#message-info');
-	    var send_loader = $('#message-loader');
-	    var crfs = $('#csrfToken');
-	    
-	    $('#message-send').click(function() {
-	    	if ($(reply).val().length <= 0) {
-	    		$(reply).attr('placeholder', "Please fill in this field");
-	    		return ;
-	    	}
-	    	$('.message-result').removeClass('hidden');
-	    	send_loader.attr('src', '/TechTrade/resources/img/checked.gif');
-	    	send_result.text("Please wait!");
-	    	$.ajax({
-	    		type : 'POST',
-	    		url : '/TechTrade/account/message/send',
-	    		data : {
-	    			receiver : sender,
-	    			content : $(reply).val(),
-	    			[crfs.attr('name')] : crfs.val()
-	    		},
-	    		success : function(result) {
-	    			$(send_result).html(result);
-	    			if (result == "Sent!") {
-	    				send_loader.attr('src', '/TechTrade/resources/img/checked.gif');
-	    			} else {
-	    				send_loader.attr('src', '/TechTrade/resources/img/error.gif');
-	    			}
-	    		}
-	    	});
-	    });
 });

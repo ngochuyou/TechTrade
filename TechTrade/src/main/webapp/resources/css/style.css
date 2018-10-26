@@ -845,17 +845,17 @@ label {
 	right: 0vw;
 }
 
-.inbox-main {
+.inbox-main, .outbox, .outbox-composer {
 	width: 50vw;
 }
 
-.inbox-main .row {
+.inbox-main .row, .outbox .row, .outbox-composer .row {
 	height: 15%;
 	margin: 0;
 	padding: 1rem .5rem;
 }
 
-.inbox-main > div .row {
+.inbox-main > div .row, .outbox > div .row, .outbox-composer > div .row{
 	height: 25%;
 	margin: 0;
 	padding: 1rem .5rem;

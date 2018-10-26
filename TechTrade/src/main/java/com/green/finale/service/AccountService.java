@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -198,36 +199,54 @@ public class AccountService {
 	}
 
 	@Transactional
+	public List<Object[]> getNewMessages(String username) {
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		date.setTime(date.getTime() - 60000);
+
+		return messDao.getJustRecentlyReceivedList(username, sdf.format(date));
+	}
+
+	@Transactional
 	public List<MessageModel> getReceivedMessage(String username, int page) {
 
 		return getMessageModelList(messDao.getReceivedList(username, true, page));
 	}
-	
+
 	@Transactional
 	public List<MessageModel> getSentMessage(String username, int page) {
-		
+
 		return getMessageModelList(messDao.getSentList(username, page));
 	}
-	
+
 	@Transactional
 	public String createMessage(String username, String receiverId, String content) {
-		Account receiver = accDao.find(receiverId);
+		String[] receiverIds = receiverId.replaceFirst(",", "").split(",");
+		Account receiver = null;
+		Message mess = null;
+		Account sender = accDao.find(username);
+		Date sentAt = new Date();
+		
+		for (String id : receiverIds) {
+			receiver = accDao.find(id);
 
-		if (receiver == null) {
-			return Contants.USER_NONEXSIT;
+			if (receiver == null) {
+				return Contants.USER_NONEXSIT + ":" + id;
+			}
+
+			mess = new Message();
+
+			mess.setSender(sender);
+			mess.setReceiver(receiver);
+			mess.setContent(content);
+			mess.setRead(false);
+			mess.setSentAt(sentAt);
+			mess.setDeletedByReceiver(false);
+			mess.setDeletedBySender(false);
+
+			messDao.insert(mess);
 		}
-
-		Message mess = new Message();
-
-		mess.setSender(accDao.find(username));
-		mess.setReceiver(receiver);
-		mess.setContent(content);
-		mess.setRead(false);
-		mess.setSentAt(new Date());
-		mess.setDeletedByReceiver(false);
-		mess.setDeletedBySender(false);
-
-		messDao.insert(mess);
 
 		return "Sent!";
 	}

@@ -68,6 +68,10 @@ public class PostController {
 		model.addAttribute("images", postService.getImageListByPost(id));
 		model.addAttribute("cateList", cateService.getCategoryList());
 
+		if (principal != null) {
+			model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
+		}
+		
 		return "viewPost";
 	}
 
@@ -91,12 +95,8 @@ public class PostController {
 			
 			return "error";
 		}
-		System.out.println("name " + postModel.getName());
-		System.out.println("description " + postModel.getDescription());
-		System.out.println("tags " + postModel.getTags());
 		
-//		return "redirect:/account/" + principal.getName();
-		return "";
+		return "redirect:/account/" + principal.getName();
 	}
 
 	@PostMapping(value = "/{postId}")

@@ -156,11 +156,7 @@ public class AccountController {
 	@GetMapping(value = "/keycheck")
 	public @ResponseBody Account keyCheck(@RequestParam(name = "key") String key) {
 
-		try {
-			return accService.keycheck(key);
-		} catch (Exception ex) {
-			return null;
-		}
+		return accService.keycheck(key);
 	}
 
 	@GetMapping(value = "/password/forgot")
@@ -205,8 +201,14 @@ public class AccountController {
 		return accService.getReceivedMessage(principal.getName(), page);
 	}
 
+	@GetMapping(value = "/message/inbox")
+	public @ResponseBody List<Object[]> getNewInbox(Principal principal) {
+
+		return accService.getNewMessages(principal.getName());
+	}
+
 	@GetMapping(value = "/message/outbox")
-	public @ResponseBody List<MessageModel> getOutBox(@RequestParam(name = "page", defaultValue = "0") int page,
+	public @ResponseBody List<MessageModel> getOutbox(@RequestParam(name = "page", defaultValue = "0") int page,
 			Principal principal) {
 
 		return accService.getSentMessage(principal.getName(), page);

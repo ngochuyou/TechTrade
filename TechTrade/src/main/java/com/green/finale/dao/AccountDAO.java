@@ -53,16 +53,13 @@ public class AccountDAO {
 		
 		query.setParameter("email", email);
 		
-		Account account = null;
+		List<Account> list = query.getResultList();
 		
-		try {
-			account = query.getSingleResult();
-
-		} catch (Exception e) {
+		if (list.size() == 0) {
 			return null;
 		}
 		
-		return account;
+		return list.get(0);
 	}
 
 	public Account findByPhone(String phone) {

@@ -43,13 +43,16 @@ $(document).ready(function() {
     		$('#my-dropdown-container').hide();
     	}
     });
-  
-    $('#search').keyup(function() {
+    
+    var search = $('#search');
+    var search_dropdown = $('#my-dropdown-container');
+    
+    $(search).keyup(function() {
         $.ajax({
         	type : 'GET',
         	url : '/TechTrade/post/search',
         	data : {
-        		keyword :$('#search').val(),
+        		keyword :$(search).val(),
         	},
         	success : function(list) {
         		var string = "";
@@ -57,12 +60,12 @@ $(document).ready(function() {
         		$.each(list, function() {
         			string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/post/"+this[1]+"'>"+this[0]+"</a>";
         		});
-        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$('#search').val()+"'>See more</a>";
-        		$('#my-dropdown-container').html(string);
-        		$('#my-dropdown-container').show();
+        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$(search).val()+"'>See more</a>";
+        		$(search_dropdown).html(string);
+        		$(search_dropdown).show();
         	},
         	error : function() {
-        		$('#my-dropdown-container').hide();
+        		$(search_dropdown).hide();
         	}
         });
     });

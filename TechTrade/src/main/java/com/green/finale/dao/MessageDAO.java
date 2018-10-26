@@ -6,6 +6,7 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +21,7 @@ public class MessageDAO {
 	public List<Message> getReceivedList(String username, boolean isRead, int page) {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<Message> hql = ss.createQuery(
-				"FROM Message WHERE receiver.id = :username AND read = :read AND deletedByReceiver = :deleted",
+				"FROM Message WHERE receiver.id = :username AND read = :read AND deletedByReceiver = :deleted ORDER BY sentAt desc",
 				Message.class);
 
 		hql.setParameter("username", username);
@@ -35,10 +36,21 @@ public class MessageDAO {
 		return hql.getResultList();
 	}
 
+	public List<Object[]> getJustRecentlyReceivedList(String username, String time) {
+		Session ss = factory.getCurrentSession();
+		String query = "SELECT id, sender.username, sentAt, content FROM Message WHERE receiver.id = :username AND sentAt > '"
+				+ time + "' ORDER BY sentAt desc";
+		Query<Object[]> hql = ss.createQuery(query, Object[].class);
+		
+		hql.setParameter("username", username);
+
+		return hql.getResultList();
+	}
+
 	public List<Message> getSentList(String username, int page) {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<Message> hql = ss.createQuery(
-				"FROM Message WHERE sender.id = :username AND deletedBySender = :deleted",
+				"FROM Message WHERE sender.id = :username AND deletedBySender = :deleted ORDER BY sentAt desc",
 				Message.class);
 
 		hql.setParameter("username", username);

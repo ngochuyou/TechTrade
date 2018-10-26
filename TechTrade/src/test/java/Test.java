@@ -1,7 +1,12 @@
-public class Test {
-	public static void main(String[] args) {	
-		String s = "order:asc";
+public class Test {	
+	public static void main(String[] args) {
+		String s = "ngochuyou";
+		String []ray = null;
 		
-		System.out.println(s);
+		ray = s.replaceFirst(",", "").split(",");
+		System.out.println(ray.length);
+		for (String sub: ray) {
+			System.out.println(sub);
+		}
 	}
 }

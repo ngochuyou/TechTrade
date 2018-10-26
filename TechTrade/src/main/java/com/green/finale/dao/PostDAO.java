@@ -152,7 +152,16 @@ public class PostDAO {
 
 		return hql.getSingleResult();
 	}
-
+	
+	public long countHashtag(String hashtag) {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<Long> hql = ss.createQuery("SELECT COUNT(*) FROM Post WHERE tags LIKE :keyword", Long.class);
+		
+		hql.setParameter("keyword", "%" + hashtag + "%");
+		
+		return hql.getSingleResult();
+	}
+	
 	public long insert(Post post) {
 		Session ss = factory.getCurrentSession();
 

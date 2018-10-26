@@ -258,11 +258,15 @@ footer a:hover, footer a:focus {
 }
 
 .text-small {
-	font-size: 15px;
+	font-size: 15px !important;
 }
 
 .text-medium {
-	font-size: 20px;
+	font-size: 20px !important;
+}
+
+.text-large {
+	font-size: 38px !important;	
 }
 
 .color-main {
@@ -322,6 +326,10 @@ footer a:hover, footer a:focus {
 	height: 100px;
 }
 
+.hpx-1000 {
+	height: 1000px;
+}
+
 .wpx-70 {
 	width: 70px;
 }
@@ -363,6 +371,7 @@ label {
 
 .hidden {
 	display: none;
+	transition: all .3s;
 }
 
 .position-right {
@@ -810,112 +819,109 @@ label {
 	overflow: hidden;
 }
 
-.inbox-header {
-	width: 100%;
-	height: 10%;
-	background-color: rgba(2, 2, 2, 0.77);
-}
-
-.inbox-content {
-	width: 100%;
-	height: 90%;
-	overflow-x: hidden;
-	overflow-y: auto; 
-}
-
-.inbox-content figure {
-	width: 200%;
+.absolute {
+	position: absolute;
 	height: 100%;
-	position: relative;
+	background-color: white;
+	top: 0;
 	left: 0;
-	margin: 0;
-	text-align: left;
+	bottom: 0;
+	right: 0;
 }
 
-.inbox-content figure > div {
-	width: 50%;
-	float: left;
+.fixed-fullscreen {
+	position: fixed;
+	width: 50vw;
+	height: 89.5vh;
+	bottom: 0;
+	right: -51vw;
+	overflow: hidden;
+	box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px
+		rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4);
+	transition: all .3s;	
+}
+
+.fixed-fullscreen-active {
+	right: 0vw;
+}
+
+.inbox-main, .outbox, .outbox-composer {
+	width: 50vw;
+}
+
+.inbox-main .row, .outbox .row, .outbox-composer .row {
+	height: 15%;
+	margin: 0;
+	padding: 1rem .5rem;
+}
+
+.inbox-main > div .row, .outbox > div .row, .outbox-composer > div .row{
+	height: 25%;
+	margin: 0;
+	padding: 1rem .5rem;
+}
+
+.inbox-composer {
+	overflow-x: hidden;
+	overflow-y: auto;
+	position: relative;
+}
+
+.icon {
+	margin-top: .3rem;
+	margin-right: .3rem;
+	border-radius: 50% !important;
+	overflow: hidden;
+	text-align: center;
+	padding-top: .25rem !important;
+	transition: all .3s;
+	cursor: pointer;
 }
 
 .icon-small {
 	width: 40px;
 	height: 40px;
-	border-radius: 50% !important;
-	overflow: hidden;
-	text-align: center;
-	padding-top: .25rem !important;
-	margin-top: .5rem;
-	transition: all .3s;
-	cursor: pointer;
 }
 
-.icon-small:hover {
-	background-color: #efefef; 
-	border: 1px solid #dee2e6 !important;
-}
-/*
-.actionbar {
-	width: 10%;
-	float: left;
-	position : absolute;
-	left : 0;
+.icon-medium {
+	width: 70px;
+	height: 70px;
 }
 
-.timeline {
-	width: 82%;
-    float: left;
-    padding: 2rem 4rem;
-    overflow: auto;
-    max-height: 100%;
-    margin-left: 10%;
+.icon:hover {
+	background-color: #efefef;
 }
 
-.inbox {
-	margin-left: 93%;
-	position : absolute;
-	right : 0;
-	width: 8%;
-	height: 100%;
-	box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px
-		rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4);	
-	transition: all .3s;
-	max-height: 100%;
-	max-width: 100%;
-	overflow-y: auto;
-	overflow-x: hidden;
-	background-color: white;
+.fit-cover {
+	object-fit: cover !important;
 }
 
-.inbox-active {
-	width: 50%;
-}
-
-.message {
-	height: 25%;
-	overflow: hidden;
-	transition: all .3s;
-}
-
-.message:hover {
+.fixed-noti {
+	position : fixed;
+	bottom: 50px;
+	right: 50px;
+	width: auto;
+	max-height: 100px; 
+	background-color: var(--main-bg-color);
+	padding: 1rem;
+	color: white;
 	box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px
 		rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4);
+	text-overflow: ellipsis;
+	overflow: hidden;	
+	transition: all .3s;
 }
 
-.message-active {
-	height: auto;
-	background: #efefef !important;
-}
-
-.message-header {
-    float: left;
-	padding-top: 1.2rem;
-	width: 110px;
+.dropzone {
+	height: 100px;
+	width: 100%;
+	min-height: 100px;
+	position: absolute;
+	z-index: 10;
+	margin: 0;
+	line-height: 100px;
+	color: var(--main-bg-color);
+	background-color: #efefef;
+	font-size: 20px !important;   
 	text-align: center;
 }
-
-.message-content {
-	margin-left: 110px;
-	max-width: 83%;
-	padding : 1rem .5rem; 
-	word-wrap: break-word;
-}*/

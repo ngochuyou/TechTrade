@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	var username = $('#username').text();
+	
 		$('.overlay').click(function() {
 			$('#sidebar').addClass('sidebar-active');
 			$('.overlay').removeClass('active-overlay');
@@ -18,35 +20,31 @@ $(document).ready(function() {
 	    });
 		
 		var string = "";
-		
-	    $('#search').keyup(function() {
+		var search = $('#search');
+	    var search_dropdown = $('#my-dropdown-container');
+	    
+	    $(search).keyup(function() {
 	        $.ajax({
 	        	type : 'GET',
 	        	url : '/TechTrade/post/search',
 	        	data : {
-	        		keyword : $('#search').val(),
+	        		keyword :$(search).val(),
 	        	},
 	        	success : function(list) {
-	        		string = "";
+	        		var string = "";
+	        		
 	        		$.each(list, function() {
 	        			string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/post/"+this[1]+"'>"+this[0]+"</a>";
 	        		});
-	        		
-	        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$('#search').val()+"'>See more</a>";
-	        		$('#my-dropdown-container').html(string);
-	        		$('#my-dropdown-container').show();
+	        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$(search).val()+"'>See more</a>";
+	        		$(search_dropdown).html(string);
+	        		$(search_dropdown).show();
 	        	},
 	        	error : function() {
-	        		$('#my-dropdown-container').hide();
+	        		$(search_dropdown).hide();
 	        	}
 	        });
 	    });
-	    
-		$('#profile-info').click(function() {
-			$('html, body').animate({
-				scrollTop: $(".wallpaper-cover").offset().top -100
-			}, 200);
-		});
 
 		$('#profile-posts').click(function() {
 			$('html, body').animate({
@@ -55,8 +53,9 @@ $(document).ready(function() {
 		});
 		
 		var postId;
+		var main = $('.main').first();
 		
-		$('.upvote').click(function() {
+		$(main).on('click', '.upvote', function() {
 			postId = this.id.match(/\d+/);
 			
 	    	$.ajax({
@@ -71,7 +70,7 @@ $(document).ready(function() {
 	    	});
 	    });
 	    
-	    $('.downvote').click(function() {
+		$(main).on('click', '.downvote', function() {
 	    	postId = this.id.match(/\d+/);
 	    	
 	    	$.ajax({
@@ -88,6 +87,8 @@ $(document).ready(function() {
 	    
 	    var currentPage = 0;
 	    var stopPaging = false;
+	    var voteHTML = "";
+	    var post_content = $('#post-content');
 	    
 	    $(window).scroll(function() {
 	  	   if((($(window).scrollTop() + $(window).height())) == ($(document).height())) {
@@ -97,7 +98,7 @@ $(document).ready(function() {
 	  		   $('#loader').fadeIn("fast");
 	  	       $.ajax({
 	  	    	   type: 'GET',
-	  	    	   url: '/TechTrade/account/api/' + $('#username').text(),
+	  	    	   url: '/TechTrade/account/api/' + $(username).text(),
 	  	    	   data:{
 	  	    		   p: currentPage + 1,
 	  	    		   s: $('#sort').text()
@@ -111,9 +112,28 @@ $(document).ready(function() {
 	  	    			   $.each(this.tags.split(','), function(){
 	  	    				   spanTags += "<span class='color-main tags d-inline-block'>"+this+"</span> ";
 	  	    			   });
-	  	    			   date = new Date(this.createAt);	
-	  	    			   string += "<div class='post'>"
-	 		+"			<div class='row my-2'>"
+	  	    			   date = new Date(this.createAt);
+	  	    			   if (this.vote == null) {
+	  	    				   voteHTML = " <div class='w-100 pointer upvote' id='upvote-" + this.id + "'>"
+										+"		<i class='fas fa-angle-up fa-3x'></i>"
+										+"	</div> "
+										+"	<div class='w-100 pointer downvote' id='downvote-" + this.id + "'>"
+										+"		<i class='fas fa-angle-down fa-3x'></i>"
+										+"	</div>";
+	  	    			   } else {
+	  	    				   if (this.vote.type == true) {
+	  	    					   voteHTML = "<p class='w-100'>You voted this post +1</p>";
+	  	    				   } else {
+	  	    					   voteHTML = "<p class='w-100'>You voted this post -1</p>";
+	  	    				   }
+	  	    			   }
+	  	    			   string += "<div class='my-2 py-2 bg-white'>"
+	 		+"				<div class='row my-4 px-4'>"
+			+"					<div class='col-1 py-3'>"
+			+"						<div class='col-1 m-auto text-center'"
+			+"							id='vote-holder-" + this.id + "'>" 
+			+ voteHTML
+			+"						</div></div>"
 	 		+"				<div class='col-10'>"
 	 		+"					<h3>"
 	 		+"						<i class='fas fa-map-marker mr-2'></i>"+this.createBy.ward.name+","
@@ -133,31 +153,27 @@ $(document).ready(function() {
 	 		+"						</span>"					
 	 		+"					</div>"
 	 		+"				</div>"
-	 		+"				<div class='col-2'>"
-	 		+"					<img src='/TechTrade/account/avatar/"+this.createBy.avatar +"'"
-	 		+"						class='avatar position-right mx-3'>"
-	 		+"				</div>"
+	 		+"				<div class='col-1'></div>"
 	 		+"			</div>"
-	 		+"			<div class='row pointer' onclick='window.location.href=\"/TechTrade/post/"+ this.id +"\"'>"
+	 		+"			<div class='row pointer my-2 px-4' onclick='window.location.href=\"/TechTrade/post/"+ this.id +"\"'>"
 	 		+"				<div class='col custom-control-description text-size-post'>"+ this.description +"</div>"
 	 		+"			</div>"
-	 		+"			<div class='row post-footer'>"
+	 		+"			<div class='row px-4'>"
 	 		+"				<div class='col'>"
-	 		+"					<div class='col-6 float-left border text-center h-100'>"
-	 		+"						<h3 class='mt-3'>"
+	 		+"					<div class='col-6 float-left border half-left-curve pointer'>"
+	 		+"						<h3 class='mt-3 text-center'>"
 	 		+"							<i class='fas fa-arrows-alt-v mr-5'></i>"+this.upVote+" Votes"
 	 		+"						</h3>"
 	 		+"					</div>"
-	 		+"					<div class='col-6 float-left border text-center h-100 pointer'>"
-	 		+"						<h3 class='mt-3'>"
+	 		+"					<div class='col-6 float-left border half-right-curve pointer'>"
+	 		+"						<h3 class='mt-3 text-center'>"
 	 		+"							<i class='fas fa-thumbtack mr-5'></i>Pin"
 	 		+"						</h3>"
 	 		+"					</div>"
 	 		+"				</div>"
-	 		+"			</div>"
-	 		+"		</div>";
+	 		+"			</div></div>";
 	  	        		});
-	  	    		   $('#post-content').html($('#post-content').html()+string);
+	  	    		   $(post_content).append(string);
 	  	    		   $('#loader').fadeOut("fast");
 	 	    		   if (string.length == 0) {
 	 	    			   stopPaging = true;
@@ -179,22 +195,31 @@ $(document).ready(function() {
 	    	return monthNames[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
 	    }
 	    
-	    var sender;
-	    var inbox = $('#inbox');
+	    var overTime = "AM";
+	    var hour;
+	    var minute; 
+	    var dateObject;
 	    
-	    $('.message').click(function() {
-	    	sender = $(this).find('h5').text();
-	    	$('#sender-ava').attr('src', '/TechTrade/account/avatar?username=' + sender.split(" ")[0]);
-	    	$('#sender-username').text(sender);
-	    	$('#sent-at').text($(this).find(':not([class])').text());
-	    	$('#message-content').text($(this).find('.text-truncate').text());
+	    function formatCurrentDateTime(date) {
+	    	dateObject = new Date(date);
+	    	overTime = "AM";
+	    	hour = dateObject.getHours();
 	    	
-	    	$(inbox).animate({
-	    		'left' : '-100%'
-	    	}, 300);
-	    });
-	    
-	    $('#inbox-open').click(function() {
-	    	$('#inbox-container').toggleClass('hidden');
-	    });
+	    	if (hour >= 13) {
+	    		hour -= 12;
+	    		overTime = "PM";
+	    	}
+	    	
+	    	if (hour < 10) {
+    			hour = "0" + hour;
+    		}
+	    	
+	    	minute = dateObject.getMinutes();
+	    	
+	    	if (minute < 10) {
+	    		minute = "0" + minute;
+	    	}
+	    	
+			return monthNames[dateObject.getMonth()] + ' ' + dateObject.getDate() + ', ' + dateObject.getFullYear() + ' ' + hour + ':' + minute + " " + overTime;
+	    }
 });

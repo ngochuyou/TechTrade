@@ -17,12 +17,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.green.finale.model.PostModel;
 import com.green.finale.model.SearchPage;
+import com.green.finale.service.AccountService;
 import com.green.finale.service.CategoryService;
 import com.green.finale.service.PostService;
 
 @Controller
 @RequestMapping("/")
 public class HomeController {
+	@Autowired
+	private AccountService accService;
+
 	@Autowired
 	private AuthenticationTrustResolver authenticationTrustResolver;
 
@@ -36,6 +40,11 @@ public class HomeController {
 	public String index(Model model, Principal principal) {
 		model.addAttribute("cateList", cateService.getCategoryList());
 		model.addAttribute("postList", postService.getNewestPostModel(principal, 0));
+
+		if (principal != null) {
+			model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
+		}
+
 		return "home";
 	}
 
@@ -66,6 +75,10 @@ public class HomeController {
 		pageModel.setPageNumber(page);
 		pageModel.setSortBy(sortBy);
 		model.addAttribute("page", pageModel);
+
+		if (principal != null) {
+			model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
+		}
 
 		return "search";
 	}

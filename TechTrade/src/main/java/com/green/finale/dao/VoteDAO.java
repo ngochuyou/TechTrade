@@ -1,5 +1,7 @@
 package com.green.finale.dao;
 
+import javax.persistence.TypedQuery;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +26,14 @@ public class VoteDAO {
 		Session ss = factory.getCurrentSession();
 		
 		return (VoteId) ss.save(vote);
+	}
+	
+	public void deleteByPost(long postId) {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<?> hql = ss.createQuery("DELETE From Vote WHERE post.id = :id");
+		
+		hql.setParameter("id", postId);
+		
+		hql.executeUpdate();
 	}
 }

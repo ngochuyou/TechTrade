@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.green.finale.model.PostModel;
+import com.green.finale.service.AccountService;
 import com.green.finale.service.CategoryService;
 import com.green.finale.service.PostService;
 import com.green.finale.utils.Contants;
@@ -33,6 +34,9 @@ public class PostController {
 
 	@Autowired
 	private CategoryService cateService;
+
+	@Autowired
+	private AccountService accService;
 
 	@GetMapping(value = "/search")
 	public @ResponseBody List<Object[]> search(@RequestParam(name = "keyword", defaultValue = "") String keyword) {
@@ -63,7 +67,35 @@ public class PostController {
 		model.addAttribute("images", postService.getImageListByPost(id));
 		model.addAttribute("cateList", cateService.getCategoryList());
 
+		if (principal != null) {
+			model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
+		}
+		
 		return "viewPost";
+	}
+
+	@GetMapping(value = "/upload")
+	public String uploadPost(Model model, Principal principal) {
+		model.addAttribute("model", postService.getNewPostModel(principal.getName()));
+		model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
+		model.addAttribute("account", accService.find(principal.getName()));
+		model.addAttribute("cateList", cateService.getCategoryList());
+
+		return "uploadPost";
+	}
+
+	@PostMapping(value = "/upload")
+	public String uploadPost(@ModelAttribute(name = "model") PostModel postModel, BindingResult result, Model model,
+			Principal principal) {
+		String error = postService.createPost(postModel, principal.getName());
+		
+		if (error.length() != 0) {
+			model.addAttribute("error", error);
+			
+			return "error";
+		}
+		
+		return "redirect:/account/" + principal.getName();
 	}
 
 	@PostMapping(value = "/{postId}")
@@ -124,7 +156,7 @@ public class PostController {
 		return "redirect:/post/" + postId;
 	}
 
-	@PostMapping("/comment")
+	@PostMapping(value = "/comment")
 	public @ResponseBody String addComment(@RequestParam(name = "comment") String comment,
 			@RequestParam(name = "postId") long postId, Principal principal) {
 		String error = postService.addComment(postId, comment, principal);
@@ -137,7 +169,7 @@ public class PostController {
 		return principal.getName();
 	}
 
-	@GetMapping("/vote/{postId}")
+	@GetMapping(value = "/vote/{postId}")
 	public @ResponseBody String vote(@PathVariable(name = "postId") long postId,
 			@RequestParam(name = "type", defaultValue = "true") boolean type, Principal principal) {
 		String error = postService.votePost(postId, type, principal);
@@ -150,6 +182,17 @@ public class PostController {
 		return error;
 	}
 
+	@GetMapping(value = "/hashtags/rate")
+	public @ResponseBody double rateHashtags(@RequestParam(name = "keyword") String hashtag) {
+
+		return postService.rateHashtag(hashtag);
+	}
+	
+	@GetMapping(value = "/test")
+	public void test(@RequestParam(name = "test") String test) {
+		System.out.println(test);
+	}
+	
 	@GetMapping(value = "/pin")
 	public @ResponseBody boolean pinPost(Principal principal, @RequestParam(name = "post") long post) {
 		return postService.pinPost(principal.getName(), post);

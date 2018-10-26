@@ -11,4 +11,5 @@ public class Contants {
 	public static final String POST_NONEXSIT = "This post doesn't exsit.";
 	public static final String POST_VOTED = "You have voted this post.";
 	public static final String POST_ALREADY_VOTED = "You cannot vote a post twice.";
+	public static final String USER_NONEXSIT = "This User doesn't exsit.";
 }

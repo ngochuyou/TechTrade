@@ -356,6 +356,25 @@ public class PostService {
 	}
 
 	@Transactional
+	public PostModel getNewPostModel(String username) {
+		PostModel model = new PostModel();
+		
+		model.setUsername(username);
+		model.setCreateBy(accDao.find(username));
+		model.setStatus(true);
+		model.setUpVote(0);
+		
+		return model;
+	}
+	
+	@Transactional
+	public double rateHashtag(String hashtag) {
+		long counted = postDao.countHashtag(hashtag);
+		long totalPost = postDao.count("");
+		
+		return Math.ceil((counted * 1.0 / totalPost) * 10000) / 100;
+	}
+	@Transactional
 	public boolean pinPost(String username, long postId) {
 		PinId pinId = new PinId();
 		pinId.setAccountId(username);

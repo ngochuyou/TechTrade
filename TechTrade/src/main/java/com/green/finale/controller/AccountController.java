@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.green.finale.entity.Account;
 import com.green.finale.model.AccountModel;
+import com.green.finale.model.MessageModel;
 import com.green.finale.model.PostModel;
 import com.green.finale.service.AccountService;
 import com.green.finale.service.EmailService;
@@ -41,7 +42,7 @@ public class AccountController {
 
 	@Autowired
 	private PostService postService;
-	
+
 	@Autowired
 	private AuthenticationTrustResolver authenticationTrustResolver;
 
@@ -60,9 +61,9 @@ public class AccountController {
 		model.addAttribute("account", acc);
 		model.addAttribute("postList", postService.getPostListByAccount(username, page, sortBy, principal));
 		model.addAttribute("sortBy", sortBy);
-		
+
 		if (principal != null) {
-			model.addAttribute("inbox", accService.getInboxModel(principal.getName()));
+			model.addAttribute("inbox", accService.getInboxModel(principal.getName(), page));
 		}
 
 		return "wall";
@@ -79,7 +80,7 @@ public class AccountController {
 	public @ResponseBody List<PostModel> wallAPI(@PathVariable(name = "username") String username,
 			@RequestParam(name = "s", defaultValue = "createAt:desc") String sortBy,
 			@RequestParam(name = "p", defaultValue = "0") int page, Principal principal) {
-		
+
 		return postService.getPostListByAccount(username, page, sortBy, principal);
 	}
 
@@ -162,11 +163,7 @@ public class AccountController {
 	@GetMapping(value = "/keycheck")
 	public @ResponseBody Account keyCheck(@RequestParam(name = "key") String key) {
 
-		try {
-			return accService.keycheck(key);
-		} catch (Exception ex) {
-			return null;
-		}
+		return accService.keycheck(key);
 	}
 
 	@GetMapping(value = "/password/forgot")
@@ -203,5 +200,45 @@ public class AccountController {
 
 		return "/login";
 	}
-	
+
+	@GetMapping(value = "/message")
+	public @ResponseBody List<MessageModel> getMessages(@RequestParam(name = "page", defaultValue = "0") int page,
+			Principal principal) {
+
+		return accService.getReceivedMessage(principal.getName(), page);
+	}
+
+	@GetMapping(value = "/message/inbox")
+	public @ResponseBody List<Object[]> getNewInbox(Principal principal) {
+
+		return accService.getNewMessages(principal.getName());
+	}
+
+	@GetMapping(value = "/message/outbox")
+	public @ResponseBody List<MessageModel> getOutbox(@RequestParam(name = "page", defaultValue = "0") int page,
+			Principal principal) {
+
+		return accService.getSentMessage(principal.getName(), page);
+	}
+
+	@PostMapping(value = "/message/send")
+	public @ResponseBody String sendMessage(@RequestParam(name = "receiver", defaultValue = "") String receiverId,
+			@RequestParam(name = "content") String content, Principal principal) {
+
+		return accService.createMessage(principal.getName(), receiverId, content);
+	}
+
+	@GetMapping(value = "/message/remove")
+	public @ResponseBody String deleteMessage(@RequestParam(name = "messageId", defaultValue = "") long messId,
+			Principal principal) {
+
+		return accService.deleteMessage(principal.getName(), messId);
+	}
+
+	@GetMapping(value = "/message/mark")
+	public @ResponseBody String markMessage(@RequestParam(name = "messageId", defaultValue = "") long messId,
+			Principal principal) {
+
+		return accService.markMessage(principal.getName(), messId);
+	}
 }

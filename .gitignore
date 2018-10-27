@@ -4,4 +4,4 @@ example/.idea
 .project
 */.settings
 */target
-pom.xml
+.DS_Store

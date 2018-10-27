@@ -87,6 +87,7 @@ public class PostController {
 	@PostMapping(value = "/upload")
 	public String uploadPost(@ModelAttribute(name = "model") PostModel postModel, BindingResult result, Model model,
 			Principal principal) {
+		
 		String error = postService.createPost(postModel, principal.getName());
 		
 		if (error.length() != 0) {
@@ -115,6 +116,13 @@ public class PostController {
 		}
 
 		return "redirect:/post/" + postId;
+	}
+
+
+	@GetMapping
+	public @ResponseBody List<PostModel> getPostList(@RequestParam(name = "page") long page, Principal principal) {
+		
+		return postService.getNewestPostModel(principal, page);
 	}
 
 	@GetMapping(value = "/images/{filename}")

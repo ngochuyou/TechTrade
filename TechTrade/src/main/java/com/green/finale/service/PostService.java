@@ -23,10 +23,14 @@ import com.green.finale.dao.AccountDAO;
 import com.green.finale.dao.CategoryDAO;
 import com.green.finale.dao.CommentDAO;
 import com.green.finale.dao.ImageDAO;
+import com.green.finale.dao.PinDAO;
 import com.green.finale.dao.PostDAO;
 import com.green.finale.dao.VoteDAO;
+import com.green.finale.entity.Account;
 import com.green.finale.entity.Comment;
 import com.green.finale.entity.Image;
+import com.green.finale.entity.Pin;
+import com.green.finale.entity.PinId;
 import com.green.finale.entity.Post;
 import com.green.finale.entity.Vote;
 import com.green.finale.entity.VoteId;
@@ -38,10 +42,7 @@ public class PostService {
 
 	@Autowired
 	private PostDAO postDao;
-	
-	@Autowired
-	private CategoryDAO cateDao;
-	
+
 	@Autowired
 	private CommentDAO commentDao;
 
@@ -54,15 +55,21 @@ public class PostService {
 	@Autowired
 	private VoteDAO voteDao;
 
+	@Autowired
+	private PinDAO pinDao;
+
+	@Autowired
+	private CategoryDAO cateDao;
+	
 	@Transactional
 	public List<Post> getPostList() {
 		return postDao.getList();
 	}
 
 	@Transactional
-	public List<Post> getNewestList(long page) {
+	public List<PostModel> getNewestPostModel(Principal principal, long page) {
 
-		return postDao.getNewestList(page);
+		return getPostModelList(postDao.getNewestList(page), principal);
 	}
 
 	@Transactional
@@ -73,7 +80,7 @@ public class PostService {
 		if (!m.matches()) {
 			return null;
 		}
-		
+
 		if (principal != null && principal.getName().equals(username)) {
 			return getPostModelList(postDao.getAllListByAccount(username, page, sortBy), principal);
 		} else {
@@ -94,32 +101,40 @@ public class PostService {
 
 	@Transactional
 	public String createPost(PostModel model, String username) {
-		if (!validatePost(model)) {	
-			return Contants.INVALID_FIELDS;
-		}
-		
-		Post newPost = extractPost(model, new Post());
-		
-		newPost.setCreateBy(accDao.find(username));
-		newPost.setCreateAt(new Date());
-		newPost.setCategory(cateDao.find(model.getCategoryId()));
-		newPost.setStatus(true);
-		newPost.setUpVote(0);
-		
-		postDao.insert(newPost);
-		
-		List<String> filenames = uploadImage(model.getFile());
-		Image newImage = null;
-		
-		for (String filename: filenames) {
-			newImage = new Image();
+		if (validatePost(model)) {
+			Account acc = accDao.find(username);
 			
-			newImage.setFilename(filename);
-			newImage.setPost(newPost);
-			imageDao.insert(newImage);
+			if (acc == null) {
+				return Contants.USER_NONEXSIT;
+			}
+			
+			Post newPost = extractPost(model, new Post());
+			
+			newPost.setCategory(cateDao.find(model.getCategoryId()));
+			newPost.setCreateAt(new Date());
+			newPost.setCreateBy(acc);
+			newPost.setStatus(true);
+			newPost.setUpVote(0);
+			
+			postDao.insert(newPost);
+			
+			List<String> filenames = uploadImage(model.getFile());
+			Image image = null;
+			
+			for (String filename: filenames) {
+				image = new Image();
+				
+				image.setFilename(filename);
+				image.setPost(newPost);
+				
+				imageDao.insert(image);
+			}
+			
+			return "";
+		} else {
+			return Contants.INVALID_FIELDS; 
 		}
 		
-		return "";
 	}
 
 	@Transactional
@@ -143,8 +158,8 @@ public class PostService {
 	}
 
 	@Transactional
-	public List<Post> search(String categoryId, String keyword, String sortBy, int firstRecord)
-			throws NumberFormatException {
+	public List<PostModel> search(String categoryId, String keyword, String sortBy, int firstRecord,
+			Principal principal) throws NumberFormatException {
 		Pattern p = Pattern.compile("(createAt|nearest|upVote)(:desc|:asc)");
 		Matcher m = p.matcher(sortBy);
 
@@ -153,7 +168,8 @@ public class PostService {
 		}
 
 		try {
-			return postDao.getList(Integer.valueOf(categoryId), keyword, sortBy, firstRecord);
+			return getPostModelList(postDao.getList(Integer.valueOf(categoryId), keyword, sortBy, firstRecord),
+					principal);
 		} catch (NumberFormatException ex) {
 			throw new NumberFormatException(Contants.INVALID_FIELDS);
 		}
@@ -169,7 +185,6 @@ public class PostService {
 			if (postUsername.equals(principal.getName())) {
 				commentDao.deleteByPost(postId);
 				imageDao.deleteByPost(postId);
-				voteDao.deleteByPost(postId);
 				postDao.delete(post);
 
 				return null;
@@ -212,7 +227,7 @@ public class PostService {
 
 		return Contants.NONEXSIT;
 	}
-	
+
 	@Transactional
 	public PostModel getPostModel(long postId, Principal principal) {
 		Post p = postDao.find(postId);
@@ -236,8 +251,10 @@ public class PostService {
 
 		if (principal != null) {
 			model.setVote(voteDao.find(new VoteId(principal.getName(), p.getId())));
+			model.setPin(pinDao.find(new PinId(principal.getName(), p.getId())));
 		} else {
 			model.setVote(null);
+			model.setPin(null);
 		}
 
 		return model;
@@ -247,7 +264,7 @@ public class PostService {
 	public List<PostModel> getPostModelList(List<Post> postList, Principal principal) {
 		List<PostModel> modelList = new ArrayList<>();
 		PostModel model;
-		
+
 		for (Post p : postList) {
 			model = new PostModel();
 
@@ -261,13 +278,16 @@ public class PostService {
 			model.setTags(p.getTags());
 			model.setUpVote(p.getUpVote());
 			model.setCreateBy(p.getCreateBy());
-			
+
 			if (principal != null) {
 				model.setVote(voteDao.find(new VoteId(principal.getName(), p.getId())));
+				model.setPin(pinDao.find(new PinId(principal.getName(), p.getId())));
+
 			} else {
 				model.setVote(null);
+				model.setPin(null);
 			}
-			
+
 			modelList.add(model);
 		}
 
@@ -286,6 +306,7 @@ public class PostService {
 			return Contants.NONEXSIT;
 		} else {
 			post = extractPost(model, post);
+			post.setTags(post.getTags().replaceAll("#", ",#").replaceFirst(",", ""));
 			postDao.update(post);
 		}
 
@@ -339,15 +360,7 @@ public class PostService {
 		if (currentPost == null) {
 			return Contants.POST_NONEXSIT;
 		}
-		
-		if (type == true) {
-			currentPost.setUpVote(currentPost.getUpVote() + 1);	
-		} else {
-			currentPost.setUpVote(currentPost.getUpVote() - 1);
-		}
-		
-		postDao.update(currentPost);
-		
+
 		VoteId voteId = new VoteId(principal.getName(), postId);
 
 		if (voteDao.find(voteId) == null) {
@@ -385,7 +398,37 @@ public class PostService {
 		
 		return Math.ceil((counted * 1.0 / totalPost) * 10000) / 100;
 	}
-	
+	@Transactional
+	public boolean pinPost(String username, long postId) {
+		PinId pinId = new PinId();
+		pinId.setAccountId(username);
+		pinId.setPostId(postId);
+
+		Pin pin = pinDao.find(pinId);
+		System.out.println(username);
+		System.out.println(postId);
+		if (pin != null) {
+			System.out.println("da ton tai pin");
+			pinDao.delete(pin);
+			return false;
+		} else {
+			System.out.println("chua ton tai pin");
+			pin = new Pin();
+			pin.setPinId(pinId);
+
+			pin.setCreateAt(new Date());
+
+			Account acc = accDao.find(username);
+			pin.setAccount(acc);
+
+			Post post = postDao.find(postId);
+			pin.setPost(post);
+
+			pinDao.insert(pin);
+			return true;
+		}
+	}
+
 	public boolean validatePost(PostModel post) {
 		if (StringUtils.isEmpty(post.getName())) {
 			return false;
@@ -420,13 +463,13 @@ public class PostService {
 
 		return data;
 	}
-	
+
 	public Post extractPost(PostModel model, Post target) {
 		target.setId(model.getId());
 		target.setName(model.getName());
 		target.setDescription(model.getDescription());
-		target.setTags(model.getTags().replaceAll("#", ",#").replaceFirst(",", ""));
-		
+		target.setTags(model.getTags().replaceAll("#", ",#"));
+
 		return target;
 	}
 

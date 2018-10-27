@@ -17,16 +17,13 @@ $(document).ready(function() {
     		$('#my-dropdown-container').hide();
     	}
     });
-
-    var search = $('#search');
-    var search_dropdown = $('#my-dropdown-container');
-    
-    $(search).keyup(function() {
+  
+    $('#search').keyup(function() {
         $.ajax({
         	type : 'GET',
         	url : '/TechTrade/post/search',
         	data : {
-        		keyword :$(search).val(),
+        		keyword : $('#search').val(),
         	},
         	success : function(list) {
         		var string = "";
@@ -34,12 +31,13 @@ $(document).ready(function() {
         		$.each(list, function() {
         			string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/post/"+this[1]+"'>"+this[0]+"</a>";
         		});
-        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$(search).val()+"'>See more</a>";
-        		$(search_dropdown).html(string);
-        		$(search_dropdown).show();
+        		
+        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$('#search').val()+"'>See more</a>";
+        		$('#my-dropdown-container').html(string);
+        		$('#my-dropdown-container').show();
         	},
         	error : function() {
-        		$(search_dropdown).hide();
+        		$('#my-dropdown-container').hide();
         	}
         });
     });
@@ -48,7 +46,6 @@ $(document).ready(function() {
     var d;
     var string = "";
     var stopPaging = false;
-    var post_content = $('#post-content');
     
     $(window).scroll(function() {
     	if((($(window).scrollTop() + $(window).height())) == ($(document).height())) {
@@ -60,11 +57,11 @@ $(document).ready(function() {
     	    	   type: 'GET',
     	    	   url: '/TechTrade/post',
     	    	   data:{
-    	    		   page: currentPage + 1,
+    	    		   page: currentPage++,
     	    	   },
     	    	   contentType: "application/json; charset=utf-8",
     	    	   success: function(result){
-    	    		   currentPage++;
+    	    		   console.log(currentPage);
 	    			   string = "";
     	    		   $.each(result, function() {
     	    			   spanTags = "";
@@ -103,22 +100,40 @@ $(document).ready(function() {
 		+"				<div class='col custom-control-description text-size-post'>"+ this.description +"</div>"
 		+"			</div>"
 		+"			<div class='row post-footer'>"
-		+"				<div class='col'>"
-		+"					<div class='col-6 float-left border text-center h-100'>"
-		+"						<h3 class='mt-3'>"
-		+"							<i class='fas fa-arrows-alt-v mr-5'></i>"+this.upVote+" Votes"
-		+"						</h3>"
-		+"					</div>"
-		+"					<div class='col-6 float-left border text-center h-100 pointer'>"
-		+"						<h3 class='mt-3'>"
-		+"							<i class='fas fa-thumbtack mr-5'></i>Pin"
-		+"						</h3>"
-		+"					</div>"
-		+"				</div>"
-		+"			</div>"
-		+"		</div>";    	        			
+		+"				<div class='col'>";
+    	    			   
+    	    			   if($('#flag').val() == 'true'){
+								string += "<div class='col-6 float-left border text-center h-100'>	"					
+								+"			<h3 class='mt-3'>"
+								+"				<i class='fas fa-arrows-alt-v mr-5'></i>"+this.upVote+" Votes"
+								+"			</h3>"
+								+"		</div>"
+								+"		<div class='col-6 float-left border text-center h-100 pointer' >";
+								if(this.pin == null){
+									string +="<h3 class='mt-3 pin' id='"+this.id+"' >"
+										+"				<i class='fas fa-thumbtack mr-5'></i>Pin"
+										+"			</h3>"
+										+"		</div>";
+								}
+								else{
+									string +="<h3 class='mt-3 pin' id='"+this.id+"' style='color:blue' >"
+										+"				<i class='fas fa-thumbtack mr-5'></i>Unpin"
+										+"			</h3>"
+										+"		</div>";
+								}
+								
+						}
+					    	        			
+						if($('#flag').val() == 'false'){
+								string +="<div class='col-12 float-left border text-center h-100'>"
+								+"			<h3 class='mt-3'>"
+								+"				<i class='fas fa-arrows-alt-v mr-5'></i>"+this.upVote+" Votes"
+								+"			</h3>"
+								+"		</div>";
+						}
+						string += "</div> </div> </div>";		
     	        		});
-    	    		   $(post_content).append(string);
+    	    		   $('#post-content').html($('#post-content').html()+string);
     	    		   $('#loader').fadeOut("fast");
 	 	    		   if (string.length == 0) {
 	 	    			   stopPaging = true;
@@ -127,6 +142,35 @@ $(document).ready(function() {
     	       });
     	   };
     	});
+    
+    var postId = "";
+    var flag;
+    $(document).on('click','.pin', function(){
+    	postId = this.id;
+    	$.ajax({
+	    	   type: 'GET',
+	    	   url: '/TechTrade/post/pin?post='+postId,
+	    	   contentType: "application/json; charset=utf-8",
+	    	   success: function(result){
+	    		   if(result == true){
+	    			   $(document).find('#'+postId).html("<i class='fas fa-thumbtack mr-5'></i>Unpin");
+	    			   $(document).find('#'+postId).css({
+	    				   'color': 'blue',
+	    			   });
+	    		   }
+	    		   else{
+	    			   $(document).find('#'+postId).html("<i class='fas fa-thumbtack mr-5'></i>Pin");
+	    			   $(document).find('#'+postId).css({
+	    				   'color': '#555',
+	    			   });
+	    		   }
+	    	   },
+	    	   error:function(){
+	    		   alert('error duy');
+	    	   }
+    	});
+    });
+    
     
     var monthNames = [
 		"Jan", "Feb", "Mar",

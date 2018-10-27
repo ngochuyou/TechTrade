@@ -24,10 +24,6 @@
 	src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"></script>
 <script type="text/javascript"
 	src="<spring:url value="/resources/js/viewPost.js"></spring:url>"></script>
-<sec:authorize access="isAuthenticated()">
-	<script type="text/javascript"
-		src="<spring:url value="/resources/js/mailbox.js"></spring:url>"></script>
-</sec:authorize>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script
@@ -135,8 +131,7 @@
 									class="dropdown-menu dropdown-menu-right pointer wpx-200 custom-dropdown"
 									aria-labelledby="dropdownMenu2">
 									<div class="dropdown-item border-bottom font-weight-bold">
-										<div class="row"
-											onclick="window.location.href='<spring:url value='/account/${user.username }'></spring:url>'">
+										<div class="row">
 											<div class="col-5 pr-0">
 												<img
 													src="<spring:url value="/account/avatar?username=${user.username }"></spring:url>"
@@ -148,8 +143,7 @@
 										</div>
 									</div>
 									<div
-										class="dropdown-item border-bottom text-main font-weight-bold"
-										onclick="window.location.href='<spring:url value='/'></spring:url>'">
+										class="dropdown-item border-bottom text-main font-weight-bold">
 										<div>
 											<i class="fas fa-home mr-4"></i>
 										</div>
@@ -158,32 +152,21 @@
 										</div>
 									</div>
 									<div
-										class="dropdown-item text-main font-weight-bold border-bottom inbox-open">
+										class="dropdown-item text-main font-weight-bold border-bottom">
 										<div>
 											<i class="fas fa-envelope"></i>
 										</div>
 										<div>
-											<span>Inboxs</span><span
-												class="badge bg-main ml-3 unread-qty">${inbox.unreadQty }</span>
+											<span>Inboxs</span><span class="badge bg-main ml-3">4</span>
+											</button>
 										</div>
 									</div>
-									<div
-										class="dropdown-item text-main font-weight-bold border-bottom"
-										onclick="window.location.href='<spring:url value='/post/upload'></spring:url>'">
-										<div>
-											<i class="fas fa-plus"></i>
-										</div>
-										<div>
-											<span>Upload</span>
-										</div>
-									</div>
-									<div class="dropdown-item text-main font-weight-bold"
-										onclick="window.location.href='<spring:url value='/logout'></spring:url>'">
+									<div class="dropdown-item text-main font-weight-bold">
 										<div>
 											<i class="fas fa-sign-out-alt mr-4"></i>
 										</div>
 										<div>
-											<span class="font-weight-bold text-right">Logout</span>
+											<a class="font-weight-bold text-right" href="">Logout</a>
 										</div>
 									</div>
 								</div>
@@ -297,18 +280,17 @@
 								</div>
 							</div>
 							<p>
-								By <span class="font-italic text-main pointer"
-									onclick="window.location.href='<spring:url value='/account/${post.createBy.username }'></spring:url>'">${post.username }</span>
+								By <span class="font-italic text-main">${post.username }</span>
 								on
 								<fmt:formatDate value="${post.createAt }" />
 							</p>
 							<div class="my-2 row">
 								<div class="col-11">
 									<span>Tags <i class="fas fa-hashtag"></i>
-									</span> <span class="tags stage-1"
+									</span> <span class="tags stage-1 d-inline-block"
 										style="background-color : ${post.category.tagColor}">${post.category.name }</span>
 									<span id="hashtags-container" class="line-height-large"><span
-										class="color-main tags hashtags m-2">${fn:replace(post.tags, ",", "<span class='hidden hashtags-stage2 hashtags-del'><i class='fas fa-times-circle'></i></span></span><span class='color-main tags hashtags mx-2'>")}
+										class="color-main tags hashtags m-2 d-inline-block">${fn:replace(post.tags, ",", "<span class='hidden hashtags-stage2 hashtags-del'><i class='fas fa-times-circle'></i></span></span><span class='color-main tags hashtags mx-2 d-inline-block'>")}
 											<span class="hidden hashtags-stage2 hashtags-del"><i
 												class="fas fa-times-circle"></i></span>
 									</span> </span><span class="hidden hashtags-stage2"><input type="text"
@@ -404,19 +386,44 @@
 						</div>
 						<div class="row preview border-dashed mx-3 p-3 hidden"></div>
 					</c:if>
+
+					<div class="row post-footer">
+						<div class="col">
+							<sec:authorize access="isAuthenticated()">
+								<input id="flag" value='true' type="hidden" />
+								<div class="col-6 float-left border text-center h-100">
+									<h3 class="mt-3">
+										<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
+									</h3>
+								</div>
+								<c:if test="${post.pin ne null }">
+									<input id="isPin" type="hidden" value="false" />
+									<div class="col-6 float-left border text-center h-100 pointer">
+										<h3 class="mt-3 pin" style="color: blue;" id="${post.id }">
+											<i class="fas fa-thumbtack mr-5"></i>Unpin
+										</h3>
+									</div>
+								</c:if>
+								<c:if test="${post.pin eq null }">
+									<input id="isPin" type="hidden" value="true" />
+									<div class="col-6 float-left border text-center h-100 pointer">
+										<h3 class="mt-3 pin" id="${post.id }">
+											<i class="fas fa-thumbtack mr-5"></i>Pin
+										</h3>
+									</div>
+								</c:if>
+							</sec:authorize>
+							<sec:authorize access="isAnonymous()">
+								<input id="flag" value='false' type="hidden" />
+								<div class="col-12 float-left border text-center h-100">
+									<h3 class="mt-3">
+										<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
+									</h3>
+								</div>
+							</sec:authorize>
+						</div>
+					</div>
 				</form:form>
-				<div class="row post-footer">
-					<div class="col-6 float-left border text-center h-100">
-						<h3 class="mt-3" id="vote">
-							<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Voted
-						</h3>
-					</div>
-					<div class="col-6 float-left border text-center h-100 pointer">
-						<h3 class="mt-3">
-							<i class="fas fa-thumbtack mr-5"></i>Pin
-						</h3>
-					</div>
-				</div>
 				<div class="hidden stage-2" id="cancel">Cancel</div>
 				<div class="panel-header">Comments</div>
 				<div class="row m-2" id="comments">
@@ -426,14 +433,15 @@
 								<fmt:formatDate value="${comment.commentedOn }" />
 							</p>
 							<p>
-								<span class="font-italic text-primary pointer"
-									onclick="window.location.href='<spring:url value='/account/${comment.account.username }'></spring:url>'">${comment.account.username }</span>
+								<span class="font-italic text-primary">${comment.account.username }</span>
 								: ${comment.content }
 							</p>
 						</div>
 					</c:forEach>
 				</div>
 				<sec:authorize access="isAuthenticated()">
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" id="csrfToken" />
 					<div class="row m-2">
 						<div class="m-2 w-100">
 							<input class="mycustom-input w-100 form-control"
@@ -443,212 +451,6 @@
 				</sec:authorize>
 			</div>
 		</div>
-		<sec:authorize access="isAuthenticated()">
-			<div class="fixed-fullscreen" id="inbox">
-				<div class="absolute inbox-composer">
-					<div class="row py-3 pl-4 border-bottom header bg-white">
-						<div class="col-1 pointer" id="inbox-back">
-							<span><i class="fas fa-angle-left fa-2x mt-3"></i></span>
-						</div>
-						<div class="col-2">
-							<img src="" id="composer-avatar" class="m-auto avatar-medium">
-						</div>
-						<div class="col-7">
-							<h3 class="text-truncate" id="composer-username"></h3>
-							<p class="m-0 text-small text-truncate" id="composer-sentAt"></p>
-							<p class="m-0 text-small text-truncate" id="composer-location"></p>
-						</div>
-						<div class="col-2 p-0">
-							<div class="icon icon-small composer-delete">
-								<i class="fas fa-trash text-right"></i>
-							</div>
-							<div class="icon icon-small composer-mark">
-								<i class="fas fa-dot-circle"></i>
-							</div>
-						</div>
-					</div>
-					<div class="row p-3 border-bottom">
-						<div class="col .custom-control-description" id="composer-content"></div>
-					</div>
-					<div class="row py-3 px-4">
-						<textarea
-							class="form-control custom-control-description text-size-post text-main"
-							placeholder="Reply" rows="5" id="reply"></textarea>
-						<div class="my-3">
-							<button class="btn btn-outline-main float-left mr-4"
-								id="message-send">Send</button>
-						</div>
-					</div>
-					<div class="row h-25 mb-5 message-result hidden">
-						<div class="text-center m-auto">
-							<img
-								src="<spring:url value="/resources/img/loading.gif"></spring:url>"
-								class="avatar-large border fit-cover" id="message-loader">
-							<span id="message-info" class="font-weight-bold"></span>
-						</div>
-					</div>
-				</div>
-				<div class="absolute outbox" id="outbox">
-					<div class="row border-bottom">
-						<div class="col-2 pt-1 border-right inbox-open pointer">
-							<i class="fas fa-bars fa-2x mt-2 ml-2"></i>
-						</div>
-						<div class="col-10">
-							<div class="w-25 h-100 py-3 pointer inbox-main-open float-left">
-								<p class="text-center">Inbox</p>
-							</div>
-							<div class="w-25 h-100 py-3 pointer outbox-load float-left">
-								<p class="text-center">Outbox</p>
-							</div>
-							<div class="w-25 h-100 py-3 pointer newoutbox-open float-left">
-								<p class="text-center">
-									<i class="fas fa-plus"></i>
-								</p>
-							</div>
-						</div>
-					</div>
-					<div class="flow-auto" style="height: 85%;">
-						<div id="outmessages-container"></div>
-						<div class="row">
-							<div class="col">
-								<p class="pointer text-center font-italic m-0"
-									id="outbox-showmore">Show more</p>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="absolute outbox-composer">
-					<div class="row border-bottom">
-						<div class="col-2 pt-1 border-right inbox-open pointer">
-							<i class="fas fa-bars fa-2x mt-2 ml-2"></i>
-						</div>
-						<div class="col-10">
-							<div class="w-25 h-100 py-3 pointer inbox-main-open float-left">
-								<p class="text-center">Inbox</p>
-							</div>
-							<div class="w-25 h-100 py-3 pointer outbox-load float-left">
-								<p class="text-center">Outbox</p>
-							</div>
-							<div class="w-25 h-100 py-3 pointer newoutbox-open float-left">
-								<p class="text-center">
-									<i class="fas fa-plus"></i>
-								</p>
-							</div>
-						</div>
-					</div>
-					<div class="flow-auto" style="height: 85%;">
-						<div class="row">
-							<div class="col">
-								<input id="newoutbox-id" class="form-control border-curve"
-									placeholder="To"> <label class="text-main font-italic">Type
-									in Receiver's username or email and press enter</label> <label
-									id="newoutbox-id-error" class="text-danger hidden">This
-									user doesn't exsit</label> <input id="newoutbox-id-input"
-									class="hidden">
-								<div class="col my-3 p-3" id="newoutbox-ids"></div>
-								<textarea id="newoutbox-content-input" rows="7"
-									class="form-control custom-control-description text-size-post text-main"
-									placeholder="Compose here"></textarea>
-								<div class="my-3">
-									<button class="btn btn-outline-main float-left mr-4"
-										id="newoutbox-send">Send</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="absolute inbox-main">
-					<div class="row border-bottom">
-						<div class="col-2 pt-1 border-right inbox-open pointer">
-							<i class="fas fa-bars fa-2x mt-2 ml-2"></i>
-						</div>
-						<div class="col-10">
-							<div class="w-25 h-100 py-3 pointer inbox-main-open float-left">
-								<p class="text-center">Inbox</p>
-							</div>
-							<div class="w-25 h-100 py-3 pointer outbox-load float-left">
-								<p class="text-center">Outbox</p>
-							</div>
-							<div class="w-25 h-100 py-3 pointer newoutbox-open float-left">
-								<p class="text-center">
-									<i class="fas fa-plus"></i>
-								</p>
-							</div>
-						</div>
-					</div>
-					<div class="flow-auto" style="height: 85%;">
-						<div id="messages-container">
-							<div id="newmessages-container"></div>
-							<c:forEach var="message" items="${inbox.unreadMessages }">
-								<div class="row bg-noti message pointer">
-									<input type="hidden" value="${message.id }" class="message-id">
-									<span class="message-location hidden">${message.sender.ward.name },
-										${message.sender.ward.district.name },
-										${message.sender.ward.district.city.name }</span>
-									<div class="col-2 border-right">
-										<img
-											src="<spring:url value='/account/avatar?username=${message.sender.username }'></spring:url>"
-											class="m-auto avatar-medium">
-									</div>
-									<div class="col-9">
-										<h3 class="text-truncate message-username">${message.sender.username }</h3>
-										<p class="text-truncate mb-1 message-content">${message.content }</p>
-										<p class="text-truncate text-small message-sentAt">
-											<fmt:formatDate value="${message.sentAt }" type="both"
-												pattern="MMM dd, yyyy hh:mm a"></fmt:formatDate>
-										</p>
-									</div>
-									<div class="col-1 p-0">
-										<div class="icon icon-small m-auto message-delete"
-											id="message-delete-${message.id }">
-											<i class="fas fa-trash text-right hidden"></i>
-										</div>
-										<div class="icon icon-small m-auto">
-											<i class="fas fa-reply text-right hidden"></i>
-										</div>
-									</div>
-								</div>
-							</c:forEach>
-							<c:forEach var="message" items="${inbox.readMessages }">
-								<div class="row message pointer">
-									<input type="hidden" value="${message.id }" class="message-id">
-									<div class="col-2 border-right">
-										<img
-											src="<spring:url value='/account/avatar?username=${message.sender.username }'></spring:url>"
-											class="m-auto avatar-medium">
-									</div>
-									<div class="col-9">
-										<h3 class="text-truncate message-username">${message.sender.username }</h3>
-										<p class="text-truncate mb-1 message-content">${message.content }</p>
-										<p class="text-truncate text-small message-sentAt">
-											<fmt:formatDate value="${message.sentAt }" type="both"
-												pattern="MMM dd, yyyy hh:mm a"></fmt:formatDate>
-										</p>
-									</div>
-									<div class="col-1 p-0">
-										<div class="icon icon-small m-auto message-delete"
-											id="message-delete-${message.id }">
-											<i class="fas fa-trash text-right hidden"></i>
-										</div>
-										<div class="icon icon-small m-auto">
-											<i class="fas fa-reply text-right hidden"></i>
-										</div>
-									</div>
-								</div>
-							</c:forEach>
-						</div>
-						<div class="row">
-							<div class="col">
-								<p class="pointer text-center font-italic m-0"
-									id="inbox-showmore">Show more</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</sec:authorize>
-		<input type="hidden" name="${_csrf.parameterName}"
-			value="${_csrf.token}" id="csrfToken" />
 		<div class="overlay"></div>
 	</div>
 </body>

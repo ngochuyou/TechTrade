@@ -11,13 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.green.finale.entity.Post;
+import com.green.finale.model.PostModel;
 import com.green.finale.model.SearchPage;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.green.finale.service.AccountService;
 import com.green.finale.service.CategoryService;
 import com.green.finale.service.PostService;
@@ -40,7 +39,7 @@ public class HomeController {
 	@GetMapping
 	public String index(Model model, Principal principal) {
 		model.addAttribute("cateList", cateService.getCategoryList());
-		model.addAttribute("postList", postService.getNewestList(0));
+		model.addAttribute("postList", postService.getNewestPostModel(principal, 0));
 
 		if (principal != null) {
 			model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
@@ -57,7 +56,7 @@ public class HomeController {
 		model.addAttribute("cateList", cateService.getCategoryList());
 
 		try {
-			model.addAttribute("postList", postService.search(categoryId, keyword, sortBy, page));
+			model.addAttribute("postList", postService.search(categoryId, keyword, sortBy, page, principal));
 		} catch (NumberFormatException ex) {
 			model.addAttribute("error", ex.getMessage());
 
@@ -85,13 +84,14 @@ public class HomeController {
 	}
 
 	@GetMapping(value = "/s")
-	public @ResponseBody List<Post> searchJSON(@RequestParam(name = "category", defaultValue = "0") String categoryId,
+	public @ResponseBody List<PostModel> searchJSON(
+			@RequestParam(name = "category", defaultValue = "0") String categoryId,
 			@RequestParam(name = "k", defaultValue = "") String keyword,
 			@RequestParam(name = "s", defaultValue = "createAt:desc") String sortBy,
-			@RequestParam(name = "p", defaultValue = "0") int page, Model model) throws Exception {
-		System.out.println(page);
+			@RequestParam(name = "p", defaultValue = "0") int page, Model model, Principal principal) throws Exception {
+		
 		try {
-			return postService.search(categoryId, keyword, sortBy, page);
+			return postService.search(categoryId, keyword, sortBy, page, principal);
 		} catch (NumberFormatException ex) {
 			model.addAttribute("error", ex.getMessage());
 

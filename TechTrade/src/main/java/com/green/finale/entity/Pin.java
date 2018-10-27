@@ -2,40 +2,37 @@ package com.green.finale.entity;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "pin")
 public class Pin {
 
-	@Id
-	@GeneratedValue
-	private long id;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "account_id")
+	@EmbeddedId
+	private PinId pinId;
+
+	@ManyToOne
+	@MapsId("accountId")
 	private Account account;
-	
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "post_id")
+
+	@ManyToOne
+	@MapsId("postId")
 	private Post post;
-	
-	@Column(name="create_at", nullable=false)
+
+	@Column(name = "create_at", nullable = false)
 	private Date createAt;
 
-	public long getId() {
-		return id;
+	public PinId getPinId() {
+		return pinId;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setPinId(PinId pinId) {
+		this.pinId = pinId;
 	}
 
 	public Account getAccount() {
@@ -61,5 +58,5 @@ public class Pin {
 	public void setCreateAt(Date createAt) {
 		this.createAt = createAt;
 	}
-	
+
 }

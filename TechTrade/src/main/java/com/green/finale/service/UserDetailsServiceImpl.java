@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,7 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		// TODO: get user permission here
 		List<GrantedAuthority> authorities = new ArrayList<>();
-//		authorities.add(new SimpleGrantedAuthority("ADMIN"));
+		authorities.add(new SimpleGrantedAuthority(account.getRole().toString()));
 //		authorities.add(new SimpleGrantedAuthority("CONTACT-MANAGER"));
 
 		UserDetails user = new User(account.getUsername(), account.getPassword(), authorities);

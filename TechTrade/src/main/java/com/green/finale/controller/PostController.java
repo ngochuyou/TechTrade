@@ -117,8 +117,7 @@ public class PostController {
 
 		return "redirect:/post/" + postId;
 	}
-
-
+	
 	@GetMapping
 	public @ResponseBody List<PostModel> getPostList(@RequestParam(name = "page") long page, Principal principal) {
 		

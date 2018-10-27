@@ -186,7 +186,8 @@ public class PostService {
 				commentDao.deleteByPost(postId);
 				imageDao.deleteByPost(postId);
 				postDao.delete(post);
-
+				voteDao.deleteByPost(postId);
+				
 				return null;
 			}
 
@@ -306,7 +307,7 @@ public class PostService {
 			return Contants.NONEXSIT;
 		} else {
 			post = extractPost(model, post);
-			post.setTags(post.getTags().replaceAll("#", ",#").replaceFirst(",", ""));
+			post.setTags(post.getTags());
 			postDao.update(post);
 		}
 
@@ -373,6 +374,16 @@ public class PostService {
 			newVote.setVoteDate(new Date());
 			voteDao.insert(newVote);
 
+			int postUpvotes = currentPost.getUpVote();
+			
+			if (type == true) {
+				currentPost.setUpVote(postUpvotes + 1);
+			} else {
+				currentPost.setUpVote(postUpvotes - 1);
+			}
+			
+			postDao.update(currentPost);
+			
 			return null;
 		} else {
 			return Contants.POST_ALREADY_VOTED;
@@ -468,7 +479,7 @@ public class PostService {
 		target.setId(model.getId());
 		target.setName(model.getName());
 		target.setDescription(model.getDescription());
-		target.setTags(model.getTags().replaceAll("#", ",#"));
+		target.setTags(model.getTags());
 
 		return target;
 	}

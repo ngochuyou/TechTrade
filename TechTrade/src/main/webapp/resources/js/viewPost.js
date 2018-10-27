@@ -103,12 +103,14 @@ $(document).ready(function() {
     var targetHashtag;
     
     $('#hashtags-input').val(originalHashtag.replace(',', ""));
+    
     $('#hashtags-container').on('click', '.hashtags-del', function() {
     	hashtagId = this.id.match(/\d+/);
     	targetHashtag = $('#hashtags'+hashtagId);
     	targetHashtag.addClass('deltags');
-    	targetHashtag.hide();
+    	$(targetHashtag).hide();
     	originalHashtag = originalHashtag.replace(targetHashtag.text().trim(), "");
+    	console.log(originalHashtag);
     });
     
     var tagContainer = $('#hashtags-container').html();

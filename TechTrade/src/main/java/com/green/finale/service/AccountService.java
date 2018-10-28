@@ -203,7 +203,7 @@ public class AccountService {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		date.setTime(date.getTime() - 60000);
+		date.setTime(date.getTime() - 30000);
 
 		return messDao.getJustRecentlyReceivedList(username, sdf.format(date));
 	}
@@ -215,9 +215,9 @@ public class AccountService {
 	}
 
 	@Transactional
-	public List<MessageModel> getSentMessage(String username, int page) {
+	public List<Object[]> getSentMessage(String username, int page) {
 
-		return getMessageModelList(messDao.getSentList(username, page));
+		return messDao.getSentList(username, page);
 	}
 
 	@Transactional
@@ -271,10 +271,10 @@ public class AccountService {
 
 			return "Message deleted.";
 		} else {
-			if (username.equals(sender)) {
-				messDao.deleteBySender(messId);
-			} else {
+			if (username.equals(receiver)) {
 				messDao.deleteByReceiver(messId);
+			} else {
+				messDao.deleteBySender(messId);
 			}
 		}
 

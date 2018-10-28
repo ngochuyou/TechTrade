@@ -214,7 +214,7 @@ public class AccountController {
 	}
 
 	@GetMapping(value = "/message/outbox")
-	public @ResponseBody List<MessageModel> getOutbox(@RequestParam(name = "page", defaultValue = "0") int page,
+	public @ResponseBody List<Object[]> getOutbox(@RequestParam(name = "page", defaultValue = "0") int page,
 			Principal principal) {
 
 		return accService.getSentMessage(principal.getName(), page);

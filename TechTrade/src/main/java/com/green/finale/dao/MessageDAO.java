@@ -41,17 +41,17 @@ public class MessageDAO {
 		String query = "SELECT id, sender.username, sentAt, content FROM Message WHERE receiver.id = :username AND sentAt > '"
 				+ time + "' ORDER BY sentAt desc";
 		Query<Object[]> hql = ss.createQuery(query, Object[].class);
-		
+
 		hql.setParameter("username", username);
 
 		return hql.getResultList();
 	}
 
-	public List<Message> getSentList(String username, int page) {
+	public List<Object[]> getSentList(String username, int page) {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<Message> hql = ss.createQuery(
-				"FROM Message WHERE sender.id = :username AND deletedBySender = :deleted ORDER BY sentAt desc",
-				Message.class);
+		TypedQuery<Object[]> hql = ss.createQuery(
+				"SELECT id, sender.username, sentAt, content FROM Message WHERE sender.id = :username AND deletedBySender = :deleted ORDER BY sentAt desc",
+				Object[].class);
 
 		hql.setParameter("username", username);
 		hql.setParameter("deleted", false);

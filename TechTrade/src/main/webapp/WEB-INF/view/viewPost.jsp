@@ -256,24 +256,31 @@
 					<form:hidden path="id" id="post-id" />
 					<form:hidden path="username" />
 					<div class="row m-2">
-						<div class="col-1 m-auto text-center" id="vote-holder">
-							<c:if test="${not empty post.vote }">
-								<c:if test="${post.vote.type eq true }">
-									<p class="w-100">You voted this post +1</p>
+						<sec:authorize access="isAuthenticated()">
+							<div class="col-1 m-auto text-center" id="vote-holder">
+								<c:if test="${not empty post.vote }">
+									<c:if test="${post.vote.type eq true }">
+										<p class="w-100">You voted this post +1</p>
+									</c:if>
+									<c:if test="${post.vote.type ne true }">
+										<p class="w-100">You voted this post -1</p>
+									</c:if>
 								</c:if>
-								<c:if test="${post.vote.type ne true }">
-									<p class="w-100">You voted this post -1</p>
+								<c:if test="${empty post.vote }">
+									<div class="w-100 pointer" id="upvote">
+										<i class="fas fa-angle-up fa-3x"></i>
+									</div>
+									<div class="w-100 pointer" id="downvote">
+										<i class="fas fa-angle-down fa-3x"></i>
+									</div>
 								</c:if>
-							</c:if>
-							<c:if test="${empty post.vote }">
-								<div class="w-100 pointer" id="upvote">
-									<i class="fas fa-angle-up fa-3x"></i>
-								</div>
-								<div class="w-100 pointer" id="downvote">
-									<i class="fas fa-angle-down fa-3x"></i>
-								</div>
-							</c:if>
-						</div>
+							</div>
+						</sec:authorize>
+						<sec:authorize access="isAnonymous()">
+							<div class="col-1 m-auto text-center" id="vote-holder">
+								<p>Sign in to vote this Post</p>
+							</div>
+						</sec:authorize>
 						<div class="col-10 px-4">
 							<h3>
 								<i class="fas fa-map-marker mr-2"></i>${post.createBy.ward.name },
@@ -307,7 +314,7 @@
 									</span> <span class="tags stage-1"
 										style="background-color : ${post.category.tagColor}">${post.category.name }</span>
 									<span id="hashtags-container" class="line-height-large"><span
-										class="color-main tags hashtags m-2">${fn:replace(post.tags, ",", "<span class='hidden hashtags-stage2 hashtags-del'><i class='fas fa-times-circle'></i></span></span><span class='color-main tags hashtags mx-2ck'>")}
+										class="color-main tags hashtags m-2">${fn:replace(post.tags, ",", "<span class='hidden hashtags-stage2 hashtags-del'><i class='fas fa-times-circle'></i></span></span><span class='color-main tags hashtags mx-2'>")}
 											<span class="hidden hashtags-stage2 hashtags-del"><i
 												class="fas fa-times-circle"></i></span>
 									</span> </span><span class="hidden hashtags-stage2"><input type="text"

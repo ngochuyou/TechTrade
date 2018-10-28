@@ -315,16 +315,38 @@
 								<p class="col custom-control-description text-size-post">${post.description }</p>
 							</div>
 							<div class="row px-4">
-								<div class="col-6 pointer border half-left-curve">
-									<h3 class="mt-3 text-center">
-										<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
-									</h3>
-								</div>
-								<div class="col-6 pointer border half-right-curve">
-									<h3 class="mt-3 text-center">
-										<i class="fas fa-thumbtack mr-5"></i>Pin
-									</h3>
-								</div>
+								<sec:authorize access="isAuthenticated()">
+									<input id="flag" value='true' type="hidden" />
+									<div class="col-6 float-left border text-center h-100">
+										<h3 class="mt-3">
+											<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
+										</h3>
+									</div>
+									<c:if test="${post.pin ne null }">
+										<input id="isPin" type="hidden" value="false" />
+										<div class="col-6 float-left border text-center h-100 pointer">
+											<h3 class="mt-3 pin" style="color: blue;" id="${post.id }">
+												<i class="fas fa-thumbtack mr-5"></i>Unpin
+											</h3>
+										</div>
+									</c:if>
+									<c:if test="${post.pin eq null }">
+										<input id="isPin" type="hidden" value="true" />
+										<div class="col-6 float-left border text-center h-100 pointer">
+											<h3 class="mt-3 pin" id="${post.id }">
+												<i class="fas fa-thumbtack mr-5"></i>Pin
+											</h3>
+										</div>
+									</c:if>
+								</sec:authorize>
+								<sec:authorize access="isAnonymous()">
+									<input id="flag" value='false' type="hidden" />
+									<div class="col-12 float-left border text-center h-100">
+										<h3 class="mt-3">
+											<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
+										</h3>
+									</div>
+								</sec:authorize>
 							</div>
 						</div>
 					</c:forEach>

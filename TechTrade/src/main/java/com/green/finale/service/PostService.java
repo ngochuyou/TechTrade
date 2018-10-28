@@ -206,7 +206,6 @@ public class PostService {
 
 			if (postUsername.equals(principal.getName())) {
 				if (status.equals("close")) {
-					System.out.println(status);
 					post.setStatus(false);
 					postDao.update(post);
 
@@ -409,34 +408,38 @@ public class PostService {
 		
 		return Math.ceil((counted * 1.0 / totalPost) * 10000) / 100;
 	}
+	
 	@Transactional
-	public boolean pinPost(String username, long postId) {
-		PinId pinId = new PinId();
-		pinId.setAccountId(username);
-		pinId.setPostId(postId);
-
+	public String pinPost(String username, long postId) {
+		PinId pinId = new PinId(username, postId);
 		Pin pin = pinDao.find(pinId);
-		System.out.println(username);
-		System.out.println(postId);
+		
 		if (pin != null) {
-			System.out.println("da ton tai pin");
 			pinDao.delete(pin);
-			return false;
+			
+			return "Unpinned";
 		} else {
-			System.out.println("chua ton tai pin");
+			Account acc = accDao.find(username);
+			
+			if(acc == null) { 
+				return Contants.USER_NONEXSIT;
+			}
+			
 			pin = new Pin();
 			pin.setPinId(pinId);
-
 			pin.setCreateAt(new Date());
-
-			Account acc = accDao.find(username);
 			pin.setAccount(acc);
 
 			Post post = postDao.find(postId);
+			
+			if(post == null) { 
+				return Contants.POST_NONEXSIT;
+			}
+			
 			pin.setPost(post);
-
 			pinDao.insert(pin);
-			return true;
+			
+			return "Pinned";
 		}
 	}
 
@@ -479,7 +482,7 @@ public class PostService {
 		target.setId(model.getId());
 		target.setName(model.getName());
 		target.setDescription(model.getDescription());
-		target.setTags(model.getTags());
+		target.setTags(model.getTags().replaceAll("#", ",#").replaceFirst(",", ""));
 
 		return target;
 	}

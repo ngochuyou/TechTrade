@@ -183,6 +183,44 @@ $(document).ready(function() {
 	  	   };
 	  	});
 	    
+	    var postId = "";
+	    var flag;
+	    var pin_noti;
+	    
+	    $(document).on('click','.pin', function() {
+	    	id = this.id;
+	    	$.ajax({
+		    	   type: 'GET',
+		    	   url: '/TechTrade/post/pin',
+		    	   data : {
+		    		   postId : id
+		    	   },
+		    	   contentType: "application/json; charset=utf-8",
+		    	   success: function(result) {
+		    		   if(result == "Pinned") {
+		    			   $(document).find('#'+id).html("<i class='fas fa-thumbtack mr-5'></i>Unpin");
+		    			   $(document).find('#'+id).css({
+		    				   'color': 'blue',
+		    			   });
+		    		   }
+		    		   else {
+		    			   if(result == "Unpinned") {
+			    			   $(document).find('#'+id).html("<i class='fas fa-thumbtack mr-5'></i>Pin");
+			    			   $(document).find('#'+id).css({
+			    				   'color': '#555',
+			    			   });
+		    			   }
+		    		   }
+		    		   $('.pin-noti').remove();
+		    		   $('body').append("<div class='fixed-noti pin-noti' id='pin-noti'><i class='fas fa-thumbtack mr-5'></i>" + result + "</div>");
+		    		   pin_noti = $('#pin-noti');
+		    		   setTimeout(function() {
+		    			   $(pin_noti).remove();
+		    		   }, 3000);
+		    	   }
+	    	});
+	    });
+	    
 	    var monthNames = [
 			"Jan", "Feb", "Mar",
 			"Apr", "May", "Jun", "Jul",

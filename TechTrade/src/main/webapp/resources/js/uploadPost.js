@@ -122,12 +122,14 @@ $(document).ready(function() {
 	    var hashtags_add = $('#hashtags-add'); 
 	    var stage_hashtasg = $('.stage-hashtags');
 	    
+    	console.log(finalTags);
 	    $(hashtags_add).click(function() {
 	    	tagInput = $(hashtagsInput).val();
 	    	$($.parseHTML("<span class='color-main tags m-2 d-inline-block' id='hashtags"+tagNumber+"'>")).html(tagInput + "<span class='hashtags-del' id='hashtags-del"+tagNumber+"'><i class='fas fa-times-circle mx-2'></i></span>").appendTo("#hashtags-container");
 	    	tagNumber++;
 	    	$(hashtagsInput).val('#');
-	    	finalTags += tagInput;  
+	    	finalTags += tagInput; 
+	    	console.log(finalTags);
 	    	$(form_hashtags).val(finalTags);
 	    });
 	    

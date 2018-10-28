@@ -188,4 +188,10 @@ public class PostController {
 
 		return postService.rateHashtag(hashtag);
 	}
+	
+	@GetMapping(value = "/pin")
+	public @ResponseBody String pinPost(@RequestParam(name = "postId") long postId, Principal principal) {
+		
+		return postService.pinPost(principal.getName(), postId);
+	}
 }

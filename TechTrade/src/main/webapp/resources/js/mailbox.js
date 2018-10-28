@@ -6,8 +6,9 @@ $(document).ready(function() {
     var messagesContainerHTML;
     var stopPagingMessages = false;
     
-    $('.inbox-open').click(function() {
+    $(document).on('click', '.inbox-open', function() {
     	$(inbox).toggleClass('fixed-fullscreen-active');
+    	$(document).find('.inbox-noti').remove();
     });
     
     $('#inbox-showmore').click(function() {
@@ -55,11 +56,11 @@ $(document).ready(function() {
     	});
     });
     
-    $('.inbox-main').on('mouseenter', '.message', function() {
+    $(inbox).on('mouseenter', '.message, .outmessage', function() {
     	$(this).find('svg').removeClass('hidden');
     });
     
-    $('.inbox-main').on('mouseleave', '.message', function() {
+    $(inbox).on('mouseleave', '.message, .outmessage', function() {
     	$(this).find('svg').addClass('hidden');
     });
     
@@ -274,18 +275,21 @@ $(document).ready(function() {
 	    		success : function(result) {
 	    			outmessages_container_HTML = "";
 	    			$.each(result, function() {
-	    				outmessages_container_HTML += "<div class='row' style='height: auto;'>"
-	    											+"	<div class='col-2 border-right'>"
-	    											+"		<img src=\"/TechTrade/account/avatar?username=" + this.receiver.username + "\" class='m-auto avatar-medium'>"
-	    											+"	</div>"
-	    											+"	<div class='col-9'>"
-	    											+"		<h3>" + this.receiver.username + "</h3>"
-	    											+"		<p class='mb-1'>" + this.content + "</p>"
-	    											+"		<p class='text-truncate text-small message-sentAt'>" + formatCurrentDateTime(this.sentAt) + "</p>"
-	    											+"	</div>"
-	    											+"	<div class='col-1 p-0'>"
-	    											+"	</div>"
-	    											+"</div>";
+	    				outmessages_container_HTML += "<div class='row outmessage' style='height: auto;'>"
+													+"	<div class='col-2 border-right'>"
+													+"		<img src=\"/TechTrade/account/avatar?username=" + this[1] + "\" class='m-auto avatar-medium'>"
+													+"	</div>"
+													+"	<div class='col-9'>"
+													+"		<h3 class='outmessage-username'>" + this[1] + "</h3>"
+													+"		<p class='mb-1'>" + this[3] + "</p>"
+													+"		<p class='text-truncate text-small'>" + formatCurrentDateTime(this[2]) + "</p>"
+													+"	</div>"
+													+"	<div class='col-1 p-0'>"
+													+"		<div class='icon icon-small m-auto outmessage-delete' id='outmessage-delete-" + this[0] + "'>"
+													+"			<i class='fas fa-trash text-right hidden'></i>"
+													+"		</div>"
+													+"	</div>"
+													+"</div>";
 	    			});
 	    			$(outmessages_container).append(outmessages_container_HTML);
 	    			outbox_load_stop = true;
@@ -296,7 +300,6 @@ $(document).ready(function() {
 		$(inbox_main).fadeOut("fast");
 		$(inbox_composer).fadeOut("fast");
 		$(outbox_newOutbox).fadeOut("fast");
-		$(outbox).addClass('')
 		$(outbox).fadeIn("fast");
     });
     
@@ -322,16 +325,19 @@ $(document).ready(function() {
 	    			outbox_current_page++;
 	    			outmessages_container_HTML = "";
 	    			$.each(result, function() {
-	    				outmessages_container_HTML += "<div class='row' style='height: auto;'>"
+	    				outmessages_container_HTML += "<div class='row outmessage' style='height: auto;'>"
 	    											+"	<div class='col-2 border-right'>"
-	    											+"		<img src=\"/TechTrade/account/avatar?username=" + this.receiver.username + "\" class='m-auto avatar-medium'>"
+	    											+"		<img src=\"/TechTrade/account/avatar?username=" + this[1] + "\" class='m-auto avatar-medium'>"
 	    											+"	</div>"
 	    											+"	<div class='col-9'>"
-	    											+"		<h3>" + this.receiver.username + "</h3>"
-	    											+"		<p class='mb-1'>" + this.content + "</p>"
-	    											+"		<p class='text-truncate text-small message-sentAt'>" + formatCurrentDateTime(this.sentAt) + "</p>"
+	    											+"		<h3 class='outmessage-username'>" + this[1] + "</h3>"
+	    											+"		<p class='mb-1'>" + this[3] + "</p>"
+	    											+"		<p class='text-truncate text-small'>" + formatCurrentDateTime(this[2]) + "</p>"
 	    											+"	</div>"
 	    											+"	<div class='col-1 p-0'>"
+	    											+"		<div class='icon icon-small m-auto outmessage-delete' id='outmessage-delete-" + this[0] + "'>"
+	    											+"			<i class='fas fa-trash text-right hidden'></i>"
+	    											+"		</div>"
 	    											+"	</div>"
 	    											+"</div>";
 	    			});
@@ -341,6 +347,38 @@ $(document).ready(function() {
     	}
     });
     
+    var outbox_delete_noti;
+    
+    $(outbox).on('click', '.outmessage-delete', function() {
+    	$('.delete-noti').remove();
+    	message_root = $(this).parents().eq(1);
+    	message_id = this.id.match(/\d+/).toString();
+    	$(outbox).append("<div class='fixed-noti outbox-delete-noti' id='outbox-delete-noti'>Are you sure you want to delete this message to <span class='font-weight-bold'>"+ $(message_root).find('.outmessage-username').text() +"</span>? Action can not be undo. <button class='btn bg-main mx-4' id='outbox-noti-yes'>Yes!</button><button class='btn btn-outline-main' id='outbox-noti-no'>Don't do it</button></div>");
+    	outbox_delete_noti = $('#outbox-delete-noti');
+    });
+    
+    $(outbox).on('click', '#outbox-noti-yes', function() {
+		$(delete_noti).html("<img src='/TechTrade/resources/img/loading.gif' class='mr-3' style='height : 50px;'> Please wait...");
+		$.ajax({
+    		type : 'GET',
+    		url : '/TechTrade/account/message/remove',
+    		data : {
+    			messageId : message_id
+    		},
+    		success : function(result) {
+    			$(outbox_delete_noti).text(result);
+    		}
+    	});
+		$(message_root).remove();
+		setTimeout(function() {
+			  $(outbox_delete_noti).remove();
+		}, 3000);
+	});
+	
+	$(outbox).on('click', '#outbox-noti-no', function() {
+		$(outbox_delete_noti).remove();
+	});
+	
     var inbox_newInbox_container = $('#newmessages-container');
     var inbox_newInbox_container_HTML;
     
@@ -348,13 +386,13 @@ $(document).ready(function() {
     	$.ajax({
     		type: 'GET',
     		url : '/TechTrade/account/message/inbox',
-    		success : function(result) {
+    		success : function(result) {	
     			if (result.length == 0) {
     				return ;
     			}
     			inbox_newInbox_container_HTML = "";
     			$.each(result, function() {
-    				inbox_newInbox_container_HTML += "<div class='row bg-noti message newmessage pointer hidden'>"
+    				inbox_newInbox_container_HTML += "<div class='row bg-noti message newmessage pointer'>"
 						+ "<input type='hidden' value='" + this[0] + "' class='message-id'>"
 						+ "<div class='col-2 border-right'>"
 						+ "<img src='/TechTrade/account/avatar?username="+ this[1] + "' class='m-auto avatar-medium'>"
@@ -374,7 +412,7 @@ $(document).ready(function() {
 						+ "</div></div></div>";
     			});
     			$(inbox_newInbox_container).append(inbox_newInbox_container_HTML);
-    			$(inbox_newInbox_container).find('.newmessage').toggleClass('hidden');
+    			$('body').append("<div class='fixed-noti inbox-noti'><i class='fas fa-envelope mr-3'></i>You have new Message <span class='mx-3 pointer inbox-open text-primary'>Show me</span></div>");
     		}
     	});
     }, 30000);

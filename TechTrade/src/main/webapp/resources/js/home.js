@@ -46,6 +46,7 @@ $(document).ready(function() {
     var d;
     var string = "";
     var stopPaging = false;
+    var flag = $('#flag').val();
     
     $(window).scroll(function() {
     	if((($(window).scrollTop() + $(window).height())) == ($(document).height())) {
@@ -87,8 +88,7 @@ $(document).ready(function() {
 		+"						</span> <span class='tags d-inline-block'"
 		+"							style='background-color : "+this.category.tagColor+"'>"+this.category.name+"</span> "
 		+ spanTags
-		+"						</span>"
-							
+		+"						</span>"				
 		+"					</div>"
 		+"				</div>"
 		+"				<div class='col-2'>"
@@ -102,7 +102,7 @@ $(document).ready(function() {
 		+"			<div class='row post-footer'>"
 		+"				<div class='col'>";
     	    			   
-    	    			   if($('#flag').val() == 'true'){
+    	    			   if(flag == 'true'){
 								string += "<div class='col-6 float-left border text-center h-100'>	"					
 								+"			<h3 class='mt-3'>"
 								+"				<i class='fas fa-arrows-alt-v mr-5'></i>"+this.upVote+" Votes"
@@ -122,9 +122,7 @@ $(document).ready(function() {
 										+"		</div>";
 								}
 								
-						}
-					    	        			
-						if($('#flag').val() == 'false'){
+						} else {
 								string +="<div class='col-12 float-left border text-center h-100'>"
 								+"			<h3 class='mt-3'>"
 								+"				<i class='fas fa-arrows-alt-v mr-5'></i>"+this.upVote+" Votes"
@@ -144,29 +142,38 @@ $(document).ready(function() {
     	});
     
     var postId = "";
-    var flag;
+    var pin_noti;
+    
     $(document).on('click','.pin', function(){
-    	postId = this.id;
+    	id = this.id;
     	$.ajax({
 	    	   type: 'GET',
-	    	   url: '/TechTrade/post/pin?post='+postId,
+	    	   url: '/TechTrade/post/pin',
+	    	   data : {
+	    		   postId : id
+	    	   },
 	    	   contentType: "application/json; charset=utf-8",
-	    	   success: function(result){
-	    		   if(result == true){
-	    			   $(document).find('#'+postId).html("<i class='fas fa-thumbtack mr-5'></i>Unpin");
-	    			   $(document).find('#'+postId).css({
+	    	   success: function(result) {
+	    		   if(result == "Pinned") {
+	    			   $(document).find('#'+id).html("<i class='fas fa-thumbtack mr-5'></i>Unpin");
+	    			   $(document).find('#'+id).css({
 	    				   'color': 'blue',
 	    			   });
 	    		   }
-	    		   else{
-	    			   $(document).find('#'+postId).html("<i class='fas fa-thumbtack mr-5'></i>Pin");
-	    			   $(document).find('#'+postId).css({
-	    				   'color': '#555',
-	    			   });
+	    		   else {
+	    			   if(result == "Unpinned") {
+		    			   $(document).find('#'+id).html("<i class='fas fa-thumbtack mr-5'></i>Pin");
+		    			   $(document).find('#'+id).css({
+		    				   'color': '#555',
+		    			   });
+	    			   }
 	    		   }
-	    	   },
-	    	   error:function(){
-	    		   alert('error duy');
+	    		   $('.pin-noti').remove();
+	    		   $('body').append("<div class='fixed-noti pin-noti' id='pin-noti'><i class='fas fa-thumbtack mr-3'></i>" + result + "</div>");
+	    		   pin_noti = $('#pin-noti');
+	    		   setTimeout(function() {
+	    			   $(pin_noti).remove();
+	    		   }, 3000);
 	    	   }
     	});
     });

@@ -39,7 +39,7 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 //			.antMatchers("/s").permitAll()
 //			.antMatchers("/post/images/**").permitAll()
 //			.antMatchers("/post/search**").permitAll()
-//			.antMatchers("/post/{postId}").permitAll()
+//			.antMatchers("/post/**").permitAll()
 //			.antMatchers("/account/{username}/**").permitAll()
 //			.antMatchers("/account/api/{username}/**").permitAll()
 //			.antMatchers("/account/sign-up").permitAll()

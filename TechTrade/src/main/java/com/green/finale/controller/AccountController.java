@@ -67,6 +67,7 @@ public class AccountController {
 
 		return "wall";
 	}
+	
 	@GetMapping(value="/update/{username}")
 	public String update(@PathVariable(name = "username") String username,Model model, Principal principal) {
 		model.addAttribute("cityList", locaService.getCityList());

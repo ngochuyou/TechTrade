@@ -205,7 +205,6 @@ public class RandomService {
 	public void addRandomMessages() {
 		int n = 1000;
 		
-		Account acc = accDao.find("ngochuyou");
 		List<Account> accounts = accDao.getList();
 		List<String> contents = randomDescription();
 		int accountsMax = accounts.size()-1;
@@ -217,7 +216,7 @@ public class RandomService {
 			mess = new Message();
 			
 			mess.setSender(accounts.get(randomNumber(accountsMax, 0)));
-			mess.setReceiver(/*accounts.get(randomNumber(accountsMax, 0))*/acc);
+			mess.setReceiver(accounts.get(randomNumber(accountsMax, 0)));
 			mess.setContent(contents.get(randomNumber(contentsMax, 0)));
 			mess.setSentAt(new Date());
 			mess.setRead(Boolean.valueOf(s[randomNumber(1, 0)]));

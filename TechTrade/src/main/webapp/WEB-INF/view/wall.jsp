@@ -256,6 +256,9 @@
 						</div>
 					</div>
 				</div>
+				<c:if test="${empty postList }">
+					<div class="hpx-600"></div>
+				</c:if> 
 				<div id="post-content" class="bg-noti p-3">
 					<span id="sort" class="hidden">${sortBy }</span>
 					<p class="panel-header">Posts</p>

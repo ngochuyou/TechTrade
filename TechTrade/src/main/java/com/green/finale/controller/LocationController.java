@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.green.finale.controller;
 
 import java.util.List;

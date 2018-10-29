@@ -282,14 +282,19 @@
 							</div>
 						</sec:authorize>
 						<div class="col-10 px-4">
-							<h3>
+							<h3 id="place">
 								<i class="fas fa-map-marker mr-2"></i>${post.createBy.ward.name },
 								${post.createBy.ward.district.name },
-								${post.createBy.ward.district.city.name }
+								${post.createBy.ward.district.city.name } <span
+									data-toggle="tooltip" data-placement="right"
+									title="Search for this place" class="text-main pointer "
+									onclick="window.open('https://www.google.com/maps/place/${post.createBy.ward.name },${post.createBy.ward.district.name },${post.createBy.ward.district.city.name }')"><i
+									class="fas fa-binoculars mx-3"></i></span>
 							</h3>
 							<div class="row">
 								<div class="col-11">
-									<h2 class="font-weight-bold" id="post-name">${post.name }</h2>
+									<h2 class="font-weight-bold" id="post-name">${post.name }
+									</h2>
 									<form:input path="name"
 										class='mr-3 w-100 form-control font-weight-bold text-medium pr-5 hidden'
 										id='title-input' />
@@ -304,7 +309,10 @@
 								</div>
 							</div>
 							<p>
-								By <span class="font-italic text-main">${post.username }</span>
+								By <span class="font-italic text-main pointer"
+									data-toggle="tooltip" data-placement="top"
+									title="Visit user's page"
+									onclick="window.location.href='<spring:url value='/account/${post.username }'></spring:url>'">${post.username }</span>
 								on
 								<fmt:formatDate value="${post.createAt }" />
 							</p>
@@ -423,7 +431,8 @@
 								<c:if test="${post.pin ne null }">
 									<input id="isPin" type="hidden" value="false" />
 									<div class="col-6 float-left border text-center h-100 pointer">
-										<h3 class="mt-3 pin" style="color: var(--primary);" id="${post.id }">
+										<h3 class="mt-3 pin" style="color: var(- -primary);"
+											id="${post.id }">
 											<i class="fas fa-thumbtack mr-5"></i>Unpin
 										</h3>
 									</div>

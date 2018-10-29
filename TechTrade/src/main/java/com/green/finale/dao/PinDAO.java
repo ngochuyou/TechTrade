@@ -26,6 +26,15 @@ public class PinDAO {
 		return hql.getResultList();
 	}
 	
+	public void deleteByPost(long postId) {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<?> hql = ss.createQuery("DELETE From Pin WHERE post.id = :id");
+		
+		hql.setParameter("id", postId);
+		
+		hql.executeUpdate();
+	}
+	
 	public void insert(Pin pin) {
 		Session ss = factory.getCurrentSession();
 		ss.save(pin);
@@ -40,11 +49,26 @@ public class PinDAO {
 		Session ss = factory.getCurrentSession();
 		String queryStr = "From Pin as p Where p.post.id like :post";
 		TypedQuery<Pin> query = ss.createQuery(queryStr, Pin.class);
+		
 		query.setParameter("post", post);
+		
 		if(query.getResultList() == null) {
 			return true;
 		}
+		
 		return false;
+	}
+	
+	public List<Pin> getPinnedList(String username) {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<Pin> hql = ss.createQuery(
+				"FROM Pin WHERE account.username = :username AND post.status = :status ORDER BY createAt desc",
+				Pin.class);
+		
+		hql.setParameter("username", username);
+		hql.setParameter("status", true);
+		
+		return hql.getResultList();
 	}
 	
 	public void delete(Pin pin) {

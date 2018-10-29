@@ -348,4 +348,24 @@ $(document).ready(function() {
     		}
     	});
     });
+    
+    var post_del_link = $('a.post-del');
+    var post_noti;
+    var post_id;
+    var post_main = $('.post');
+    
+    post_del_link.click(function(event) {
+    	event.preventDefault();
+    	post_id = this.id.match(/\d+/);
+    	post_main.append("<div class='fixed-noti post-noti'><i class='fas fa-trash mr-5'></i>Are you sure you want to delete this post? Action can not be undo. <button class='btn bg-main mx-4' id='post-noti-yes'>Yes!</button><button class='btn btn-outline-main' id='post-noti-no'>Don't do it</button></div>");
+    	post_noti = $('.post-noti');
+    });
+    
+    post_main.on('click', '#post-noti-yes', function(){
+    	window.location.href = '/TechTrade/post/delete/' + post_id; 
+    });
+    
+    post_main.on('click', '#post-noti-no', function(){
+    	post_noti.remove();
+    });
 });

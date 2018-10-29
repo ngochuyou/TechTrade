@@ -263,7 +263,7 @@
 						<div class="py-2 my-2 bg-white">
 							<c:if test="${post.status eq false }">
 								<h3 class="text-main">
-									<span class="tags text-light bg-main">Closed</span>
+									<span class="half-right-curve tags text-light bg-main mr-1">Closed</span>
 								</h3>
 							</c:if>
 							<div class="row my-4 px-4">
@@ -291,9 +291,6 @@
 										</div>
 									</div>
 								</sec:authorize>
-								<sec:authorize access="isAuthenticated()">
-									<div class="col-1 py-3"></div>
-								</sec:authorize>
 								<div class="col-10">
 									<h2 class="text-truncate font-weight-bold">${post.name }</h2>
 									<p>
@@ -309,6 +306,30 @@
 										</span>
 									</div>
 								</div>
+								<sec:authorize access="isAuthenticated()">
+									<c:if test="${user.username eq account.username }">
+										<div class="dropdown">
+											<button class="btn-nobg text-light" type="button"
+												id="dropdownMenu2" data-toggle="dropdown"
+												aria-haspopup="true" aria-expanded="false">
+												<i class="fas fa-ellipsis-h text-dark fa-2x mr-4"></i>
+											</button>
+											<div class="dropdown-menu dropdown-menu-right box-shadow"
+												aria-labelledby="dropdownMenu2">
+												<a class="dropdown-item post-del" id="post-del-${post.id }"
+													href="<spring:url value="/post/delete/${post.id }"></spring:url>">Delete</a>
+												<c:if test="${post.status == true }">
+													<a class="dropdown-item"
+														href="<spring:url value="/post/${post.id }/status?s=close"></spring:url>">Close</a>
+												</c:if>
+												<c:if test="${post.status == false }">
+													<a class="dropdown-item"
+														href="<spring:url value="/post/${post.id }/status?s=restore"></spring:url>">Restore</a>
+												</c:if>
+											</div>
+										</div>
+									</c:if>
+								</sec:authorize>
 							</div>
 							<div class="row pointer my-2  px-4"
 								onclick="window.location.href='<spring:url value='/post/${post.id }'></spring:url>'">
@@ -325,7 +346,8 @@
 									<c:if test="${post.pin ne null }">
 										<input id="isPin" type="hidden" value="false" />
 										<div class="col-6 float-left border text-center h-100 pointer">
-											<h3 class="mt-3 pin" style="color: blue;" id="${post.id }">
+											<h3 class="mt-3 pin" style="color: var(- -primary);"
+												id="${post.id }">
 												<i class="fas fa-thumbtack mr-5"></i>Unpin
 											</h3>
 										</div>

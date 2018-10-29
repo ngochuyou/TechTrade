@@ -102,21 +102,20 @@ $(document).ready(function() {
 		+"			<div class='row post-footer'>"
 		+"				<div class='col'>";
     	    			   
-    	    			   if(flag == 'true'){
+    	    			   if (flag == 'true') {
 								string += "<div class='col-6 float-left border text-center h-100'>	"					
 								+"			<h3 class='mt-3'>"
 								+"				<i class='fas fa-arrows-alt-v mr-5'></i>"+this.upVote+" Votes"
 								+"			</h3>"
 								+"		</div>"
 								+"		<div class='col-6 float-left border text-center h-100 pointer' >";
-								if(this.pin == null){
+								if (this.pin == null) {
 									string +="<h3 class='mt-3 pin' id='"+this.id+"' >"
 										+"				<i class='fas fa-thumbtack mr-5'></i>Pin"
 										+"			</h3>"
 										+"		</div>";
-								}
-								else{
-									string +="<h3 class='mt-3 pin' id='"+this.id+"' style='color:blue' >"
+								} else {
+									string +="<h3 class='mt-3 pin' id='"+this.id+"' style='color: var(--primary)' >"
 										+"				<i class='fas fa-thumbtack mr-5'></i>Unpin"
 										+"			</h3>"
 										+"		</div>";
@@ -157,7 +156,7 @@ $(document).ready(function() {
 	    		   if(result == "Pinned") {
 	    			   $(document).find('#'+id).html("<i class='fas fa-thumbtack mr-5'></i>Unpin");
 	    			   $(document).find('#'+id).css({
-	    				   'color': 'blue',
+	    				   'color': 'var(--primary)',
 	    			   });
 	    		   }
 	    		   else {

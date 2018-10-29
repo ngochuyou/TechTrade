@@ -89,11 +89,6 @@ public class PostService {
 	}
 
 	@Transactional
-	public List<Post> getPostListByWard(String ward) {
-		return postDao.getListByWard(ward);
-	}
-
-	@Transactional
 	public Post find(long postId) {
 
 		return postDao.find(postId);
@@ -185,8 +180,9 @@ public class PostService {
 			if (postUsername.equals(principal.getName())) {
 				commentDao.deleteByPost(postId);
 				imageDao.deleteByPost(postId);
-				postDao.delete(post);
 				voteDao.deleteByPost(postId);
+				pinDao.deleteByPost(postId);
+				postDao.delete(post);
 				
 				return null;
 			}
@@ -282,7 +278,6 @@ public class PostService {
 			if (principal != null) {
 				model.setVote(voteDao.find(new VoteId(principal.getName(), p.getId())));
 				model.setPin(pinDao.find(new PinId(principal.getName(), p.getId())));
-
 			} else {
 				model.setVote(null);
 				model.setPin(null);
@@ -442,7 +437,13 @@ public class PostService {
 			return "Pinned";
 		}
 	}
-
+	
+	@Transactional
+	public List<Pin> getPinnedPostList(Principal principal) {
+		
+		return pinDao.getPinnedList(principal.getName());
+	}
+	
 	public boolean validatePost(PostModel post) {
 		if (StringUtils.isEmpty(post.getName())) {
 			return false;

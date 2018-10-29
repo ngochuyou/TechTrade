@@ -194,4 +194,13 @@ public class PostController {
 		
 		return postService.pinPost(principal.getName(), postId);
 	}
+	
+	@GetMapping(value = "/pinned")
+	public String getPinnedPosts(Principal principal, Model model) {
+		model.addAttribute("pinnedList", postService.getPinnedPostList(principal));
+		model.addAttribute("cateList", cateService.getCategoryList());
+		model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
+		
+		return "pin";
+	}
 }

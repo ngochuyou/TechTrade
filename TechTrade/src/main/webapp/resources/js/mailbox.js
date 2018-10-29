@@ -87,7 +87,7 @@ $(document).ready(function() {
     			messageId : message_id
     		},
     		success : function(result) {
-    			$(delete_noti).text(result);
+    			$(delete_noti).html('<i class="fas fa-trash mr-3"></i>' + result);
     		}
     	});
 		if ($(message_root).hasClass('bg-noti')) {
@@ -188,7 +188,7 @@ $(document).ready(function() {
     			messageId : message_id
     		},
     		success : function(result) {
-    			$(delete_noti).text(result);
+    			$(delete_noti).html('<i class="fas fa-trash mr-3"></i>' + result);
     		}
     	});
 		message_root = $('#message-delete-' + message_id).parents().eq(1);
@@ -366,7 +366,7 @@ $(document).ready(function() {
     			messageId : message_id
     		},
     		success : function(result) {
-    			$(outbox_delete_noti).text(result);
+    			$(outbox_delete_noti).html('<i class="fas fa-trash mr-3"></i>' + result);
     		}
     	});
 		$(message_root).remove();
@@ -470,6 +470,14 @@ $(document).ready(function() {
     var outbox_newOutbox_noti;
     
     $(outbox_newOutbox_send).click(function() {
+    	if (outbox_newOutbox_idInput.length == 0) {
+        	outbox_newOutbox_noti = $('.newoutbox-send-noti');
+    		$(outbox_newOutbox_noti).remove();
+    		$(outbox_newOutbox).append("<div class='fixed-noti newoutbox-send-noti'><i class='fas fa-comment-dots mr-3'></i>Don't forget to enter receiver's username<button class='btn bg-main mx-3 text-primary' id='newoutbox-send-notiOK'>Okay</button></div>");
+    		
+    		return ;
+    	} 
+    	
     	$(outbox_newOutbox).append("<div class='fixed-noti newoutbox-send-noti'><img src='/TechTrade/resources/img/loading.gif' class='mr-3' style='height : 50px;'> Please wait...</div>");
     	outbox_newOutbox_noti = $('.newoutbox-send-noti');
     	$.ajax({
@@ -487,6 +495,10 @@ $(document).ready(function() {
     			$(outbox_load).trigger('click');
     		}
     	});
+    });
+    
+    outbox_newOutbox.on('click', '#newoutbox-send-notiOK', function() {
+    	outbox_newOutbox.find('.newoutbox-send-noti').remove();
     });
     
     var monthNames = [

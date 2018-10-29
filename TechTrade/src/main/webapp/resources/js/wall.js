@@ -89,6 +89,7 @@ $(document).ready(function() {
 	    var stopPaging = false;
 	    var voteHTML = "";
 	    var post_content = $('#post-content');
+	    var flag = $('#flag').val();
 	    
 	    $(window).scroll(function() {
 	  	   if((($(window).scrollTop() + $(window).height())) == ($(document).height())) {
@@ -127,8 +128,13 @@ $(document).ready(function() {
 	  	    					   voteHTML = "<p class='w-100'>You voted this post -1</p>";
 	  	    				   }
 	  	    			   }
-	  	    			   string += "<div class='my-2 py-2 bg-white'>"
-	 		+"				<div class='row my-4 px-4'>"
+	  	    			   string += "<div class='my-2 py-2 bg-white'>";
+	  	    			   
+	  	    			   if (this.status == false) {
+	  	    				   string += "<h3 class='text-main'><span class='tags text-light bg-main'>Closed</span></h3>"
+	  	    			   }
+	  	    			   
+	  	    			 string += "<div class='row my-4 px-4'>"
 			+"					<div class='col-1 py-3'>"
 			+"						<div class='col-1 m-auto text-center'"
 			+"							id='vote-holder-" + this.id + "'>" 
@@ -160,18 +166,33 @@ $(document).ready(function() {
 	 		+"			</div>"
 	 		+"			<div class='row px-4'>"
 	 		+"				<div class='col'>"
-	 		+"					<div class='col-6 float-left border half-left-curve pointer'>"
-	 		+"						<h3 class='mt-3 text-center'>"
-	 		+"							<i class='fas fa-arrows-alt-v mr-5'></i>"+this.upVote+" Votes"
-	 		+"						</h3>"
-	 		+"					</div>"
-	 		+"					<div class='col-6 float-left border half-right-curve pointer'>"
-	 		+"						<h3 class='mt-3 text-center'>"
-	 		+"							<i class='fas fa-thumbtack mr-5'></i>Pin"
-	 		+"						</h3>"
-	 		+"					</div>"
-	 		+"				</div>"
-	 		+"			</div></div>";
+							   if (flag == 'true') {
+									string += "<div class='col-6 float-left border text-center h-100'>	"					
+									+"			<h3 class='mt-3'>"
+									+"				<i class='fas fa-arrows-alt-v mr-5'></i>"+this.upVote+" Votes"
+									+"			</h3>"
+									+"		</div>"
+									+"		<div class='col-6 float-left border text-center h-100 pointer' >";
+									if (this.pin == null) {
+										string +="<h3 class='mt-3 pin' id='"+this.id+"' >"
+											+"				<i class='fas fa-thumbtack mr-5'></i>Pin"
+											+"			</h3>"
+											+"		</div>";
+									} else {
+										string +="<h3 class='mt-3 pin' id='"+this.id+"' style='color: var(--primary)' >"
+											+"				<i class='fas fa-thumbtack mr-5'></i>Unpin"
+											+"			</h3>"
+											+"		</div>";
+									}
+									
+							} else {
+									string +="<div class='col-12 float-left border text-center h-100'>"
+									+"			<h3 class='mt-3'>"
+									+"				<i class='fas fa-arrows-alt-v mr-5'></i>"+this.upVote+" Votes"
+									+"			</h3>"
+									+"		</div>";
+							}
+							string += "</div> </div> </div>";	
 	  	        		});
 	  	    		   $(post_content).append(string);
 	  	    		   $('#loader').fadeOut("fast");
@@ -200,7 +221,7 @@ $(document).ready(function() {
 		    		   if(result == "Pinned") {
 		    			   $(document).find('#'+id).html("<i class='fas fa-thumbtack mr-5'></i>Unpin");
 		    			   $(document).find('#'+id).css({
-		    				   'color': 'blue',
+		    				   'color': 'var(--primary)',
 		    			   });
 		    		   }
 		    		   else {
@@ -260,4 +281,23 @@ $(document).ready(function() {
 	    	
 			return monthNames[dateObject.getMonth()] + ' ' + dateObject.getDate() + ', ' + dateObject.getFullYear() + ' ' + hour + ':' + minute + " " + overTime;
 	    }
+	    
+	    var post_del_link = $('a.post-del');
+	    var post_noti;
+	    var post_id;
+	    
+	    post_del_link.click(function(event) {
+	    	event.preventDefault();
+	    	post_id = this.id.match(/\d+/);
+	    	post_content.append("<div class='fixed-noti post-noti'><i class='fas fa-trash mr-5'></i>Are you sure you want to delete this post? Action can not be undo. <button class='btn bg-main mx-4' id='post-noti-yes'>Yes!</button><button class='btn btn-outline-main' id='post-noti-no'>Don't do it</button></div>");
+	    	post_noti = $('.post-noti');
+	    });
+	    
+	    post_content.on('click', '#post-noti-yes', function(){
+	    	window.location.href = '/TechTrade/post/delete/' + post_id; 
+	    });
+	    
+	    post_content.on('click', '#post-noti-no', function(){
+	    	post_noti.remove();
+	    });
 });

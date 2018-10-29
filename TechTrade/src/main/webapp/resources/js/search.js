@@ -119,7 +119,7 @@ $(document).ready(function() {
 									+"			</h3>"
 									+"		</div>";
 							} else {
-								string +="<h3 class='mt-3 pin' id='"+this.id+"' style='color:blue' >"
+								string +="<h3 class='mt-3 pin' id='"+this.id+"' style='color: var(--primary)' >"
 									+"				<i class='fas fa-thumbtack mr-5'></i>Unpin"
 									+"			</h3>"
 									+"		</div>";
@@ -160,7 +160,7 @@ $(document).ready(function() {
 	    		   if(result == "Pinned") {
 	    			   $(document).find('#'+id).html("<i class='fas fa-thumbtack mr-5'></i>Unpin");
 	    			   $(document).find('#'+id).css({
-	    				   'color': 'blue',
+	    				   'color': 'var(--primary)',
 	    			   });
 	    		   }
 	    		   else {

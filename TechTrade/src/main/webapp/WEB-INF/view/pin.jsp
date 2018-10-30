@@ -37,7 +37,8 @@
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar-active">
 			<div class="sidebar-header p-3 border-bottom">
-				<h2 class="text-light">TechTrade</h2>
+				<h2 class="text-light pointer"
+					onclick="window.location.href='<spring:url value="/"></spring:url>'">TechTrade</h2>
 			</div>
 			<div class="sidebar-body hpx-500">
 				<div class="list-group border-bottom">
@@ -52,8 +53,7 @@
 									</h1>
 								</div>
 								<div class="col-8 my-auto border-left">
-									<span>${cate.name }<span
-										class="badge badge-pill bg-light text-main position-right">1</span></span>
+									<span>${cate.name }</span>
 								</div>
 							</div>
 						</a>
@@ -123,7 +123,7 @@
 									aria-labelledby="dropdownMenu2">
 									<div class="dropdown-item border-bottom font-weight-bold">
 										<div class="row"
-											onclick="window.location.href='<spring:url value='/account/${user.username }'></spring:url>'">
+											onclick="window.location.href='<spring:url value='/account/wall/${user.username }'></spring:url>'">
 											<div class="col-5 pr-0">
 												<img
 													src="<spring:url value="/account/avatar?username=${user.username }"></spring:url>"
@@ -181,17 +181,17 @@
 						<li class="nav-item active"><a
 							href="<spring:url value="/login"></spring:url>"><button
 									class="btn-blank hpx-70  my-0 my-sm-0 font-weight-bold wpx-100"
-									type="submit" id="signin">Sign in</button></a></li>
+									id="signin">Sign in</button></a></li>
 						<li class="nav-item active"><a
 							href="<spring:url value="/account/sign-up"></spring:url>"><button
 									class="btn-blank hpx-70 my-2 my-sm-0 font-weight-bold wpx-100"
-									type="submit" id="signup">Sign up</button></a></li>
+									id="signup">Sign up</button></a></li>
 					</sec:authorize>
 				</ul>
 			</div>
 		</nav>
 		<div
-			style="background-image: url('<spring:url value="/resources/img/parallax.jpg"></spring:url>');"
+			style="background-image: url('<spring:url value="/account/avatar/${account.wallpaper }"></spring:url>');"
 			class="parallax position-relative">
 			<div class="wallpaper-cover">
 				<p class="background-opacity m-0">
@@ -204,14 +204,19 @@
 		<div class="main p-3">
 			<c:if test="${empty pinnedList }">
 				<div class="hpx-600">
-					<h2 class="text-center text-main"><i class="fas fa-clipboard-list mr-3"></i>You haven't pinned any post.</h2>
+					<h2 class="text-center text-main">
+						<i class="fas fa-clipboard-list mr-3"></i>You haven't pinned any
+						post.
+					</h2>
 				</div>
 			</c:if>
 			<c:if test="${not empty pinnedList }">
-				<h2 class="text-main"><i class="fas fa-clipboard-list mr-3"></i>Pinned Posts</h2>
+				<h2 class="text-main">
+					<i class="fas fa-clipboard-list mr-3"></i>Pinned Posts
+				</h2>
 			</c:if>
 			<c:forEach var="pin" items="${pinnedList }">
-				<div id="${pin.post.id }" class="my-3 post">
+				<div id="${pin.post.id }" class="px-2 my-3 post">
 					<p class="panel-header">
 						Pinned On
 						<fmt:formatDate value="${pin.createAt }" type="date"></fmt:formatDate>
@@ -223,18 +228,18 @@
 							<div class="row">
 								<div class="col-4 border text-center pointer unpin"
 									id="unpin-${pin.post.id }">
-									<p class="my-2" style="color: var(--primary);">
+									<p class="my-2" style="color: #007bff;">
 										<i class="fas fa-thumbtack mr-5"></i>Unpin
 									</p>
 								</div>
 								<div class="col-4 border text-center h-100 pointer"
-									onclick="window.location.href='<spring:url value="/post/${pin.post.id }"></spring:url>'">
+									onclick="window.location.href='<spring:url value="/post/view/${pin.post.id }"></spring:url>'">
 									<p class="my-2">
 										<i class="fas fa-external-link-square-alt mr-5"></i>See Post
 									</p>
 								</div>
 								<div class="col-4 border text-center h-100 pointer"
-									onclick="window.location.href='<spring:url value="/account/${pin.post.createBy.username }"></spring:url>'">
+									onclick="window.location.href='<spring:url value="/account/wall/${pin.post.createBy.username }"></spring:url>'">
 									<p class="my-2">
 										<i class="fas fa-user mr-5"></i>Visit user's page
 									</p>

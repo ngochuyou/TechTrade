@@ -3,11 +3,17 @@ $(document)
 				function() {
 					$('#ward-select option').first().attr('selected',
 							'selected');
-
+					
+					var selected;
+					var districtSb;
+					var districtSbHTML;
+					var wardSb;
+					var wardSbHTML;
+					
 					$('#city-select')
 							.change(
 									function() {
-										var selected = $('#city-select option:selected');
+										selected = $('#city-select option:selected');
 
 										$
 												.ajax({
@@ -17,11 +23,11 @@ $(document)
 																	.attr("value"),
 													contentType : 'application/json; charset=utf-8',
 													success : function(list) {
-														var districtSb = $('#district-select');
+														districtSb = $('#district-select');
 
 														districtSb.empty();
 
-														var districtSbHTML = districtSb
+														districtSbHTML = districtSb
 																.html();
 
 														$
@@ -56,12 +62,12 @@ $(document)
 																	contentType : 'application/json; charset=utf-8',
 																	success : function(
 																			list) {
-																		var wardSb = $('#ward-select');
+																		wardSb = $('#ward-select');
 
 																		wardSb
 																				.empty();
 
-																		var wardSbHTML = wardSb;
+																		wardSbHTML = wardSb;
 
 																		$
 																				.each(
@@ -101,11 +107,11 @@ $(document)
 																	.attr("value"),
 													contentType : 'application/json; charset=utf-8',
 													success : function(list) {
-														var wardSb = $('#ward-select');
+														wardSb = $('#ward-select');
 
 														wardSb.empty();
 
-														var wardSbHTML = wardSb
+														wardSbHTML = wardSb
 																.html();
 
 														$
@@ -143,23 +149,32 @@ $(document)
 
 						});
 					});
-
-					$('#username').keyup(function() {
-						var usernameVar = $('#username').val();
+					
+					var username = $('#username');
+					var username_result = $('#username-check-result');
+					var username_key;
+					
+					username.keyup(function() {
+						username_key = username.val();
+						
 						$.ajax({
 							type : 'GET',
 							url : '/TechTrade/account/username',
 							data : {
-								username : usernameVar
+								username : username_key
 							},
 							success : function(result) {
-								$('#username-check-result').text(result);
+								username_result.text(result);
 							},
 						});
 					});
 
-					$('#phone').keyup(function() {
-						var phoneVar = $('#phone').val();
+					var phone = $('#phone');
+					var phone_key;
+					var phone_result = $('#phone-check-result');
+					
+					phone.keyup(function() {
+						phone_key = phone.val();
 
 						$.ajax({
 							type : 'GET',
@@ -168,7 +183,7 @@ $(document)
 								phone : phoneVar
 							},
 							success : function(result) {
-								$('#phone-check-result').text(result);
+								phone_result.text(result);
 							},
 						});
 					});
@@ -211,15 +226,15 @@ $(document)
 										}
 									});
 					var code;
-
+					var email = $('#email');
+					
 					$('#submit-btn').click(function() {
 						if ($('#reg-form').valid() == true) {
-
 							$.ajax({
 								type : 'GET',
 								url : '/TechTrade/account/verify',
 								data : {
-									email : $('#email').val()
+									email : email.val()
 								},
 								success : function(verifyCode) {
 									code = verifyCode;

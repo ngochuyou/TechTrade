@@ -88,13 +88,11 @@ public class HomeController {
 			@RequestParam(name = "category", defaultValue = "0") String categoryId,
 			@RequestParam(name = "k", defaultValue = "") String keyword,
 			@RequestParam(name = "s", defaultValue = "createAt:desc") String sortBy,
-			@RequestParam(name = "p", defaultValue = "0") int page, Model model, Principal principal) throws Exception {
+			@RequestParam(name = "p", defaultValue = "0") int page, Principal principal) throws Exception {
 		
 		try {
 			return postService.search(categoryId, keyword, sortBy, page, principal);
 		} catch (NumberFormatException ex) {
-			model.addAttribute("error", ex.getMessage());
-
 			return null;
 		}
 	}

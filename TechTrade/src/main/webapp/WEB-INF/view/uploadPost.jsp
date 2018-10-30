@@ -59,7 +59,8 @@
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar-active">
 			<div class="sidebar-header p-3 border-bottom">
-				<h2 class="text-light">TechTrade</h2>
+				<h2 class="text-light pointer"
+					onclick="window.location.href='<spring:url value="/"></spring:url>'">TechTrade</h2>
 			</div>
 			<div class="sidebar-body hpx-500">
 				<div class="list-group border-bottom">
@@ -144,7 +145,7 @@
 								aria-labelledby="dropdownMenu2">
 								<div class="dropdown-item border-bottom font-weight-bold">
 									<div class="row"
-										onclick="window.location.href='<spring:url value='/account/${user.username }'></spring:url>'">
+										onclick="window.location.href='<spring:url value='/account/wall/${user.username }'></spring:url>'">
 										<div class="col-5 pr-0">
 											<img
 												src="<spring:url value="/account/avatar?username=${account.username }"></spring:url>"
@@ -200,7 +201,7 @@
 			</div>
 		</nav>
 		<div
-			style="background-image: url('<spring:url value="/resources/img/parallax.jpg"></spring:url>');"
+			style="background-image: url('<spring:url value="/account/avatar/${account.wallpaper }"></spring:url>');"
 			class="parallax position-relative">
 			<div class="wallpaper-cover">
 				<p class="background-opacity m-0">

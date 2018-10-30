@@ -28,15 +28,15 @@ $(document).ready(function() {
 	        	type : 'GET',
 	        	url : '/TechTrade/post/search',
 	        	data : {
-	        		keyword :$(search).val(),
+	        		keyword : $(search).val(),
 	        	},
 	        	success : function(list) {
 	        		var string = "";
 	        		
 	        		$.each(list, function() {
-	        			string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/post/"+this[1]+"'>"+this[0]+"</a>";
+	        			string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/post/view/" + this[1] + "'>" + this[0] + "</a>";
 	        		});
-	        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$(search).val()+"'>See more</a>";
+	        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k=" + $(search).val() + "'>See more</a>";
 	        		$(search_dropdown).html(string);
 	        		$(search_dropdown).show();
 	        	},

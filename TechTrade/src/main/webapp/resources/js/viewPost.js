@@ -20,10 +20,12 @@ $(document).ready(function() {
 	});
 	
 	var tagNumber = $('.hashtags').length;
+	var hashtags_array = $('.hashtags');
+	var hashtags_del_array = $('.hashtags-del');
 	
 	for (var i=0; i<tagNumber; i++) {
-		$($('.hashtags')[i]).attr('id', 'hashtags'+i);
-		$($('.hashtags-del')[i]).attr('id', 'hashtags-del'+i);
+		$(hashtags_array[i]).attr('id', 'hashtags' + i);
+		$(hashtags_del_array[i]).attr('id', 'hashtags-del' + i);
 	}
 		
 	$('.overlay').click(function() {
@@ -37,15 +39,15 @@ $(document).ready(function() {
 		$('.collapse.in').toggleClass('in');
 		$('a[aria-expanded=true]').attr('aria-expanded', 'false');
 	});
-	
-    $(window).click(function(target) {
-    	if (target.target.id != 'my-dropdown-container') {
-    		$('#my-dropdown-container').hide();
-    	}
-    });
     
     var search = $('#search');
     var search_dropdown = $('#my-dropdown-container');
+    
+    $(window).click(function(target) {
+    	if (target.target.id != 'my-dropdown-container') {
+    		search_dropdown.hide();
+    	}
+    });
     
     $(search).keyup(function() {
         $.ajax({
@@ -58,9 +60,9 @@ $(document).ready(function() {
         		var string = "";
         		
         		$.each(list, function() {
-        			string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/post/"+this[1]+"'>"+this[0]+"</a>";
+        			string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/post/view/" + this[1] + "'>" + this[0] + "</a>";
         		});
-        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$(search).val()+"'>See more</a>";
+        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k=" + $(search).val() + "'>See more</a>";
         		$(search_dropdown).html(string);
         		$(search_dropdown).show();
         	},
@@ -70,41 +72,51 @@ $(document).ready(function() {
         });
     });
     
+    var editable = $('.editable');
+    	
     $('#post-edit').click(function() {
-    	$('.editable').toggleClass('hidden');
+    	editable.toggleClass('hidden');
     });
     
     var title = $('#post-name').text();
     var description = $('#post-description').text();
-
-    $('#title-edit').click(function(event) {
+    var title_edit = $('#title-edit');
+    var title_input = $('#title-input');
+    var title_submit = $('#title-submit');
+    var title_cancel = $('#title-cancel');
+    
+    title_edit.click(function(event) {
     	$('#post-name').toggleClass('hidden');
-    	$('#title-input').toggleClass('hidden');
-    	$('#title-submit').toggleClass('hidden');
-    	$('#title-cancel').toggleClass('hidden');
+    	title_input.toggleClass('hidden');
+    	title_submit.toggleClass('hidden');
+    	title_cancel.toggleClass('hidden');
     });
     
-    $('#title-cancel').click(function() {
+    title_cancel.click(function() {
     	$('#post-name').toggleClass('hidden');
-    	$('#title-input').toggleClass('hidden');
-    	$('#title-input').val($('#post-name').text());
-    	$('#title-submit').toggleClass('hidden');
-    	$('#title-cancel').toggleClass('hidden');
-    	console.log($('#title-input').val());
+    	title_input.toggleClass('hidden');
+    	title_input.val($('#post-name').text());
+    	title_submit.toggleClass('hidden');
+    	title_cancel.toggleClass('hidden');
     });
 
-    $('#hashtags-edit').click(function() {
-    	$('.hashtags-stage2').toggleClass('hidden');
+    var hashtags_edit =  $('#hashtags-edit');
+    var hashtags_stage2 = $('.hashtags-stage2');
+    
+    hashtags_edit.click(function() {
+    	hashtags_stage2.toggleClass('hidden');
     });
     
     var hashtags = $('#hashtags-container').text().trim();
     var hashtagId;
     var originalHashtag = hashtags;
     var targetHashtag;
+    var hashtags_input = $('#hashtags-input');
+    var hashtags_container = $('#hashtags-container');
     
-    $('#hashtags-input').val(originalHashtag.replace(',', ""));
+    hashtags_input.val(originalHashtag.replace(',', ""));
     
-    $('#hashtags-container').on('click', '.hashtags-del', function() {
+    hashtags_container.on('click', '.hashtags-del', function() {
     	hashtagId = this.id.match(/\d+/);
     	targetHashtag = $('#hashtags'+hashtagId);
     	targetHashtag.addClass('deltags');
@@ -115,61 +127,79 @@ $(document).ready(function() {
     
     var tagContainer = $('#hashtags-container').html();
     var tagInput;	
+    var hashtags_add = $('#hashtags-add');
+    var hashtags_add_input = $('#hashtags-add-input');
     
-    $('#hashtags-add').click(function() {
-    	tagInput = $('#hashtags-add-input').val();
+    hashtags_add.click(function() {
+    	tagInput = hashtags_add_input.val();
     	$($.parseHTML("<span class='color-main tags temptags mx-2' id='hashtags"+tagNumber+"'>")).html(tagInput + "<span class='hashtags-stage2 hashtags-del' id='hashtags-del"+tagNumber+"'><i class='fas fa-times-circle mx-2'></i></span>").appendTo("#hashtags-container");
     	originalHashtag += tagInput;
     	tagNumber++;
-    	$('#hashtags-add-input').val('#');
+    	hashtags_add_input.val('#');
     });
     
-    $('#hashtags-cancel').click(function() {
-    	$('.hashtags').show();
+    var hashtags_cancel = $('#hashtags-cancel');
+    
+    hashtags_cancel.click(function() {
+    	hashtags_array.show();
     	$('.temptags').remove();
-    	$('.hashtags-stage2').toggleClass('hidden');
+    	hashtags_stage2.toggleClass('hidden');
     	originalHashtag = hashtags;
     });
     
-    $('#content-edit').click(function() {
-    	$('#post-description').toggleClass('hidden');
-    	$('#content-input').toggleClass('hidden');
-    	$('#content-submit').toggleClass('hidden');
-    	$('#content-cancel').toggleClass('hidden');
+    var content_edit = $('#content-edit');
+    var post_description = $('#post-description');
+    var content_input = $('#content-input');
+    var content_submit = $('#content-submit');
+    var content_cancel = $('#content-cancel');
+    
+    content_edit.click(function() {
+    	post_description.toggleClass('hidden');
+    	content_input.toggleClass('hidden');
+    	content_submit.toggleClass('hidden');
+    	content_cancel.toggleClass('hidden');
     });
      
-    $('#content-cancel').click(function() {
-    	$('#post-description').toggleClass('hidden');
-    	$('#content-input').val($('#post-description').text());
-    	$('#content-input').toggleClass('hidden');
-    	$('#content-submit').toggleClass('hidden');
-    	$('#content-cancel').toggleClass('hidden');
+    content_cancel.click(function() {
+    	post_description.toggleClass('hidden');
+    	content_input.val(post_description.text());
+    	content_input.toggleClass('hidden');
+    	content_submit.toggleClass('hidden');
+    	content_cancel.toggleClass('hidden');
     });
     
-    $('#image-edit').click(function() {
-    	$('.image-del').toggleClass('hidden');
-    	$('#image-add').toggleClass('hidden');
-    	$('#image-cancel').toggleClass('hidden');
-    	$('.preview').toggleClass('hidden');
+    var image_edit = $('#image-edit');
+    var image_del = $('.image-del');
+    var image_add = $('#image-add');
+    var image_cancel = $('#image-cancel');
+    var preview = $('.preview');
+    
+    image_edit.click(function() {
+    	image_del.toggleClass('hidden');
+    	image_add.toggleClass('hidden');
+    	image_cancel.toggleClass('hidden');
+    	preview.toggleClass('hidden');
     });
     
     var deletedImage = [];
     var imageId;
     
-    $('.image-del').click(function() {
+    image_del.click(function() {
     	imageId = this.id.match(/\d+/);
     	$('#image-'+imageId).hide();
     	deletedImage.push("image-"+imageId);
     });
     
-    $('#image-cancel').click(function() {
-    	$('.image-del').toggleClass('hidden');
-    	$('#image-add').toggleClass('hidden');
-    	$('#image-cancel').toggleClass('hidden');
-    	$('.preview').toggleClass('hidden');
-    	$('.preview').empty();
-    	$("#upload-photo").val(null);
-    	$('.image').show();
+    var upload_photo = $("#upload-photo");
+    var image =  $('.image');
+    
+    image_cancel.click(function() {
+    	image_del.toggleClass('hidden');
+    	image_add.toggleClass('hidden');
+    	image_cancel.toggleClass('hidden');
+    	preview.toggleClass('hidden').empty();
+    	upload_photo.val(null);
+    	image.show();
     	deletedImage.length = 0;
     });
     
@@ -179,7 +209,7 @@ $(document).ready(function() {
 	var filesAmount;
 	
     function readURL(input, place) {
-    	$('.preview').empty();
+    	preview.empty();
             if (input.files) {
             	filesAmount = input.files.length;
 
@@ -187,7 +217,7 @@ $(document).ready(function() {
                     reader = new FileReader();
 
                     reader.onload = function(event) {
-                        $($.parseHTML("<img class='float-left w-25 hpx-350 mx-4 my-3'>")).attr('src', event.target.result).appendTo(place);
+                        $($.parseHTML("<img class='float-left w-25 hpx-350 mx-5 my-3'>")).attr('src', event.target.result).appendTo(place);
                     }
 
                     reader.readAsDataURL(input.files[i]);
@@ -196,35 +226,38 @@ $(document).ready(function() {
             }
     };
     
-    $("#upload-photo").change(function() {
+    upload_photo.change(function() {
     	readURL(this, "div.preview");
-    	console.log($("#upload-photo").val());
     });
     
-    $('#title-submit').click(function() {
-    	$('#post-name').text($('#title-input').val());
-    	$('#post-name').toggleClass('hidden');
-    	$('#title-input').toggleClass('hidden');
-    	$('#title-submit').toggleClass('hidden');
-    	$('#title-cancel').toggleClass('hidden');
+    var post_name = $('#post-name');
+    
+    title_submit.click(function() {
+    	post_name.text($('#title-input').val());
+    	post_name.toggleClass('hidden');
+    	title_input.toggleClass('hidden');
+    	title_submit.toggleClass('hidden');
+    	title_cancel.toggleClass('hidden');
     });
     
-    $('#hashtags-submit').click(function() {
+    var hashtags_submit = $('#hashtags-submit');
+    var hashtags_del_array = $('.deltags');
+    
+    hashtags_submit.click(function() {
     	console.log(originalHashtag);
     	$('.temptags').addClass('hashtags');
     	$('.temptags').removeClass('temptags');
-    	$('.hashtags').show();
-    	$('.deltags').remove();
-    	$('#hashtags-input').val(originalHashtag);
-    	$('.hashtags-stage2').toggleClass('hidden');
+    	hashtags_array.show();
+    	hashtags_del_array.remove();
+    	hashtags_input.val(originalHashtag);
+    	hashtags_stage2.toggleClass('hidden');
     });
     
-    $('#content-submit').click(function() {
-    	$('#post-description').text($('#content-input').val());
-    	$('#post-description').toggleClass('hidden');
-    	$('#content-input').toggleClass('hidden');
-    	$('#content-submit').toggleClass('hidden');
-    	$('#content-cancel').toggleClass('hidden');
+    content_submit.click(function() {
+    	post_description.text(content_input.val()).toggleClass('hidden');
+    	content_input.toggleClass('hidden');
+    	content_submit.toggleClass('hidden');
+    	content_cancel.toggleClass('hidden');
     });
     
     $('#submit-all').click(function() {
@@ -240,57 +273,55 @@ $(document).ready(function() {
     
     var newComment = "";
     var crfs = $('#csrfToken');
+    var comment = $('#comment');
+    var post_id = $('#post-id').val();
     
-    $('#comment').focus(function() {
+    comment.focus(function() {
     	$(document).keypress(function(event) {
-    		if (event.which == 13 && $('#comment').val().length > 0) {
+    		if (event.which == 13 && comment.val().length > 0) {
     			newComment = "";
     			$.ajax({
     				type : 'POST',
     				url : '/TechTrade/post/comment',
     				data : {
-    					postId : $('#post-id').val(),
-    					comment : $('#comment').val(),
+    					postId : post_id.val(),
+    					comment : comment.val(),
     					[crfs.attr('name')] : crfs.val()
     				},
     				success : function(username) {
     					newComment = "<div class='m-2 w-100'>"
     								+ "<p class='text-primary'>" + formatCurrentDate() + "</p>"
-    								+ "<p> <span class='font-italic text-primary'>" + username + "</span> : " + $('#comment').val() + "</p>"
+    								+ "<p> <span class='font-italic text-primary'>" + username + "</span> : " + comment.val() + "</p>"
     								+ "</div>";
     					
-    					$('#comments').html($('#comments').html() + newComment);
-    					$('#comment').val(null);
+    					$('#comments').append(newComment);
+    					comment.val(null);
     				},
     			});
     		}
     	});
     });
     
-    var postId = "";
     var flag;
     var pin_noti;
     
     $(document).on('click','.pin', function(){
-    	id = this.id;
     	$.ajax({
 	    	   type: 'GET',
 	    	   url: '/TechTrade/post/pin',
 	    	   data : {
-	    		   postId : id
+	    		   postId : post_id
 	    	   },
 	    	   contentType: "application/json; charset=utf-8",
 	    	   success: function(result) {
 	    		   if(result == "Pinned") {
-	    			   $(document).find('#'+id).html("<i class='fas fa-thumbtack mr-5'></i>Unpin");
-	    			   $(document).find('#'+id).css({
+	    			   $(document).find('#' + post_id).html("<i class='fas fa-thumbtack mr-5'></i>Unpin").css({
 	    				   'color': 'blue',
-	    			   });
+	    			   }); 
 	    		   }
 	    		   else {
 	    			   if(result == "Unpinned") {
-		    			   $(document).find('#'+id).html("<i class='fas fa-thumbtack mr-5'></i>Pin");
-		    			   $(document).find('#'+id).css({
+		    			   $(document).find('#' + post_id).html("<i class='fas fa-thumbtack mr-5'></i>Pin").css({
 		    				   'color': '#555',
 		    			   });
 	    			   }
@@ -321,11 +352,13 @@ $(document).ready(function() {
     	return monthNames[monthIndex] + ' ' + day + ', ' + year;
     }
     
+    var vote = $('#vote');
+    
     $('#upvote').click(function() {
-    	$('#vote').text((parseInt($('#vote').text()) + 1) + " Voted");
+    	vote.text((parseInt(vote.text()) + 1) + " Voted");
     	$.ajax({
     		type : 'GET',
-    		url : '/TechTrade/post/vote/' + $('#post-id').val(),
+    		url : '/TechTrade/post/vote/' + post_id,
     		data : {
     			type : true
     		},
@@ -336,10 +369,10 @@ $(document).ready(function() {
     });
     
     $('#downvote').click(function() {
-    	$('#vote').text((parseInt($('#vote').text()) - 1) + " Voted");
+    	vote.text((parseInt(vote.text()) - 1) + " Voted");
     	$.ajax({
     		type : 'GET',
-    		url : '/TechTrade/post/vote/' + $('#post-id').val(),
+    		url : '/TechTrade/post/vote/' + post_id,
     		data : {
     			type : false
     		},
@@ -351,7 +384,6 @@ $(document).ready(function() {
     
     var post_del_link = $('a.post-del');
     var post_noti;
-    var post_id;
     var post_main = $('.post');
     
     post_del_link.click(function(event) {

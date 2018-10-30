@@ -22,6 +22,7 @@ import com.green.finale.model.AccountModel;
 import com.green.finale.model.MessageModel;
 import com.green.finale.model.PostModel;
 import com.green.finale.service.AccountService;
+import com.green.finale.service.CategoryService;
 import com.green.finale.service.EmailService;
 import com.green.finale.service.LocationService;
 import com.green.finale.service.PostService;
@@ -41,11 +42,14 @@ public class AccountController {
 
 	@Autowired
 	private PostService postService;
+	
+	@Autowired
+	private CategoryService cateService;
 
 	@Autowired
 	private AuthenticationTrustResolver authenticationTrustResolver;
 
-	@GetMapping(value = "/{username}")
+	@GetMapping(value = "/wall/{username}")
 	public String wall(@PathVariable(name = "username") String username,
 			@RequestParam(name = "s", defaultValue = "createAt:desc") String sortBy,
 			@RequestParam(name = "p", defaultValue = "0") int page, Model model, Principal principal) {
@@ -56,7 +60,8 @@ public class AccountController {
 
 			return "error";
 		}
-
+		
+		model.addAttribute("cateList", cateService.getCategoryList());
 		model.addAttribute("account", acc);
 		model.addAttribute("postList", postService.getPostListByAccount(username, page, sortBy, principal));
 		model.addAttribute("sortBy", sortBy);
@@ -73,10 +78,11 @@ public class AccountController {
 		model.addAttribute("cityList", locaService.getCityList());
 		model.addAttribute("districtList", locaService.getDistrictByIdCity("01"));
 		model.addAttribute("wardList", locaService.getWardByIdDistrict("001"));
+		
 		return "updateAccount";
 	}
 
-	@GetMapping(value = "/api/{username}")
+	@GetMapping(value = "/api/wall/{username}")
 	public @ResponseBody List<PostModel> wallAPI(@PathVariable(name = "username") String username,
 			@RequestParam(name = "s", defaultValue = "createAt:desc") String sortBy,
 			@RequestParam(name = "p", defaultValue = "0") int page, Principal principal) {
@@ -88,7 +94,7 @@ public class AccountController {
 	public String createTodoList(Model model) {
 		if (!authenticationTrustResolver.isAnonymous(SecurityContextHolder.getContext().getAuthentication())) {
 
-			return "redirect:/";
+			return "redirect:/login";
 		}
 
 		AccountModel regisAcc = new AccountModel();
@@ -107,11 +113,11 @@ public class AccountController {
 		String resultStr = accService.createAccount(regisAcc);
 
 		if (resultStr == null) {
-			return "redirect:/location";
+			return "redirect:/";
 		} else {
 			model.addAttribute("error", resultStr);
+			
 			return "error";
-
 		}
 	}
 

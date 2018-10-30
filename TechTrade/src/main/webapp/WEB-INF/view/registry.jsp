@@ -140,7 +140,7 @@ js "></script>
 								</form:form>
 								<div class="form-group hidden" id="code-verify">
 									<h2>An verify code has been sent to your email</h2>
-									<p>Please enter the code to the following field to continue</p>
+									<p>Please enter the code in the following field to continue</p>
 									<input type="text" class="w-75" id="code" />
 									<button class="btn btn-outline-success float-right w-25"
 										id="verify-btn">Verify</button>

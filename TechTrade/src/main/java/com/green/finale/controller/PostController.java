@@ -44,7 +44,7 @@ public class PostController {
 		return postService.search(keyword);
 	}
 
-	@GetMapping(value = "/{postId}")
+	@GetMapping(value = "/view/{postId}")
 	public String viewPost(@PathVariable(name = "postId") long id, Model model, Principal principal) {
 		PostModel postModel = postService.getPostModel(id, principal);
 
@@ -96,10 +96,10 @@ public class PostController {
 			return "error";
 		}
 		
-		return "redirect:/account/" + principal.getName();
+		return "redirect:/account/wall/" + principal.getName();
 	}
 
-	@PostMapping(value = "/{postId}")
+	@PostMapping(value = "/update/{postId}")
 	public String update(@ModelAttribute("post") PostModel postModel, BindingResult result,
 			@PathVariable(name = "postId") long postId, Principal principal, Model model) {
 
@@ -115,7 +115,7 @@ public class PostController {
 			return "error";
 		}
 
-		return "redirect:/post/" + postId;
+		return "redirect:/post/view/" + postId;
 	}
 	
 	@GetMapping
@@ -140,10 +140,10 @@ public class PostController {
 			return "error";
 		}
 
-		return "redirect:/account/" + principal.getName();
+		return "redirect:/account/wall/" + principal.getName();
 	}
 
-	@GetMapping(value = "/{postId}/status")
+	@GetMapping(value = "/status/{postId}")
 	public String restoreOrclose(@PathVariable(name = "postId", required = false) long postId,
 			@RequestParam(name = "s", defaultValue = "") String status, Principal principal, Model model) {
 		String result = postService.changePostStatus(postId, status, principal);
@@ -154,7 +154,7 @@ public class PostController {
 			return "error";
 		}
 
-		return "redirect:/post/" + postId;
+		return "redirect:/post/view/" + postId;
 	}
 
 	@PostMapping(value = "/comment")
@@ -200,6 +200,7 @@ public class PostController {
 		model.addAttribute("pinnedList", postService.getPinnedPostList(principal));
 		model.addAttribute("cateList", cateService.getCategoryList());
 		model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
+		model.addAttribute("account", accService.find(principal.getName()));
 		
 		return "pin";
 	}

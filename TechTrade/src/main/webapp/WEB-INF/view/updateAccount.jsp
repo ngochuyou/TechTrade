@@ -33,7 +33,8 @@
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar-active">
 			<div class="sidebar-header p-3 border-bottom">
-				<h2 class="text-light">TechTrade</h2>
+				<h2 class="text-light pointer"
+					onclick="window.location.href='<spring:url value="/"></spring:url>'">TechTrade</h2>
 			</div>
 			<div class="sidebar-body hpx-500">
 				<div class="list-group border-bottom">
@@ -130,7 +131,8 @@
 									class="dropdown-menu dropdown-menu-right pointer wpx-200 custom-dropdown"
 									aria-labelledby="dropdownMenu2">
 									<div class="dropdown-item border-bottom font-weight-bold">
-										<div class="row">
+										<div class="row"
+											onclick="window.location.href='<spring:url value='/account/wall/${user.username }'></spring:url>'">
 											<div class="col-5 pr-0">
 												<img
 													src="<spring:url value="/account/avatar?username=${user.username }"></spring:url>"
@@ -143,7 +145,7 @@
 									</div>
 									<div
 										class="dropdown-item border-bottom text-main font-weight-bold"
-										onclick="window.location.href='<spring:url value='/account/${user.username }'></spring:url>'">
+										onclick="window.location.href='<spring:url value='/account/wall/${user.username }'></spring:url>'">
 										<div>
 											<i class="fas fa-home mr-4"></i>
 										</div>
@@ -177,7 +179,7 @@
 			</div>
 		</nav>
 		<div
-			style="background-image: url('<spring:url value="/resources/img/parallax.jpg"></spring:url>');"
+			style="background-image: url('<spring:url value="/account/avatar/${account.wallpaper }"></spring:url>');"
 			class="parallax position-relative">
 			<div class="wallpaper-cover">
 				<p class="background-opacity m-0">
@@ -193,9 +195,6 @@
 				<h1 class="text-center">${account.username }</h1>
 			</div>
 			<div class="row mx-1 p-5 bg-noti" id="info">
-
-				<!-- <input type="button" value="Edit" /> -->
-
 				<div class="col-6">
 					<h4 class="text-left my-4">
 						<i class="fas fa-phone mr-4"></i><input type="number" id="phone" />
@@ -204,11 +203,11 @@
 						<i class="fas fa-map-marker-alt mr-4"></i> <select
 							id="city-select" class="custom-select hpx-50">
 							<c:forEach var="city" items="${cityList }">
-								<option style="width:33%" value="${city.id }">${city.name }</option>
+								<option style="width: 33%" value="${city.id }">${city.name }</option>
 							</c:forEach>
 						</select> <select id="district-select" class="custom-select hpx-50">
 							<c:forEach var="district" items="${districtList }">
-								<option style="width:33%" value="${district.id }">${district.name }</option>
+								<option style="width: 33%" value="${district.id }">${district.name }</option>
 							</c:forEach>
 						</select>
 						<%-- <form:select path="wardId" id="ward-select"
@@ -233,7 +232,6 @@
 					</h4>
 				</div>
 			</div>
-
 		</div>
 </body>
 </html>

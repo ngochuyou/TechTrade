@@ -131,7 +131,7 @@ public class AccountService {
 	@Transactional
 	public byte[] getUserAvaByFilename(String filename) {
 		try {
-			return getImageBytes(filename + ".jpg");
+			return getImageBytes(filename + ".JPG");
 		} catch (Exception ex) {
 			return null;
 		}

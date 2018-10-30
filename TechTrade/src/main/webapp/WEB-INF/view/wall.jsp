@@ -37,10 +37,29 @@
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar-active">
 			<div class="sidebar-header p-3 border-bottom">
-				<h2 class="text-light">TechTrade</h2>
+				<h2 class="text-light pointer"
+					onclick="window.location.href='<spring:url value="/"></spring:url>'">TechTrade</h2>
 			</div>
 			<div class="sidebar-body hpx-500">
-				<div class="list-group border-bottom"></div>
+				<div class="list-group border-bottom">
+					<c:forEach var="cate" items="${cateList }">
+						<a
+							href="<spring:url value="/search?category=${cate.id }"></spring:url>"
+							class="list-group-item list-group-item-action flex-column align-items-start py-3 noborder thumb-medium">
+							<div class="row">
+								<div class="col-4 h-100">
+									<h1>
+										<i class="${cate.icon }"></i>
+									</h1>
+								</div>
+								<div class="col-8 my-auto border-left">
+									<span>${cate.name }<span
+										class="badge badge-pill bg-light text-main position-right">1</span></span>
+								</div>
+							</div>
+						</a>
+					</c:forEach>
+				</div>
 			</div>
 			<div class="row sidebar-footer pr-3">
 				<div class="col-4 text-center">
@@ -105,7 +124,7 @@
 									aria-labelledby="dropdownMenu2">
 									<div class="dropdown-item border-bottom font-weight-bold">
 										<div class="row"
-											onclick="window.location.href='<spring:url value='/account/${user.username }'></spring:url>'">
+											onclick="window.location.href='<spring:url value='/account/wall/${user.username }'></spring:url>'">
 											<div class="col-5 pr-0">
 												<img
 													src="<spring:url value="/account/avatar?username=${account.username }"></spring:url>"
@@ -173,7 +192,7 @@
 			</div>
 		</nav>
 		<div
-			style="background-image: url('<spring:url value="/resources/img/parallax.jpg"></spring:url>');"
+			style="background-image: url('<spring:url value="/account/avatar/${account.wallpaper }"></spring:url>');"
 			class="parallax position-relative">
 			<div class="wallpaper-cover">
 				<p class="background-opacity m-0">
@@ -224,13 +243,13 @@
 				<c:if test="${user.username eq account.username }">
 					<div
 						class="col-2 pt-4 pb-3 border-right box-shadow-hover pointer boxshadow-hover"
-						id="profile-messages">
-						<h3 class="text-main text-center font-weight-bold">Message</h3>
+						onclick="window.location.href='<spring:url value='/post/upload'></spring:url>'">
+						<h3 class="text-main text-center font-weight-bold">Upload</h3>
 					</div>
 					<div
 						class="col-2 pt-4 pb-3 border-right box-shadow-hover pointer boxshadow-hover"
-						onclick="window.location.href='<spring:url value='/post/upload'></spring:url>'">
-						<h3 class="text-main text-center font-weight-bold">Upload</h3>
+						onclick="window.location.href='<spring:url value='/post/pinned'></spring:url>'">
+						<h3 class="text-main text-center font-weight-bold">Pinned</h3>
 					</div>
 				</c:if>
 			</div>
@@ -245,20 +264,17 @@
 						<div class="dropdown-menu dropdown-menu-left bg-main"
 							aria-labelledby="dropdownMenu2" style="z-index: 1022;">
 							<a class="dropdown-item text-white"
-								href="<spring:url value="/account/${account.username }?s=createAt:desc"></spring:url>">Newest</a>
+								href="<spring:url value="/account/wall/${account.username }?s=createAt:desc"></spring:url>">Newest</a>
 							<a class="dropdown-item text-white"
-								href="<spring:url value="/account/${account.username }?s=createAt:asc"></spring:url>">Oldest</a>
+								href="<spring:url value="/account/wall/${account.username }?s=createAt:asc"></spring:url>">Oldest</a>
 							<a class="dropdown-item text-white"
-								href="<spring:url value="/account/${account.username }?s=upVote:desc"></spring:url>">Most
+								href="<spring:url value="/account/wall/${account.username }?s=upVote:desc"></spring:url>">Most
 								voted</a> <a class="dropdown-item text-white"
-								href="<spring:url value="/account/${account.username }?s=upVote:asc"></spring:url>">Least
+								href="<spring:url value="/account/wall/${account.username }?s=upVote:asc"></spring:url>">Least
 								Voted</a>
 						</div>
 					</div>
 				</div>
-				<c:if test="${empty postList }">
-					<div class="hpx-600"></div>
-				</c:if> 
 				<div id="post-content" class="bg-noti p-3">
 					<span id="sort" class="hidden">${sortBy }</span>
 					<p class="panel-header">Posts</p>
@@ -323,11 +339,11 @@
 													href="<spring:url value="/post/delete/${post.id }"></spring:url>">Delete</a>
 												<c:if test="${post.status == true }">
 													<a class="dropdown-item"
-														href="<spring:url value="/post/${post.id }/status?s=close"></spring:url>">Close</a>
+														href="<spring:url value="/post/status/${post.id }?s=close"></spring:url>">Close</a>
 												</c:if>
 												<c:if test="${post.status == false }">
 													<a class="dropdown-item"
-														href="<spring:url value="/post/${post.id }/status?s=restore"></spring:url>">Restore</a>
+														href="<spring:url value="/post/status/${post.id }?s=restore"></spring:url>">Restore</a>
 												</c:if>
 											</div>
 										</div>
@@ -335,7 +351,7 @@
 								</sec:authorize>
 							</div>
 							<div class="row pointer my-2  px-4"
-								onclick="window.location.href='<spring:url value='/post/${post.id }'></spring:url>'">
+								onclick="window.location.href='<spring:url value='/post/view/${post.id }'></spring:url>'">
 								<p class="col custom-control-description text-size-post">${post.description }</p>
 							</div>
 							<div class="row px-4">
@@ -349,7 +365,7 @@
 									<c:if test="${post.pin ne null }">
 										<input id="isPin" type="hidden" value="false" />
 										<div class="col-6 float-left border text-center h-100 pointer">
-											<h3 class="mt-3 pin" style="color: var(- -primary);"
+											<h3 class="mt-3 pin" style="color: #007bff;"
 												id="${post.id }">
 												<i class="fas fa-thumbtack mr-5"></i>Unpin
 											</h3>
@@ -376,6 +392,9 @@
 						</div>
 					</c:forEach>
 				</div>
+				<c:if test="${empty postList }">
+					<div class="hpx-600"></div>
+				</c:if>
 			</div>
 		</div>
 		<sec:authorize access="isAuthenticated()">

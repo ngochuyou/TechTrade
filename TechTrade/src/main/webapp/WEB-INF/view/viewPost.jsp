@@ -37,7 +37,8 @@
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar-active">
 			<div class="sidebar-header p-3 border-bottom">
-				<h2 class="text-light">TechTrade</h2>
+				<h2 class="text-light pointer"
+					onclick="window.location.href='<spring:url value="/"></spring:url>'">TechTrade</h2>
 			</div>
 			<div class="sidebar-body hpx-500">
 				<div class="list-group border-bottom">
@@ -113,11 +114,11 @@
 						<li class="nav-item active"><a
 							href="<spring:url value="/login"></spring:url>"><button
 									class="btn-blank hpx-70  my-0 my-sm-0 font-weight-bold wpx-100"
-									type="submit" id="signin">Sign in</button></a></li>
+									id="signin">Sign in</button></a></li>
 						<li class="nav-item active"><a
 							href="<spring:url value="/account/sign-up"></spring:url>"><button
 									class="btn-blank hpx-70 my-2 my-sm-0 font-weight-bold wpx-100"
-									type="submit" id="signup">Sign up</button></a></li>
+									id="signup">Sign up</button></a></li>
 					</sec:authorize>
 					<sec:authorize access="isAuthenticated()">
 						<sec:authentication property="principal" var="user" />
@@ -136,7 +137,7 @@
 									aria-labelledby="dropdownMenu2">
 									<div class="dropdown-item border-bottom font-weight-bold">
 										<div class="row"
-											onclick="window.location.href='<spring:url value='/account/${user.username }'></spring:url>'">
+											onclick="window.location.href='<spring:url value='/account/wall/${user.username }'></spring:url>'">
 											<div class="col-5 pr-0">
 												<img
 													src="<spring:url value="/account/avatar?username=${user.username }"></spring:url>"
@@ -231,11 +232,11 @@
 										href="<spring:url value="/post/delete/${post.id }"></spring:url>">Delete</a>
 									<c:if test="${post.status == true }">
 										<a class="dropdown-item"
-											href="<spring:url value="/post/${post.id }/status?s=close"></spring:url>">Close</a>
+											href="<spring:url value="/post/status/${post.id }?s=close"></spring:url>">Close</a>
 									</c:if>
 									<c:if test="${post.status == false }">
 										<a class="dropdown-item"
-											href="<spring:url value="/post/${post.id }/status?s=restore"></spring:url>">Restore</a>
+											href="<spring:url value="/post/status/${post.id }?s=restore"></spring:url>">Restore</a>
 									</c:if>
 								</div>
 							</div>
@@ -251,7 +252,9 @@
 				</sec:authorize>
 			</div>
 			<div class="post">
-				<form:form modelAttribute="post" method="post" id="form"
+				<form:form
+					action="/TechTrade/post/update/${post.id }"
+					modelAttribute="post" method="post" id="form"
 					enctype="multipart/form-data">
 					<form:hidden path="id" id="post-id" />
 					<form:hidden path="username" />
@@ -312,7 +315,7 @@
 								By <span class="font-italic text-main pointer"
 									data-toggle="tooltip" data-placement="top"
 									title="Visit user's page"
-									onclick="window.location.href='<spring:url value='/account/${post.username }'></spring:url>'">${post.username }</span>
+									onclick="window.location.href='<spring:url value='/account/wall/${post.username }'></spring:url>'">${post.username }</span>
 								on
 								<fmt:formatDate value="${post.createAt }" />
 							</p>
@@ -363,6 +366,7 @@
 								class="fas fa-edit fa-2x text-muted pointer mx-2 my-1"></i></span>
 						</div>
 					</c:if>
+					<p class="font-weight-bold"><i class="fas fa-image mr-3"></i>Images</p>
 					<div class="row m-3">
 						<form:hidden path="deletedImages" id="deleted-image-input" />
 						<c:forEach var="image" items="${images }" varStatus="level">
@@ -431,7 +435,7 @@
 								<c:if test="${post.pin ne null }">
 									<input id="isPin" type="hidden" value="false" />
 									<div class="col-6 float-left border text-center h-100 pointer">
-										<h3 class="mt-3 pin" style="color: var(- -primary);"
+										<h3 class="mt-3 pin" style="color: #007bff;"
 											id="${post.id }">
 											<i class="fas fa-thumbtack mr-5"></i>Unpin
 										</h3>
@@ -458,7 +462,7 @@
 					</div>
 				</form:form>
 				<div class="hidden stage-2" id="cancel">Cancel</div>
-				<div class="panel-header">Comments</div>
+				<div class="panel-header"><i class="fas fa-comment-dots mr-3"></i>Comments</div>
 				<div class="row m-2" id="comments">
 					<c:forEach var="comment" items="${comments }">
 						<div class="m-2 w-100">
@@ -466,7 +470,8 @@
 								<fmt:formatDate value="${comment.commentedOn }" />
 							</p>
 							<p>
-								<span class="font-italic text-primary">${comment.account.username }</span>
+								<span class="font-italic text-primary pointer"
+									onclick="window.location.href='<spring:url value="/account/wall/${comment.account.username }"></spring:url>'">${comment.account.username }</span>
 								: ${comment.content }
 							</p>
 						</div>

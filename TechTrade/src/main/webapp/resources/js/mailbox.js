@@ -69,6 +69,8 @@ $(document).ready(function() {
     var message_root;
     var inbox_main = $('.inbox-main');
     var inbox_composer = $('.inbox-composer');
+    var unRead_qty = $('.unread-qty');
+    var message_result = $('.message-result');
     
     $(inbox_main).on('click', '.message-delete', function() {
     	$('.delete-noti').remove();
@@ -91,7 +93,7 @@ $(document).ready(function() {
     		}
     	});
 		if ($(message_root).hasClass('bg-noti')) {
-			$('.unread-qty').text(--unread_qty);
+			unRead_qty.text(--unread_qty);
 			$(message_root).remove();
 		}
 		$(message_root).remove();
@@ -107,7 +109,6 @@ $(document).ready(function() {
     var sender; 
     var reply = $('#reply');
     var inbox_back = $('#inbox-back');
-    
     var composer_avatar = $('#composer-avatar');
     var composer_username = $('#composer-username');
     var composer_sentAt = $('#composer-sentAt');
@@ -128,10 +129,10 @@ $(document).ready(function() {
 	    		},
 	    		success : function(result) {
 	    			if (result == "Marked as unread.") {
-	    				$('.unread-qty').text(++unread_qty);
+	    				unRead_qty.text(++unread_qty);
 	    				$('.message-id[value="' + message_id + '"]').parent().addClass('bg-noti');
 	    			} else {
-	    				$('.unread-qty').text(--unread_qty);
+	    				unRead_qty.text(--unread_qty);
 	    				$('.message-id[value="' + message_id + '"]').parent().removeClass('bg-noti');
 	    			}
 	    		}
@@ -169,10 +170,10 @@ $(document).ready(function() {
     			}, 3000);
     			
     			if (result == "Marked as unread.") {
-    				$('.unread-qty').text(++unread_qty);	
+    				unRead_qty.text(++unread_qty);	
     				$('.message-id[value="' + message_id + '"]').parent().addClass('bg-noti');
     			} else {
-    				$('.unread-qty').text(--unread_qty);
+    				$unRead_qty.text(--unread_qty);
     				$('.message-id[value="' + message_id + '"]').parent().removeClass('bg-noti');
     			}
     		}
@@ -194,7 +195,7 @@ $(document).ready(function() {
 		message_root = $('#message-delete-' + message_id).parents().eq(1);
 		
 		if ($(message_root).hasClass('bg-noti')) {
-			$('.unread-qty').text(--unread_qty);
+			unRead_qty.text(--unread_qty);
 		}
 		
 		$(message_root).remove();
@@ -206,13 +207,12 @@ $(document).ready(function() {
 	
 	$(inbox_composer).on('click', '#noti-no', function() {
 		$('#delete-noti').remove();
-    	return ;
 	});
 	
     $(inbox_back).click(function() {
-    	$('.inbox-main').fadeIn("fast");
-    	$('.inbox-composer').fadeOut("fast");
-    	$('.message-result').addClass('hidden');
+    	inbox_main.fadeIn("fast");
+    	inbox_composer.fadeOut("fast");
+    	message_result.addClass('hidden');
     	$(reply).val(null);
     });	
     
@@ -222,7 +222,7 @@ $(document).ready(function() {
     
     $('.inbox-main-open').click(function() {
     	$('.absolute:not(.inbox-main)').fadeOut("fast");
-    	$('.inbox-main').fadeIn("fast");
+    	inbox_main.fadeIn("fast");
     });
     
     var send_result = $('#message-info');
@@ -234,7 +234,7 @@ $(document).ready(function() {
     		$(reply).attr('placeholder', "Please fill in this field");
     		return ;
     	}
-    	$('.message-result').removeClass('hidden');
+    	message_result.removeClass('hidden');
     	send_loader.attr('src', '/TechTrade/resources/img/loading.gif');
     	send_result.text("Please wait!");
     	$.ajax({
@@ -350,7 +350,7 @@ $(document).ready(function() {
     var outbox_delete_noti;
     
     $(outbox).on('click', '.outmessage-delete', function() {
-    	$('.delete-noti').remove();
+    	$('.outbox-delete-noti').remove();
     	message_root = $(this).parents().eq(1);
     	message_id = this.id.match(/\d+/).toString();
     	$(outbox).append("<div class='fixed-noti outbox-delete-noti' id='outbox-delete-noti'>Are you sure you want to delete this message to <span class='font-weight-bold'>"+ $(message_root).find('.outmessage-username').text() +"</span>? Action can not be undo. <button class='btn bg-main mx-4' id='outbox-noti-yes'>Yes!</button><button class='btn btn-outline-main' id='outbox-noti-no'>Don't do it</button></div>");
@@ -411,6 +411,7 @@ $(document).ready(function() {
 						+ "<i class='fas fa-reply text-right hidden'></i>"
 						+ "</div></div></div>";
     			});
+    			unRead_qty.text(++unread_qty);
     			$(inbox_newInbox_container).append(inbox_newInbox_container_HTML);
     			$('body').append("<div class='fixed-noti inbox-noti'><i class='fas fa-envelope mr-3'></i>You have new Message <span class='mx-3 pointer inbox-open text-primary'>Show me</span></div>");
     		}
@@ -490,9 +491,10 @@ $(document).ready(function() {
     		},
     		success : function(result) {
     			$(outbox_newOutbox_noti).text(result);
-    			$(outbox_newOutbox_noti).remove();
+    			setTimeout(function() {
+    				$(outbox_newOutbox_noti).remove();
+    			}, 3000);
     			outbox_load_stop = false;
-    			$(outbox_load).trigger('click');
     		}
     	});
     });

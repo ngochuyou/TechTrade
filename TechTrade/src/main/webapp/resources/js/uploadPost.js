@@ -32,7 +32,7 @@ $(document).ready(function() {
 	        		var string = "";
 	        		
 	        		$.each(list, function() {
-	        			string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/post/"+this[1]+"'>"+this[0]+"</a>";
+	        			string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/post/view/" + this[1] + "'>" + this[0] + "</a>";
 	        		});
 	        		string += "<a class='dropdown-item text-main text-truncate' href='/TechTrade/search?k="+$(search).val()+"'>See more</a>";
 	        		$(search_dropdown).html(string);
@@ -183,21 +183,24 @@ $(document).ready(function() {
 	    var cate_message = $('#categoy-forgot');
 	    var des_message = $('#description-forgot');
 	    var post_form = $('#post-form');
+	    var post_name = $('#name');
+	    var post_cateId = $('#categoryId');
+	    var post_des = $('#form-description');
 	    
 	    $(post_form).submit(function(event) {
-	    	if ($('#name').val().length == 0) {
+	    	if (post_name.val().length == 0) {
 	    		handleInvalid(0, 25, name_message);
 	    		
 	    		return false;
 	    	}
 	    	
-	    	if ($('#categoryId').val() == null) {
+	    	if (post_cateId.val() == null) {
 	    		handleInvalid(-100, 50, cate_message);
 	    		
 	    		return false;
 	    	}
 	    	
-	    	if ($('#form-description').val().length == 0) {
+	    	if (post_des.val().length == 0) {
 	    		handleInvalid(-200, 75, des_message);
 	    		
 	    		return false;
@@ -222,19 +225,19 @@ $(document).ready(function() {
 	    $(drop_zone).on("dragover", function(event) {
     		event.preventDefault();  
     		event.stopPropagation();
-    		$(this).addClass('dragging');
 		});
 	    
  		$(drop_zone).on("dragleave", function(event) {
     		event.preventDefault();  
     		event.stopPropagation();
-		    $(this).removeClass('dragging');
 		});
+
+ 		var files = $("#files");
  		
  		$(drop_zone).on("drop", function(event) {
 			event.preventDefault();  
     		event.stopPropagation();
-    		$('#files').prop('files', event.originalEvent.dataTransfer.files);
+    		files.prop('files', event.originalEvent.dataTransfer.files);
 		});
 		
  		var preview = $('.preview');
@@ -254,8 +257,6 @@ $(document).ready(function() {
                 }
             }
 		};
-    
-	var files = $("#files");
 		
     $(files).change(function() {
     	readURL(this, "div.preview");

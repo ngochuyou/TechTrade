@@ -31,7 +31,8 @@
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar-active">
 			<div class="sidebar-header p-3 border-bottom">
-				<h2 class="text-light">TechTrade</h2>
+				<h2 class="text-light pointer"
+					onclick="window.location.href='<spring:url value="/"></spring:url>'">TechTrade</h2>
 			</div>
 			<div class="sidebar-body hpx-500">
 				<div class="list-group border-bottom">
@@ -108,12 +109,12 @@
 					<sec:authorize access="isAnonymous()">
 						<li class="nav-item active"><a
 							href="<spring:url value="/login"></spring:url>"><button
-									class="btn-blank hpx-70 my-0 my-sm-0 font-weight-bold wpx-100"
-									type="submit">Sign in</button></a></li>
+									class="btn-blank hpx-70 my-0 my-sm-0 font-weight-bold wpx-100">Sign
+									in</button></a></li>
 						<li class="nav-item active"><a
 							href="<spring:url value="/account/sign-up"></spring:url>"><button
-									class="btn-blank hpx-70 my-2 my-sm-0 font-weight-bold wpx-100"
-									type="submit">Sign up</button></a></li>
+									class="btn-blank hpx-70 my-2 my-sm-0 font-weight-bold wpx-100">Sign
+									up</button></a></li>
 					</sec:authorize>
 					<sec:authorize access="isAuthenticated()">
 						<sec:authentication property="principal" var="user" />
@@ -131,7 +132,7 @@
 									aria-labelledby="dropdownMenu2">
 									<div class="dropdown-item border-bottom font-weight-bold">
 										<div class="row"
-											onclick="window.location.href='<spring:url value='/account/${user.username }'></spring:url>'">
+											onclick="window.location.href='<spring:url value='/account/wall/${user.username }'></spring:url>'">
 											<div class="col-5 pr-0">
 												<img
 													src="<spring:url value="/account/avatar?username=${user.username }"></spring:url>"
@@ -193,12 +194,13 @@
 				<div class="row py-2">
 					<div class="col-8">
 						<input class="form-control font-weight-bold" name="k"
-							placeholder="Search">
+							placeholder="Search" value="${page.keyword }">
 					</div>
 					<div class="col-3">
 						<select name="category" class="form-control">
 							<c:forEach var="cate" items="${cateList }">
-								<option value="${cate.id }">${cate.name }</option>
+								<option value="${cate.id }"
+									${cate.id eq page.categoryId ? 'selected' : ''}>${cate.name }</option>
 							</c:forEach>
 						</select>
 					</div>
@@ -227,9 +229,7 @@
 								href="<spring:url value="/search?${page.toParameters() }&s=upVote:desc"></spring:url>">Most
 								voted</a> <a class="dropdown-item text-white"
 								href="<spring:url value="/search?${page.toParameters() }&s=upVote:asc"></spring:url>">Least
-								Voted</a> <a class="dropdown-item text-white"
-								href="<spring:url value="/logout"></spring:url>">Closest to
-								you</a>
+								Voted</a>
 						</div>
 					</div>
 				</div>
@@ -246,7 +246,7 @@
 							<h2 class="text-truncate font-weight-bold">${post.name }</h2>
 							<p>
 								By <span class="font-italic text-main pointer"
-									onclick="window.location.href='<spring:url value='/account/${post.createBy.username }'></spring:url>'">${post.createBy.username }</span>
+									onclick="window.location.href='<spring:url value='/account/wall/${post.createBy.username }'></spring:url>'">${post.createBy.username }</span>
 								on
 								<fmt:formatDate value="${post.createAt }" />
 							</p>
@@ -265,7 +265,7 @@
 						</div>
 					</div>
 					<div class="row pointer"
-						onclick="window.location.href='<spring:url value='/post/${post.id }'></spring:url>'">
+						onclick="window.location.href='<spring:url value='/post/view/${post.id }'></spring:url>'">
 						<div class="col custom-control-description text-size-post">${post.description }</div>
 					</div>
 					<div class="row post-footer">
@@ -280,7 +280,8 @@
 								<c:if test="${post.pin ne null }">
 									<input id="isPin" type="hidden" value="false" />
 									<div class="col-6 float-left border text-center h-100 pointer">
-										<h3 class="mt-3 pin" style="color: var(--primary);" id="${post.id }">
+										<h3 class="mt-3 pin" style="color: #007bff;"
+											id="${post.id }">
 											<i class="fas fa-thumbtack mr-5"></i>Unpin
 										</h3>
 									</div>

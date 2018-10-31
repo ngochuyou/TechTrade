@@ -25,6 +25,7 @@ import com.green.finale.dao.CommentDAO;
 import com.green.finale.dao.ImageDAO;
 import com.green.finale.dao.PinDAO;
 import com.green.finale.dao.PostDAO;
+import com.green.finale.dao.PostReportDAO;
 import com.green.finale.dao.VoteDAO;
 import com.green.finale.entity.Account;
 import com.green.finale.entity.Comment;
@@ -32,6 +33,7 @@ import com.green.finale.entity.Image;
 import com.green.finale.entity.Pin;
 import com.green.finale.entity.PinId;
 import com.green.finale.entity.Post;
+import com.green.finale.entity.PostReportId;
 import com.green.finale.entity.Vote;
 import com.green.finale.entity.VoteId;
 import com.green.finale.model.PostModel;
@@ -60,7 +62,10 @@ public class PostService {
 
 	@Autowired
 	private CategoryDAO cateDao;
-	
+
+	@Autowired
+	private PostReportDAO postReportDao;
+
 	@Transactional
 	public List<Post> getPostList() {
 		return postDao.getList();
@@ -98,38 +103,38 @@ public class PostService {
 	public String createPost(PostModel model, String username) {
 		if (validatePost(model)) {
 			Account acc = accDao.find(username);
-			
+
 			if (acc == null) {
 				return Contants.USER_NONEXSIT;
 			}
-			
+
 			Post newPost = extractPost(model, new Post());
-			
+
 			newPost.setCategory(cateDao.find(model.getCategoryId()));
 			newPost.setCreateAt(new Date());
 			newPost.setCreateBy(acc);
 			newPost.setStatus(true);
 			newPost.setUpVote(0);
-			
+
 			postDao.insert(newPost);
-			
+
 			List<String> filenames = uploadImage(model.getFile());
 			Image image = null;
-			
-			for (String filename: filenames) {
+
+			for (String filename : filenames) {
 				image = new Image();
-				
+
 				image.setFilename(filename);
 				image.setPost(newPost);
-				
+
 				imageDao.insert(image);
 			}
-			
+
 			return "";
 		} else {
-			return Contants.INVALID_FIELDS; 
+			return Contants.INVALID_FIELDS;
 		}
-		
+
 	}
 
 	@Transactional
@@ -183,7 +188,7 @@ public class PostService {
 				voteDao.deleteByPost(postId);
 				pinDao.deleteByPost(postId);
 				postDao.delete(post);
-				
+
 				return null;
 			}
 
@@ -248,9 +253,11 @@ public class PostService {
 		if (principal != null) {
 			model.setVote(voteDao.find(new VoteId(principal.getName(), p.getId())));
 			model.setPin(pinDao.find(new PinId(principal.getName(), p.getId())));
+			model.setReport(postReportDao.find(new PostReportId(accDao.find(principal.getName()), p)));
 		} else {
 			model.setVote(null);
 			model.setPin(null);
+			model.setReport(null);
 		}
 
 		return model;
@@ -369,15 +376,15 @@ public class PostService {
 			voteDao.insert(newVote);
 
 			int postUpvotes = currentPost.getUpVote();
-			
+
 			if (type == true) {
 				currentPost.setUpVote(postUpvotes + 1);
 			} else {
 				currentPost.setUpVote(postUpvotes - 1);
 			}
-			
+
 			postDao.update(currentPost);
-			
+
 			return null;
 		} else {
 			return Contants.POST_ALREADY_VOTED;
@@ -387,72 +394,72 @@ public class PostService {
 	@Transactional
 	public PostModel getNewPostModel(String username) {
 		PostModel model = new PostModel();
-		
+
 		model.setUsername(username);
 		model.setCreateBy(accDao.find(username));
 		model.setStatus(true);
 		model.setUpVote(0);
-		
+
 		return model;
 	}
-	
+
 	@Transactional
 	public double rateHashtag(String hashtag) {
 		long counted = postDao.countHashtag(hashtag);
 		long totalPost = postDao.count("");
-		
+
 		return Math.ceil((counted * 1.0 / totalPost) * 10000) / 100;
 	}
-	
+
 	@Transactional
 	public String pinPost(String username, long postId) {
 		PinId pinId = new PinId(username, postId);
 		Pin pin = pinDao.find(pinId);
-		
+
 		if (pin != null) {
 			pinDao.delete(pin);
-			
+
 			return "Unpinned";
 		} else {
 			Account acc = accDao.find(username);
-			
-			if(acc == null) { 
+
+			if (acc == null) {
 				return Contants.USER_NONEXSIT;
 			}
-			
+
 			pin = new Pin();
 			pin.setPinId(pinId);
 			pin.setCreateAt(new Date());
 			pin.setAccount(acc);
 
 			Post post = postDao.find(postId);
-			
-			if(post == null) { 
+
+			if (post == null) {
 				return Contants.POST_NONEXSIT;
 			}
-			
+
 			pin.setPost(post);
 			pinDao.insert(pin);
-			
+
 			return "Pinned";
 		}
 	}
-	
+
 	@Transactional
 	public List<Pin> getPinnedPostList(Principal principal) {
-		
+
 		return pinDao.getPinnedList(principal.getName());
 	}
-	
+
 	public boolean validatePost(PostModel post) {
 		if (StringUtils.isEmpty(post.getName())) {
 			return false;
 		}
-		
+
 		if (StringUtils.isEmpty(post.getDescription())) {
 			return false;
 		}
-		
+
 		if (StringUtils.isEmpty(post.getCategoryId())) {
 			return false;
 		}

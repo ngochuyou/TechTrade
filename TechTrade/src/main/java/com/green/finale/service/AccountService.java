@@ -41,7 +41,7 @@ public class AccountService {
 
 	@Autowired
 	private MessageDAO messDao;
-
+	
 	@Transactional
 	public Account find(String username) {
 		Account acc = accDao.find(username);
@@ -306,7 +306,7 @@ public class AccountService {
 			return "Marked as read.";
 		}
 	}
-
+	
 	public String uploadFile(MultipartFile file) {
 		if (file.isEmpty()) {
 			return null;

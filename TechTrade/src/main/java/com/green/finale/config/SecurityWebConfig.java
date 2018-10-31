@@ -67,7 +67,7 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 				.logout()
 				.logoutUrl("/logout")
 			.and()
-				.csrf()
+				.csrf().ignoringAntMatchers("/admin/report/**")
 			.and()
 				.exceptionHandling()
 				.accessDeniedPage("/denied")

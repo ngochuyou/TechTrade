@@ -403,5 +403,57 @@ $(document).ready(function() {
     
     $(function () {
     	$('[data-toggle="tooltip"]').tooltip();
-    })
+    });
+    
+    var report_open = $('#report-open');
+    var report_cancel = $('#report_cancel');
+    var report_container = $('#report-container');
+    var report = $('#report');
+    var report_send = $('#report-send');
+    var report_cancel = $('#report-cancel');
+    var report_content = $('#report-content');
+    var report_model = {
+    	reason : "",
+    	content : "",
+    	targetedPost : 0,
+    	targetedUser : ""
+    }
+    
+    report_open.click(function() {
+    	report_container.show();
+    	setTimeout(function() {
+    		report.addClass("absolute-center-active");
+    	}, 100);
+    });
+    
+    report_cancel.click(function() {
+    	report.removeClass("absolute-center-active");
+    	setTimeout(function() {
+    		report_container.hide();
+    	}, 200);
+    });
+    
+    report_send.click(function() {
+    	report_model.content = report_content.val();
+    	report_model.reason = $('input[name=report-radio]:checked').val();
+    	report_model.targetedPost = post_id;
+    	$.ajax({
+    		type : 'POST',
+    		url : '/TechTrade/admin/report/post',
+    		contentType: "application/json; charset=utf-8",
+    		data : JSON.stringify(report_model),
+    		success : function(result) {
+    			report_cancel.trigger('click');
+    			report_open.removeAttr('class');
+    			report_open.attr('class', 'col-4 float-left border text-center h-100');
+    			report_open.html("<p class='mt-3 text-small text-main'>"
+    								+ "<i class='fas fa-flag mr-3'></i>You reported this post on " + formatCurrentDate() + ".</p>");
+    			$('#report-open').off('click');
+    			$('body').append("<div class='fixed-noti report-noti'><i class='fas fa-flag mr-3'></i>" + result + "</div>");
+    			setTimeout(function() {
+    				$('.report-noti').remove();
+    			}, 3000);
+    		}
+    	});
+    });
 });

@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.green.finale.entity.Account;
 import com.green.finale.entity.Category;
 import com.green.finale.entity.Pin;
+import com.green.finale.entity.PostReport;
 import com.green.finale.entity.Vote;
 
 public class PostModel {
@@ -25,6 +26,7 @@ public class PostModel {
 	private String username;
 	private Vote vote;
 	private Pin pin;
+	private PostReport report;
 
 	public long getId() {
 		return id;
@@ -144,6 +146,14 @@ public class PostModel {
 
 	public void setPin(Pin pin) {
 		this.pin = pin;
+	}
+
+	public PostReport getReport() {
+		return report;
+	}
+
+	public void setReport(PostReport report) {
+		this.report = report;
 	}
 
 }

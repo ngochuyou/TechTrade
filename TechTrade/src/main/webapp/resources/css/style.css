@@ -353,8 +353,8 @@ label {
 	left: 0;
 	bottom: 0;
 	right: 0;
-	background-color: white;
 	display: none;
+	background-color: rgba(0, 0, 0, 0.45);
 	box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px
 		rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4);
 }
@@ -924,4 +924,71 @@ label {
 	background-color: #efefef;
 	font-size: 20px !important;   
 	text-align: center;
+}
+
+.absolute-center {
+	position: absolute;
+	width: 400px;
+	height: 500px;
+	top: 9vw;
+	left: 36vw;
+	background-color: white;
+	transform: scale(0);
+	transition: all .3s ease-in-out;
+}
+
+.absolute-center-active {
+	transform: scale(1);	
+}
+
+.custom-radio-container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    user-select: none;
+}
+
+.custom-radio-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.custom-radio-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 50%;
+    transition: all .1s;
+}
+
+.custom-radio-container:hover input ~ .custom-radio-label {
+    background-color: #ccc;
+}
+
+.custom-radio-container input:checked ~ .custom-radio-label {
+    background-color: var(--main-bg-color);
+}
+
+.custom-radio-label:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.custom-radio-container input:checked ~ .custom-radio-label:after {
+    display: block;
+}
+
+.custom-radio-container .custom-radio-label:after {
+ 	top: 9px;
+	left: 9px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
 }

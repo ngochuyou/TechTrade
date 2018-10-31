@@ -41,8 +41,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		// TODO: get user permission here
 		List<GrantedAuthority> authorities = new ArrayList<>();
+		
 		authorities.add(new SimpleGrantedAuthority(account.getRole().toString()));
-//		authorities.add(new SimpleGrantedAuthority("CONTACT-MANAGER"));
 
 		UserDetails user = new User(account.getUsername(), account.getPassword(), authorities);
 

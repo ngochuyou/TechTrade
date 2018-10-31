@@ -252,8 +252,7 @@
 				</sec:authorize>
 			</div>
 			<div class="post">
-				<form:form
-					action="/TechTrade/post/update/${post.id }"
+				<form:form action="/TechTrade/post/update/${post.id }"
 					modelAttribute="post" method="post" id="form"
 					enctype="multipart/form-data">
 					<form:hidden path="id" id="post-id" />
@@ -366,7 +365,9 @@
 								class="fas fa-edit fa-2x text-muted pointer mx-2 my-1"></i></span>
 						</div>
 					</c:if>
-					<p class="font-weight-bold"><i class="fas fa-image mr-3"></i>Images</p>
+					<p class="font-weight-bold">
+						<i class="fas fa-image mr-3"></i>Images
+					</p>
 					<div class="row m-3">
 						<form:hidden path="deletedImages" id="deleted-image-input" />
 						<c:forEach var="image" items="${images }" varStatus="level">
@@ -422,31 +423,49 @@
 						</div>
 						<div class="row preview border-dashed mx-3 p-3 hidden"></div>
 					</c:if>
-
 					<div class="row post-footer">
 						<div class="col">
 							<sec:authorize access="isAuthenticated()">
 								<input id="flag" value='true' type="hidden" />
-								<div class="col-6 float-left border text-center h-100">
+								<div class="col-4 float-left border text-center h-100">
 									<h3 class="mt-3">
 										<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
 									</h3>
 								</div>
 								<c:if test="${post.pin ne null }">
 									<input id="isPin" type="hidden" value="false" />
-									<div class="col-6 float-left border text-center h-100 pointer">
-										<h3 class="mt-3 pin" style="color: #007bff;"
-											id="${post.id }">
+									<div class="col-4 float-left border text-center h-100 pointer">
+										<h3 class="mt-3 pin" style="color: #007bff;" id="${post.id }">
 											<i class="fas fa-thumbtack mr-5"></i>Unpin
 										</h3>
 									</div>
 								</c:if>
 								<c:if test="${post.pin eq null }">
 									<input id="isPin" type="hidden" value="true" />
-									<div class="col-6 float-left border text-center h-100 pointer">
+									<div class="col-4 float-left border text-center h-100 pointer">
 										<h3 class="mt-3 pin" id="${post.id }">
 											<i class="fas fa-thumbtack mr-5"></i>Pin
 										</h3>
+									</div>
+								</c:if>
+								<c:if test="${post.report eq null }">
+									<div class="col-4 float-left border text-center h-100 pointer"
+										id="report-open">
+										<h3 class="mt-3">
+											<i class="fas fa-flag mr-5"></i>Report
+										</h3>
+									</div>
+								</c:if>
+								<c:if test="${post.report ne null }">
+									<div class="col-4 float-left border text-center h-100"
+										data-toggle="tooltip" data-placement="bottom"
+										title="With accusation: ${post.report.description } and Description: ${post.report.content }">
+										<p class="mt-3 text-small text-main">
+											<i class="fas fa-flag mr-3"></i>You reported this
+											post on
+											<fmt:formatDate value="${post.report.createdAt }" type="date"></fmt:formatDate>
+											.
+										</p>
 									</div>
 								</c:if>
 							</sec:authorize>
@@ -462,7 +481,9 @@
 					</div>
 				</form:form>
 				<div class="hidden stage-2" id="cancel">Cancel</div>
-				<div class="panel-header"><i class="fas fa-comment-dots mr-3"></i>Comments</div>
+				<div class="panel-header">
+					<i class="fas fa-comment-dots mr-3"></i>Comments
+				</div>
 				<div class="row m-2" id="comments">
 					<c:forEach var="comment" items="${comments }">
 						<div class="m-2 w-100">
@@ -690,6 +711,43 @@
 					</div>
 				</div>
 			</div>
+			<c:if test="${user.username ne post.username }">
+				<div class="hidden-center-container" id="report-container">
+					<div class="absolute-center flow-hidden p-3" id="report">
+						<div class="row m-0" style="height: 30%;">
+							<div class="col">
+								<h5 class="text-main">
+									<i class="fas fa-question mr-3"></i>You want to make a report
+									about:
+								</h5>
+								<label class="text-dark custom-radio-container">The
+									informations provided in this post is not real.<input
+									type="radio" checked="checked" name="report-radio"
+									value="The informations provided in this post is not real.">
+									<span class="custom-radio-label"></span>
+								</label> <label class="text-dark custom-radio-container">Other.<input
+									type="radio" name="report-radio" value="Other."> <span
+									class="custom-radio-label"></span>
+								</label>
+							</div>
+						</div>
+						<div class="row m-0" style="height: 70%;">
+							<div class="col">
+								<h5 class="text-main">
+									<i class="fas fa-comment-dots mr-3"></i>Write a description:
+								</h5>
+								<textarea class="form-control" placeholder="Description"
+									style="resize: none;" rows="9" id="report-content"></textarea>
+								<button class="btn btn-main mt-3 float-left mr-3"
+									id="report-send">Send report</button>
+								<button class="btn btn-outline-main mt-3 float-left"
+									id="report-cancel">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</c:if>
+			<div></div>
 		</sec:authorize>
 		<input type="hidden" name="${_csrf.parameterName}"
 			value="${_csrf.token}" id="csrfToken" />

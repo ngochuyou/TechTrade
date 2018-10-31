@@ -44,6 +44,9 @@ public class Post {
 	@Column(name = "vote", nullable = false)
 	private int upVote;
 
+	@Column(name = "deleted", nullable = false)
+	private boolean deleted;
+
 	public long getId() {
 		return id;
 	}
@@ -114,6 +117,14 @@ public class Post {
 
 	public void setUpVote(int upVote) {
 		this.upVote = upVote;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 }

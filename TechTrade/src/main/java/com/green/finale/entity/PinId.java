@@ -8,7 +8,6 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class PinId implements Serializable {
-
 	/**
 	 * 
 	 */

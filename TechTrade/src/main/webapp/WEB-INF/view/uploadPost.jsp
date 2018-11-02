@@ -24,10 +24,10 @@
 	src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"></script>
 <script type="text/javascript"
 	src="<spring:url value="/resources/js/uploadPost.js"></spring:url>"></script>
-<sec:authorize access="isAuthenticated()">
-	<script type="text/javascript"
-		src="<spring:url value="/resources/js/mailbox.js"></spring:url>"></script>
-</sec:authorize>
+<script type="text/javascript"
+	src="<spring:url value="/resources/js/mailbox.js"></spring:url>"></script>
+<script
+	src="https://cdn.ckeditor.com/ckeditor5/11.1.1/classic/ckeditor.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script

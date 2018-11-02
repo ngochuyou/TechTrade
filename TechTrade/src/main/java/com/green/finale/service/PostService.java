@@ -196,7 +196,7 @@ public class PostService {
 		targetedPost.setDeleted(true);
 		postDao.update(targetedPost);
 		
-		return "Post deleted";
+		return "";
 	}
 
 	@Transactional

@@ -292,6 +292,7 @@ $(document).ready(function() {
 	    
 	    post_del_link.click(function(event) {
 	    	event.preventDefault();
+	    	event.stopPropagation();
 	    	post_id = this.id.match(/\d+/);
 	    	post_content.append("<div class='fixed-noti post-noti'><i class='fas fa-trash mr-3'></i>Are you sure you want to delete this post? Action can not be undo. <button class='btn bg-main mx-4' id='post-noti-yes'>Yes!</button><button class='btn btn-outline-main' id='post-noti-no'>Don't do it</button></div>");
 	    	post_noti = $('.post-noti');

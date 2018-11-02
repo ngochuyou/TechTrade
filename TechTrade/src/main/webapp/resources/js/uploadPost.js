@@ -1,4 +1,13 @@
 $(document).ready(function() {
+	ClassicEditor
+	.create( document.querySelector( '#form-description' ) )
+	.then( editor => {
+		console.log( editor );
+	} )
+	.catch( error => {
+		console.error( error );
+	} );
+	
 		$('.overlay').click(function() {
 			$('#sidebar').addClass('sidebar-active');
 			$('.overlay').removeClass('active-overlay');

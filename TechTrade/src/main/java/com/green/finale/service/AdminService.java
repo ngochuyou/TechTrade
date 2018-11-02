@@ -201,15 +201,21 @@ public class AdminService {
 	public List<UserReportModel> getUserReportModelList(List<UserReport> reports) {
 		List<UserReportModel> models = new ArrayList<>();
 		UserReportModel model = null;
-
+		int userInvolved;
+		String targetedUsername;
+		
 		for (UserReport report : reports) {
+			userInvolved = 0;
 			model = new UserReportModel();
 
 			model.setId(report.getId());
 			model.setReason(report.getDescription());
 			model.setCreatedAt(report.getCreatedAt());
 			model.setContent(report.getContent());
-			model.setInvolvedIn(userReportDao.count(report.getId().getTargetedUser().getUsername()));
+			targetedUsername = report.getId().getTargetedUser().getUsername();
+			userInvolved += postReportDao.countUserInvolve(targetedUsername);
+			userInvolved += userReportDao.count(targetedUsername);
+			model.setInvolvedIn(userInvolved);
 
 			models.add(model);
 		}
@@ -220,8 +226,11 @@ public class AdminService {
 	public List<PostReportModel> getPostReportModelList(List<PostReport> reports) {
 		List<PostReportModel> models = new ArrayList<>();
 		PostReportModel model = null;
-
+		int userInvolved;
+		String targetedUsername;
+		
 		for (PostReport report : reports) {
+			userInvolved = 0;
 			model = new PostReportModel();
 
 			model.setId(report.getId());
@@ -229,9 +238,12 @@ public class AdminService {
 			model.setCreatedAt(report.getCreatedAt());
 			model.setContent(report.getContent());
 			model.setInvolvedIn(postReportDao.count(report.getId().getTargetedPost().getId()));
-			model.setUserInvolvedIn(
-					postReportDao.countUserInvolve(report.getId().getTargetedPost().getCreateBy().getUsername()));
-
+			targetedUsername = report.getId().getTargetedPost().getCreateBy().getUsername();
+			userInvolved += postReportDao.countUserInvolve(targetedUsername);
+			userInvolved += userReportDao.count(targetedUsername);
+			
+			model.setUserInvolvedIn(userInvolved);
+			
 			models.add(model);
 		}
 
@@ -257,7 +269,7 @@ public class AdminService {
 				postReportDao.deleteByPost(postId);
 				postDao.delete(post);
 				sendMessage(user, post.getCreateBy(),
-						"One of your posts has been taken down by the Community. Please check your profile page. If you want to have further details, please reply to this message.");
+						"One of your posts has been taken down by the Community. Please check your profile page. For further details, please reply to this message.");
 
 				return "Post permanently deleted";
 			}
@@ -287,7 +299,7 @@ public class AdminService {
 		targetedPost.setDeleted(true);
 		postDao.update(targetedPost);
 		sendMessage(user, targetedPost.getCreateBy(),
-				"One of your posts has been taken down by the Community. Please check your profile page. If you want to have further details, please reply to this message.");
+				"One of your posts has been taken down by the Community. Please check your profile page. For further details, please reply to this message.");
 		
 		return "Post deleted";
 	}

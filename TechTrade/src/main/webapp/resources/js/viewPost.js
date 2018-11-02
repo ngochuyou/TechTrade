@@ -284,7 +284,7 @@ $(document).ready(function() {
     				type : 'POST',
     				url : '/TechTrade/post/comment',
     				data : {
-    					postId : post_id.val(),
+    					postId : post_id,
     					comment : comment.val(),
     					[crfs.attr('name')] : crfs.val()
     				},

@@ -53,7 +53,7 @@ public class AccountController {
 	public String wall(@PathVariable(name = "username") String username,
 			@RequestParam(name = "s", defaultValue = "createAt:desc") String sortBy,
 			@RequestParam(name = "p", defaultValue = "0") int page, Model model, Principal principal) {
-		AccountModel acc = accService.findModel(username);
+		AccountModel acc = accService.findModel(username, principal);
 
 		if (acc == null) {
 			model.addAttribute("error", Contants.NONEXSIT);

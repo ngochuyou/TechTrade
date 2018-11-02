@@ -255,25 +255,47 @@
 			</div>
 			<div class="m-4">
 				<div class="row">
-					<div class="dropdown">
-						<button class="btn-nobg text-main wpx-70 hpx-70" type="button"
-							id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
-							aria-expanded="false">
-							<i class="fas fa-sort fa-lg"></i>
-						</button>
-						<div class="dropdown-menu dropdown-menu-left bg-main"
-							aria-labelledby="dropdownMenu2" style="z-index: 1022;">
-							<a class="dropdown-item text-white"
-								href="<spring:url value="/account/wall/${account.username }?s=createAt:desc"></spring:url>">Newest</a>
-							<a class="dropdown-item text-white"
-								href="<spring:url value="/account/wall/${account.username }?s=createAt:asc"></spring:url>">Oldest</a>
-							<a class="dropdown-item text-white"
-								href="<spring:url value="/account/wall/${account.username }?s=upVote:desc"></spring:url>">Most
-								voted</a> <a class="dropdown-item text-white"
-								href="<spring:url value="/account/wall/${account.username }?s=upVote:asc"></spring:url>">Least
-								Voted</a>
+					<div class="col-6">
+						<div class="dropdown">
+							<button class="btn-nobg text-main wpx-70 hpx-70" type="button"
+								id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false">
+								<i class="fas fa-sort fa-lg"></i>
+							</button>
+							<div class="dropdown-menu dropdown-menu-left bg-main"
+								aria-labelledby="dropdownMenu2" style="z-index: 1022;">
+								<a class="dropdown-item text-white"
+									href="<spring:url value="/account/wall/${account.username }?s=createAt:desc"></spring:url>">Newest</a>
+								<a class="dropdown-item text-white"
+									href="<spring:url value="/account/wall/${account.username }?s=createAt:asc"></spring:url>">Oldest</a>
+								<a class="dropdown-item text-white"
+									href="<spring:url value="/account/wall/${account.username }?s=upVote:desc"></spring:url>">Most
+									voted</a> <a class="dropdown-item text-white"
+									href="<spring:url value="/account/wall/${account.username }?s=upVote:asc"></spring:url>">Least
+									Voted</a>
+							</div>
 						</div>
 					</div>
+					<c:if test="${user.username ne account.username }">
+						<c:if test="${account.report eq null }">
+							<div class="col-6 pointer" id="report-open">
+								<h3 class="text-right">
+									<i class="fas fa-flag mr-3"></i>Report
+								</h3>
+							</div>
+						</c:if>
+						<c:if test="${account.report ne null }">
+							<div class="col-6 pointer" data-toggle="tooltip"
+								data-placement="bottom"
+								title="With accusation: ${account.report.description } and Description: ${account.report.content }">
+								<h3 class="text-right">
+									<i class="fas fa-flag mr-3"></i>You reported this user on
+									<fmt:formatDate value="${account.report.createdAt }"
+										type="date"></fmt:formatDate>
+								</h3>
+							</div>
+						</c:if>
+					</c:if>
 				</div>
 				<div id="post-content" class="bg-noti p-3">
 					<span id="sort" class="hidden">${sortBy }</span>
@@ -365,8 +387,7 @@
 									<c:if test="${post.pin ne null }">
 										<input id="isPin" type="hidden" value="false" />
 										<div class="col-6 float-left border text-center h-100 pointer">
-											<h3 class="mt-3 pin" style="color: #007bff;"
-												id="${post.id }">
+											<h3 class="mt-3 pin" style="color: #007bff;" id="${post.id }">
 												<i class="fas fa-thumbtack mr-5"></i>Unpin
 											</h3>
 										</div>
@@ -422,7 +443,7 @@
 						</div>
 					</div>
 					<div class="row p-3 border-bottom">
-						<div class="col .custom-control-description" id="composer-content"></div>
+						<div class="col custom-control-description" id="composer-content"></div>
 					</div>
 					<div class="row py-3 px-4">
 						<textarea
@@ -600,6 +621,42 @@
 					</div>
 				</div>
 			</div>
+			<c:if test="${user.username ne account.username }">
+				<div class="hidden-center-container" id="report-container">
+					<div class="absolute-center flow-hidden p-3" id="report">
+						<div class="row m-0" style="height: 30%;">
+							<div class="col">
+								<h5 class="text-main">
+									<i class="fas fa-question mr-3"></i>You want to make a report
+									about:
+								</h5>
+								<label class="text-dark custom-radio-container">This
+									user is providing fake profile.<input type="radio"
+									checked="checked" name="report-radio"
+									value="The informations provided in this post is not real.">
+									<span class="custom-radio-label"></span>
+								</label> <label class="text-dark custom-radio-container">Other.<input
+									type="radio" name="report-radio" value="Other."> <span
+									class="custom-radio-label"></span>
+								</label>
+							</div>
+						</div>
+						<div class="row m-0" style="height: 70%;">
+							<div class="col">
+								<h5 class="text-main">
+									<i class="fas fa-comment-dots mr-3"></i>Write a description:
+								</h5>
+								<textarea class="form-control" placeholder="Description"
+									style="resize: none;" rows="9" id="report-content"></textarea>
+								<button class="btn btn-main mt-3 float-left mr-3"
+									id="report-send">Send report</button>
+								<button class="btn btn-outline-main mt-3 float-left"
+									id="report-cancel">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</c:if>
 		</sec:authorize>
 		<input type="hidden" name="${_csrf.parameterName}"
 			value="${_csrf.token}" id="csrfToken" />

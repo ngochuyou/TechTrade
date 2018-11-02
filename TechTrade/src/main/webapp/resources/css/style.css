@@ -387,6 +387,10 @@ label {
 	overflow: auto;
 }
 
+.flowY-auto {
+	overflow-y: auto; 
+}
+
 button.btn:hover {
 	opacity: 1 !important;
 }
@@ -991,4 +995,63 @@ label {
 	height: 8px;
 	border-radius: 50%;
 	background: white;
+}
+
+.bg-noti-hover:hover {
+	background-color: #efefef;
+}
+
+.bs-callout {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+
+*.bs-callout:empty {
+   padding: 20px;
+   margin: 0px;
+   border: none;   
+}
+
+.bs-callout h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.bs-callout p:last-child {
+    margin-bottom: 0;
+}
+
+.bs-callout code {
+    border-radius: 3px;
+}
+
+.bs-callout+.bs-callout {
+    margin-top: -5px;
+}
+
+.bs-callout-default {
+    border-left-color: #777;
+}
+
+.bs-callout-primary {
+    border-left-color: #428bca;
+}
+
+.bs-callout-success {
+    border-left-color: #5cb85c;
+}
+
+.bs-callout-danger {
+    border-left-color: #d9534f;
+}
+
+.bs-callout-warning {
+    border-left-color: #f0ad4e;
+}
+
+.bs-callout-info {
+    border-left-color: #5bc0de;
 }

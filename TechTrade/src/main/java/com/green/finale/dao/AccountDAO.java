@@ -22,7 +22,14 @@ public class AccountDAO {
 
 		return hql.getResultList();
 	}
-
+	
+	public List<Account> getAdminList() {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<Account> hql = ss.createQuery("FROM Account WHERE role = 'Admin'", Account.class);
+		
+		return hql.getResultList();
+	}
+	
 	public String insert(Account acc) {
 		Session ss = factory.getCurrentSession();
 

@@ -1,5 +1,6 @@
 package com.green.finale.model;
 
+import com.green.finale.entity.UserReport;
 import com.green.finale.entity.Ward;
 import com.green.finale.utils.AccountRole;
 import com.green.finale.utils.Gender;
@@ -18,6 +19,7 @@ public class AccountModel {
 	private int prestigePoints;
 	private String wallpaper;
 	private Ward ward;
+	private UserReport report;
 
 	public String getUsername() {
 		return username;
@@ -121,6 +123,14 @@ public class AccountModel {
 
 	public void setWard(Ward ward) {
 		this.ward = ward;
+	}
+
+	public UserReport getReport() {
+		return report;
+	}
+
+	public void setReport(UserReport report) {
+		this.report = report;
 	}
 
 }

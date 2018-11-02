@@ -18,6 +18,7 @@ public class PostModel {
 	private Account createBy;
 	private Category category;
 	private boolean status;
+	private boolean deleted;
 	private String tags;
 	private int categoryId;
 	private MultipartFile[] file;
@@ -154,6 +155,14 @@ public class PostModel {
 
 	public void setReport(PostReport report) {
 		this.report = report;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 }

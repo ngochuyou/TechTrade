@@ -304,4 +304,56 @@ $(document).ready(function() {
 	    post_content.on('click', '#post-noti-no', function(){
 	    	post_noti.remove();
 	    });
+	    
+	    $(function () {
+	    	$('[data-toggle="tooltip"]').tooltip();
+	    });
+	    
+	    var report_open = $('#report-open');
+	    var report_cancel = $('#report_cancel');
+	    var report_container = $('#report-container');
+	    var report = $('#report');
+	    var report_send = $('#report-send');
+	    var report_cancel = $('#report-cancel');
+	    var report_content = $('#report-content');
+	    var report_model = {
+	    	reason : "",
+	    	content : "",
+	    	targetedUser : username.text()
+	    }
+	    
+	    report_open.click(function() {
+	    	report_container.show();
+	    	setTimeout(function() {
+	    		report.addClass("absolute-center-active");
+	    	}, 100);
+	    });
+	    
+	    report_cancel.click(function() {
+	    	report.removeClass("absolute-center-active");
+	    	setTimeout(function() {
+	    		report_container.hide();
+	    	}, 200);
+	    });
+	    
+	    report_send.click(function() {
+	    	report_model.content = report_content.val();
+	    	report_model.reason = $('input[name=report-radio]:checked').val();
+	    	$.ajax({
+	    		type : 'POST',
+	    		url : '/TechTrade/admin/report/user',
+	    		contentType: "application/json; charset=utf-8",
+	    		data : JSON.stringify(report_model),
+	    		success : function(result) {
+	    			report_cancel.trigger('click');
+	    			report_open.html("<h3 class='text-right'>"
+	    								+ "<i class='fas fa-flag mr-3'></i>You reported this user on " + formatCurrentDate(new Date()) + ".</h3>");
+	    			$('#report-open').off('click');
+	    			$('body').append("<div class='fixed-noti report-noti'><i class='fas fa-flag mr-3'></i>" + result + "</div>");
+	    			setTimeout(function() {
+	    				$('.report-noti').remove();
+	    			}, 3000);
+	    		}
+	    	});
+	    });
 });

@@ -37,6 +37,7 @@ import com.green.finale.entity.PostReportId;
 import com.green.finale.entity.Vote;
 import com.green.finale.entity.VoteId;
 import com.green.finale.model.PostModel;
+import com.green.finale.utils.AccountRole;
 import com.green.finale.utils.Contants;
 
 @Service
@@ -114,6 +115,7 @@ public class PostService {
 			newPost.setCreateAt(new Date());
 			newPost.setCreateBy(acc);
 			newPost.setStatus(true);
+			newPost.setDeleted(false);
 			newPost.setUpVote(0);
 
 			postDao.insert(newPost);
@@ -176,26 +178,25 @@ public class PostService {
 	}
 
 	@Transactional
-	public String deletePost(long postId, Principal principal) {
-		Post post = postDao.find(postId);
+	public String deletePost(long postId, String username) {
+		Post targetedPost = postDao.find(postId);
 
-		if (post != null) {
-			String postUsername = post.getCreateBy().getUsername();
-
-			if (postUsername.equals(principal.getName())) {
-				commentDao.deleteByPost(postId);
-				imageDao.deleteByPost(postId);
-				voteDao.deleteByPost(postId);
-				pinDao.deleteByPost(postId);
-				postDao.delete(post);
-
-				return null;
-			}
-
-			return Contants.NOT_BELONG;
+		if (targetedPost == null) {
+			
+			return Contants.POST_NONEXSIT;
 		}
 
-		return Contants.NONEXSIT;
+		Account user = accDao.find(username);
+
+		if (!targetedPost.getCreateBy().getUsername().equals(username) && user.getRole() != AccountRole.Admin) {
+			
+			return Contants.NOT_BELONG;
+		}
+		
+		targetedPost.setDeleted(true);
+		postDao.update(targetedPost);
+		
+		return "Post deleted";
 	}
 
 	@Transactional
@@ -246,6 +247,7 @@ public class PostService {
 		model.setDescription(p.getDescription());
 		model.setName(p.getName());
 		model.setStatus(p.isStatus());
+		model.setDeleted(p.isDeleted());
 		model.setTags(p.getTags());
 		model.setUpVote(p.getUpVote());
 		model.setCreateBy(p.getCreateBy());

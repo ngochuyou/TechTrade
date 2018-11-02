@@ -342,6 +342,7 @@ $(document).ready(function() {
 		"Aug", "Sep", "Oct",
 		"Nov", "Dec"
     ];
+    
     var currentDate = new Date();
     var day = currentDate.getDate();
 	var monthIndex = currentDate.getMonth();
@@ -415,8 +416,7 @@ $(document).ready(function() {
     var report_model = {
     	reason : "",
     	content : "",
-    	targetedPost : 0,
-    	targetedUser : ""
+    	targetedPost : 0
     }
     
     report_open.click(function() {

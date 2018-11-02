@@ -4,10 +4,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-import org.springframework.stereotype.Repository;
-
-@Repository
+@Entity
+@Table(name = "user_report")
 public class UserReport {
 	@EmbeddedId
 	private UserReportId id;

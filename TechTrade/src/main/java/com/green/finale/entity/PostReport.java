@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "report")
+@Table(name = "post_report")
 public class PostReport {
 
 	@EmbeddedId

@@ -61,6 +61,12 @@ public class Account {
 	@Column(name = "wallpaper")
 	private String wallpaper;
 
+	@Column(name = "banned", nullable = false)
+	private boolean banned;
+
+	@Column(name = "deleted", nullable = false)
+	private boolean deleted;
+
 	public String getUsername() {
 		return username;
 	}
@@ -163,6 +169,22 @@ public class Account {
 
 	public void setWallpaper(String wallpaper) {
 		this.wallpaper = wallpaper;
+	}
+
+	public boolean isBanned() {
+		return banned;
+	}
+
+	public void setBanned(boolean banned) {
+		this.banned = banned;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 }

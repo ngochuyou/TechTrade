@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="ISO-8859-1" isELIgnored="false"%>
+	pageEncoding="utf-8" isELIgnored="false"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -21,12 +21,12 @@
 	src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"></script>
 <script defer
 	src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"></script>
-<script type="text/javascript"
-	src="<spring:url value="/resources/js/report_compose.js"></spring:url>"></script>
 <sec:authorize access="isAuthenticated()">
 	<script type="text/javascript"
 		src="<spring:url value="/resources/js/mailbox.js"></spring:url>"></script>
 </sec:authorize>
+<script type="text/javascript"
+	src="<spring:url value="/resources/js/report.js"></spring:url>"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script
@@ -191,12 +191,238 @@
 			</div>
 		</nav>
 		<div class="main">
-			<h1 class="text-main"><i class="fas fa-flag mr-3"><span class="font-italic">TechTrade</span> Report center.</i></h1>
-			<div class="row">
-				<div class="col-6">
-					
+			<h2 class="text-center py-4 text-light border-bottom bg-main">
+				<i class="fas fa-flag mr-3"></i>Post Reports
+			</h2>
+			<div class="row m-0 hpx-500 border-bottom" id="postReport-container">
+				<div class="col-4 flowY-auto h-100 border-right">
+					<c:forEach var="report" items="${postReportList }">
+						<c:set var="postReportId"
+							value="${report.id.accuser.username }${report.id.targetedPost.id }"></c:set>
+						<div
+							class="row h-25 border-bottom postReport pointer bg-noti-hover"
+							id="${postReportId }">
+							<div class="col-4">
+								<p>
+									<fmt:formatDate value="${report.createdAt }"></fmt:formatDate>
+								</p>
+							</div>
+							<div class="col-8">
+								<p class="text-truncate"
+									data-postReport-content="${postReportId }">${report.content }</p>
+							</div>
+							<input type="hidden" data-postReport-post-id="${postReportId }"
+								value="${report.id.targetedPost.id }"> <input
+								type="hidden"
+								data-postReport-reporter-username="${postReportId }"
+								value="${report.id.accuser.username }"> <input
+								type="hidden" data-postReport-post-upvote="${postReportId }"
+								value="${report.id.targetedPost.upVote }"> <input
+								type="hidden" data-postReport-post-involved="${postReportId }"
+								value="${report.involvedIn }"> <input type="hidden"
+								data-postReport-owner-username="${postReportId }"
+								value="${report.id.targetedPost.createBy.username }"> <input
+								type="hidden" data-postReport-owner-involved="${postReportId }"
+								value="${report.userInvolvedIn }">
+						</div>
+					</c:forEach>
 				</div>
-				<div class="col-6"></div>
+				<div class="col-8">
+					<div class="row h-100">
+						<div class="col-6">
+							<div class="row h-50">
+								<div class="col">
+									<h3 class="text-main">Post peek</h3>
+									<div class="pl-3">
+										<p>
+											<i class="fas fa-user-times mr-3"></i>Reported by <span
+												id="postReport-details-accuserUsername"></span>.
+										</p>
+										<p>
+											<i class="fas fa-arrows-alt-v mr-3"></i><span
+												id="postReport-details-post-vote"></span> Vote(s) in this
+											post.
+										</p>
+										<p>
+											<i class="fas fa-flag mr-3"></i><span
+												id="postReport-details-post-involved"></span> Report(s)
+											involved.
+										</p>
+										<p>
+											<a href="" id="postReport-details-post"><i
+												class="fas fa-external-link-square-alt mr-3"></i>See post
+												details.</a>
+										</p>
+									</div>
+								</div>
+							</div>
+							<div class="row h-25">
+								<div class="col">
+									<h3 class="text-main">Post's owner peek</h3>
+									<div class="pl-3">
+										<div class="row">
+											<div class="col-6">
+												<p class="text-truncate">
+													<i class="fas fa-user mr-3"></i><span
+														id="postReport-details-owner-username"></span>
+												</p>
+											</div>
+											<div class="col-6">
+												<p>
+													<i class="fas fa-flag mr-3"></i><span
+														id="postReport-details-owner-involved"></span> involved
+												</p>
+											</div>
+										</div>
+										<p>
+											<a id="postReport-details-owner"><i
+												class="fas fa-external-link-square-alt mr-3"></i>See user
+												details.</a>
+										</p>
+									</div>
+								</div>
+							</div>
+							<div class="row h-25">
+								<div class="col">
+									<h3 class="text-main">Action</h3>
+									<div class="dropdown">
+										<button class="btn-nobg text-main wpx-70 hpx-70" type="button"
+											id="dropdownMenu2" data-toggle="dropdown"
+											aria-haspopup="true" aria-expanded="false">
+											<i class="fas fa-cog"></i>
+										</button>
+										<div class="dropdown-menu dropdown-menu-left bg-main"
+											aria-labelledby="dropdownMenu2">
+											<p
+												class="dropdown-item text-white pointer postReport-action-postId"
+												id="postReport-action-closePost" data-id="">Delete this
+												post.</p>
+											<p
+												class="dropdown-item text-white pointer postReport-action-postId"
+												id="postReport-action-delPost" data-id="">Permanently
+												delete this post.</p>
+											<p
+												class="dropdown-item text-white pointer postReport-action-ownerId"
+												id="postReport-action-messOwner" data-id="">Send a
+												message to post's owner.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="row h-100">
+								<div class="col">
+									<h3>
+										<i class="fas fa-comment-dots mr-3"></i>Accusation
+									</h3>
+									<div class="pl-3 flow-auto" style="max-height: 90%;">
+										<p class="custom-control-description"
+											id="postReport-details-content"></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<h2 class="text-center py-4 text-light border-bottom bg-main">
+				<i class="fas fa-flag mr-3"></i>User Reports
+			</h2>
+			<div class="row m-0 hpx-500" id="userReport-container">
+				<div class="col-4 flowY-auto h-100 border-right">
+					<c:forEach var="report" items="${userReportList }">
+						<c:set var="userReportId"
+							value="${report.id.accuser.username }${report.id.targetedUser.username }"></c:set>
+						<div
+							class="row h-25 border-bottom userReport pointer bg-noti-hover"
+							id="${userReportId }">
+							<div class="col-4">
+								<p>
+									<fmt:formatDate value="${report.createdAt }"></fmt:formatDate>
+								</p>
+							</div>
+							<div class="col-8">
+								<p class="text-truncate"
+									data-userReport-content="${userReportId }">${report.content }</p>
+							</div>
+							<input type="hidden"
+								data-userReport-target-username="${userReportId }"
+								value="${report.id.targetedUser.username }"> <input
+								type="hidden"
+								data-userReport-reporter-username="${userReportId }"
+								value="${report.id.accuser.username }"> <input
+								type="hidden" data-postReport-involved="${userReportId }"
+								value="${report.involvedIn }">
+						</div>
+					</c:forEach>
+				</div>
+				<div class="col-8">
+					<div class="row h-100">
+						<div class="col-6">
+							<div class="row h-50">
+								<div class="col">
+									<h3 class="text-main">User peek</h3>
+									<div class="pl-3">
+										<div class="row">
+											<div class="col">
+												<p>
+													<i class="fas fa-user-times mr-3"></i>Reported by <span
+														id="userReport-details-accuserUsername"></span>.
+												</p>
+												<p class="text-truncate">
+													<i class="fas fa-user mr-3"></i><span
+														id="userReport-details-target-username"></span>
+												</p>
+												<p>
+													<i class="fas fa-flag mr-3"></i><span
+														id="userReport-details-target-involved"></span> involved
+												</p>
+											</div>
+										</div>
+										<p>
+											<a id="userReport-details-owner"><i
+												class="fas fa-external-link-square-alt mr-3"></i>See user
+												details.</a>
+										</p>
+									</div>
+								</div>
+							</div>
+							<div class="row h-25">
+								<div class="col">
+									<h3 class="text-main">Action</h3>
+									<div class="dropdown">
+										<button class="btn-nobg text-main wpx-70 hpx-70" type="button"
+											id="dropdownMenu2" data-toggle="dropdown"
+											aria-haspopup="true" aria-expanded="false">
+											<i class="fas fa-cog"></i>
+										</button>
+										<div class="dropdown-menu dropdown-menu-left bg-main"
+											aria-labelledby="dropdownMenu2">
+											<p
+												class="dropdown-item text-white pointer"
+												id="userReport-action-messOwner" data-id="">Send a
+												message to this User.</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="row h-100">
+								<div class="col">
+									<h3>
+										<i class="fas fa-comment-dots mr-3"></i>Accusation
+									</h3>
+									<div class="pl-3 flow-auto" style="max-height: 90%;">
+										<p class="custom-control-description"
+											id="userReport-details-content"></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<sec:authorize access="isAuthenticated()">
@@ -224,7 +450,7 @@
 						</div>
 					</div>
 					<div class="row p-3 border-bottom">
-						<div class="col .custom-control-description" id="composer-content"></div>
+						<div class="col custom-control-description" id="composer-content"></div>
 					</div>
 					<div class="row py-3 px-4">
 						<textarea

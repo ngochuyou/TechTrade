@@ -27,16 +27,21 @@ public class PostDAO {
 
 	public List<Post> getList() {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<Post> hql = ss.createQuery("FROM Post WHERE status=true", Post.class);
+		TypedQuery<Post> hql = ss.createQuery("FROM Post WHERE deleted = :deleted AND status = :status", Post.class);
+
+		hql.setParameter("deleted", false);
+		hql.setParameter("status", true);
 
 		return hql.getResultList();
 	}
 
 	public List<Post> getList(int firstRow) {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<Post> hql = ss.createQuery("FROM Post WHERE status=true", Post.class);
+		TypedQuery<Post> hql = ss.createQuery("FROM Post WHERE deleted = :deleted AND status = :status", Post.class);
 
 		hql.setFirstResult(firstRow);
+		hql.setParameter("deleted", false);
+		hql.setParameter("status", true);
 
 		return hql.getResultList();
 	}
@@ -47,11 +52,11 @@ public class PostDAO {
 		Query<Post> hql = null;
 
 		if (categoryId == 0) {
-			query = "FROM Post WHERE category.id IS NOT NULL AND (name LIKE :keyword OR tags LIKE :keyword) AND status = true ORDER BY "
+			query = "FROM Post WHERE category.id IS NOT NULL AND (name LIKE :keyword OR tags LIKE :keyword) AND deleted = :deleted AND status = :status ORDER BY "
 					+ sortBy.replace(":", " ");
 			hql = ss.createQuery(query, Post.class);
 		} else {
-			query = "FROM Post WHERE category.id = :cateId AND (name LIKE :keyword OR tags LIKE :keyword) AND status = true ORDER BY "
+			query = "FROM Post WHERE category.id = :cateId AND (name LIKE :keyword OR tags LIKE :keyword) AND deleted = :deleted AND status = :status ORDER BY "
 					+ sortBy.replace(":", " ");
 			hql = ss.createQuery(query, Post.class);
 			hql.setParameter("cateId", categoryId);
@@ -60,28 +65,35 @@ public class PostDAO {
 		hql.setParameter("keyword", "%" + keyword + "%");
 		hql.setFirstResult(firstRecord * MAX_RESULT);
 		hql.setMaxResults(MAX_RESULT);
+		hql.setParameter("deleted", false);
+		hql.setParameter("status", true);
 
 		return hql.getResultList();
 	}
 
 	public List<Post> getNewestList(long page) {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<Post> hql = ss.createQuery("FROM Post WHERE status=true ORDER BY createAt desc ", Post.class);
+		TypedQuery<Post> hql = ss.createQuery(
+				"FROM Post WHERE deleted = :deleted AND status = :status ORDER BY createAt desc ", Post.class);
 
 		hql.setMaxResults(MAX_RESULT);
 		hql.setFirstResult((int) page * MAX_RESULT);
+		hql.setParameter("deleted", false);
+		hql.setParameter("status", true);
 
 		return hql.getResultList();
 	}
 
 	public List<Post> getAllListByAccount(String username, int firstRecord, String sortBy) {
 		Session ss = factory.getCurrentSession();
-		TypedQuery<Post> hql = ss.createQuery(
-				"FROM Post Where createBy.username = :username ORDER BY " + sortBy.replace(":", " "), Post.class);
+		TypedQuery<Post> hql = ss
+				.createQuery("FROM Post Where createBy.username = :username AND deleted = :deleted ORDER BY "
+						+ sortBy.replace(":", " "), Post.class);
 
 		hql.setParameter("username", username);
 		hql.setFirstResult(firstRecord * MAX_RESULT);
 		hql.setMaxResults(MAX_RESULT);
+		hql.setParameter("deleted", false);
 
 		return hql.getResultList();
 	}
@@ -89,12 +101,15 @@ public class PostDAO {
 	public List<Post> getListByAccount(String username, int firstRecord, String sortBy) {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<Post> hql = ss.createQuery(
-				"FROM Post Where createBy.username = :username AND status=true ORDER BY " + sortBy.replace(":", " "),
+				"FROM Post Where createBy.username = :username AND deleted = :deleted AND status = :status ORDER BY "
+						+ sortBy.replace(":", " "),
 				Post.class);
 
 		hql.setParameter("username", username);
 		hql.setFirstResult(firstRecord * MAX_RESULT);
 		hql.setMaxResults(MAX_RESULT);
+		hql.setParameter("deleted", false);
+		hql.setParameter("status", true);
 
 		return hql.getResultList();
 	}
@@ -102,12 +117,15 @@ public class PostDAO {
 	public List<Post> getListByCategory(int cateId, String sortBy, int firstRecord) {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<Post> hql = ss.createQuery(
-				"FROM Post Where category.id = :cateId AND status=true ORDER BY " + sortBy.replace(":", " "),
+				"FROM Post Where category.id = :cateId AND deleted = :deleted AND status = :status ORDER BY "
+						+ sortBy.replace(":", " "),
 				Post.class);
 
 		hql.setParameter("cateId", cateId);
 		hql.setFirstResult(firstRecord * MAX_RESULT);
 		hql.setMaxResults(MAX_RESULT);
+		hql.setParameter("deleted", false);
+		hql.setParameter("status", true);
 
 		return hql.getResultList();
 	}
@@ -115,11 +133,13 @@ public class PostDAO {
 	public List<Object[]> getListByTitle(String keyword) {
 		Session ss = factory.getCurrentSession();
 		Query<Object[]> hql = ss.createQuery(
-				"SELECT name, id FROM Post WHERE (name LIKE :keyword OR tags LIKE :keyword) AND status=true ORDER BY upVote desc",
+				"SELECT name, id FROM Post WHERE (name LIKE :keyword OR tags LIKE :keyword) AND deleted = :deleted AND status = :status ORDER BY upVote desc",
 				Object[].class);
 
 		hql.setParameter("keyword", "%" + keyword + "%");
 		hql.setMaxResults(MAX_RESULT);
+		hql.setParameter("deleted", false);
+		hql.setParameter("status", true);
 
 		return hql.list();
 	}
@@ -127,12 +147,13 @@ public class PostDAO {
 	public List<Post> getPinnedList(String username) {
 		Session ss = factory.getCurrentSession();
 		TypedQuery<Post> hql = ss.createQuery(
-				"SELECT p FROM Post as p, Pin as pn WHERE pn.account.username = p.createBy.username AND pn.account.username = :username AND p.status = :status ORDER BY pn.createAt desc",
+				"SELECT p FROM Post as p, Pin as pn WHERE pn.account.username = p.createBy.username AND pn.account.username = :username AND p.deleted = :deleted AND p.status = :status ORDER BY pn.createAt desc",
 				Post.class);
-		
+
 		hql.setParameter("username", username);
+		hql.setParameter("deleted", false);
 		hql.setParameter("status", true);
-		
+
 		return hql.getResultList();
 	}
 

@@ -382,7 +382,7 @@
 									</div>
 									<img src="/TechTrade/post/images/${image.filename }">
 								</div>
-								<c:out value="</div><div class='row m-2'>" escapeXml="false"></c:out>
+								<c:out value="</div><div class='row m-3'>" escapeXml="false"></c:out>
 							</c:if>
 							<c:if test="${(level.index + 1) % 3 ne 0}">
 								<div
@@ -427,46 +427,71 @@
 						<div class="col">
 							<sec:authorize access="isAuthenticated()">
 								<input id="flag" value='true' type="hidden" />
-								<div class="col-4 float-left border text-center h-100">
-									<h3 class="mt-3">
-										<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
-									</h3>
-								</div>
-								<c:if test="${post.pin ne null }">
-									<input id="isPin" type="hidden" value="false" />
-									<div class="col-4 float-left border text-center h-100 pointer">
-										<h3 class="mt-3 pin" style="color: #007bff;" id="${post.id }">
-											<i class="fas fa-thumbtack mr-5"></i>Unpin
-										</h3>
-									</div>
-								</c:if>
-								<c:if test="${post.pin eq null }">
-									<input id="isPin" type="hidden" value="true" />
-									<div class="col-4 float-left border text-center h-100 pointer">
-										<h3 class="mt-3 pin" id="${post.id }">
-											<i class="fas fa-thumbtack mr-5"></i>Pin
-										</h3>
-									</div>
-								</c:if>
-								<c:if test="${post.report eq null }">
-									<div class="col-4 float-left border text-center h-100 pointer"
-										id="report-open">
+								<c:if test="${user.username ne post.username }">
+									<div class="col-4 float-left border text-center h-100">
 										<h3 class="mt-3">
-											<i class="fas fa-flag mr-5"></i>Report
+											<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
 										</h3>
 									</div>
+									<c:if test="${post.pin ne null }">
+										<input id="isPin" type="hidden" value="false" />
+										<div class="col-4 float-left border text-center h-100 pointer">
+											<h3 class="mt-3 pin" style="color: #007bff;" id="${post.id }">
+												<i class="fas fa-thumbtack mr-5"></i>Unpin
+											</h3>
+										</div>
+									</c:if>
+									<c:if test="${post.pin eq null }">
+										<input id="isPin" type="hidden" value="true" />
+										<div class="col-4 float-left border text-center h-100 pointer">
+											<h3 class="mt-3 pin" id="${post.id }">
+												<i class="fas fa-thumbtack mr-5"></i>Pin
+											</h3>
+										</div>
+									</c:if>
+									<c:if test="${post.report eq null }">
+										<div class="col-4 float-left border text-center h-100 pointer"
+											id="report-open">
+											<h3 class="mt-3">
+												<i class="fas fa-flag mr-5"></i>Report
+											</h3>
+										</div>
+									</c:if>
+									<c:if test="${post.report ne null }">
+										<div class="col-4 float-left border text-center h-100"
+											data-toggle="tooltip" data-placement="bottom"
+											title="With accusation: ${post.report.description } and Description: ${post.report.content }">
+											<p class="mt-3 text-small text-main">
+												<i class="fas fa-flag mr-3"></i>You reported this post on
+												<fmt:formatDate value="${post.report.createdAt }"
+													type="date"></fmt:formatDate>
+												.
+											</p>
+										</div>
+									</c:if>
 								</c:if>
-								<c:if test="${post.report ne null }">
-									<div class="col-4 float-left border text-center h-100"
-										data-toggle="tooltip" data-placement="bottom"
-										title="With accusation: ${post.report.description } and Description: ${post.report.content }">
-										<p class="mt-3 text-small text-main">
-											<i class="fas fa-flag mr-3"></i>You reported this
-											post on
-											<fmt:formatDate value="${post.report.createdAt }" type="date"></fmt:formatDate>
-											.
-										</p>
+								<c:if test="${user.username eq post.username }">
+									<div class="col-6 float-left border text-center h-100">
+										<h3 class="mt-3">
+											<i class="fas fa-arrows-alt-v mr-5"></i>${post.upVote } Votes
+										</h3>
 									</div>
+									<c:if test="${post.pin ne null }">
+										<input id="isPin" type="hidden" value="false" />
+										<div class="col-6 float-left border text-center h-100 pointer">
+											<h3 class="mt-3 pin" style="color: #007bff;" id="${post.id }">
+												<i class="fas fa-thumbtack mr-5"></i>Unpin
+											</h3>
+										</div>
+									</c:if>
+									<c:if test="${post.pin eq null }">
+										<input id="isPin" type="hidden" value="true" />
+										<div class="col-6 float-left border text-center h-100 pointer">
+											<h3 class="mt-3 pin" id="${post.id }">
+												<i class="fas fa-thumbtack mr-5"></i>Pin
+											</h3>
+										</div>
+									</c:if>
 								</c:if>
 							</sec:authorize>
 							<sec:authorize access="isAnonymous()">
@@ -747,7 +772,6 @@
 					</div>
 				</div>
 			</c:if>
-			<div></div>
 		</sec:authorize>
 		<input type="hidden" name="${_csrf.parameterName}"
 			value="${_csrf.token}" id="csrfToken" />

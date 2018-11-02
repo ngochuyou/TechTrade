@@ -54,7 +54,7 @@ public class PostController {
 			return "error";
 		}
 
-		if (postModel.isStatus() == false) {
+		if (postModel.isStatus() == false || postModel.isDeleted()) {
 			if (!principal.getName().equals(postModel.getUsername())) {
 				model.addAttribute("error", Contants.POST_CLOSED);
 
@@ -132,9 +132,9 @@ public class PostController {
 
 	@GetMapping(value = "/delete/{postId}")
 	public String delete(@PathVariable(name = "postId") long postId, Principal principal, Model model) {
-		String result = postService.deletePost(postId, principal);
+		String result = postService.deletePost(postId, principal.getName());
 
-		if (result != null) {
+		if (result.length() != 0) {
 			model.addAttribute("error", result);
 
 			return "error";

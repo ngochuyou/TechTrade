@@ -419,7 +419,7 @@ $(document).ready(function() {
     }, 30000);
     
     var outbox_newOutbox = $('.outbox-composer');
-    var outbox_newOutbox_open = $('.newoutbox-open')
+    var outbox_newOutbox_open = $('.newoutbox-open');
     var outbox_newOutbox_id = $('#newoutbox-id');
     var outbox_newOutbox_ids = $('#newoutbox-ids');
     var outbox_newOutbox_content = $('#newoutbox-content-input');

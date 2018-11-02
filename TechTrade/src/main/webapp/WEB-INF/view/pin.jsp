@@ -293,7 +293,7 @@
 						</div>
 					</div>
 					<div class="row p-3 border-bottom">
-						<div class="col .custom-control-description" id="composer-content"></div>
+						<div class="col custom-control-description" id="composer-content"></div>
 					</div>
 					<div class="row py-3 px-4">
 						<textarea

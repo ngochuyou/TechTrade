@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	var currentPage = 0;
+	
 	$('.overlay').click(function() {
 		$('#sidebar').addClass('sidebar-active');
 		$('.overlay').removeClass('active-overlay');
@@ -85,7 +86,7 @@ $(document).ready(function() {
 		+"					</h3>"
 		+"					<h2 class='text-truncate font-weight-bold'>" + this.name + "</h2>"
 		+"					<p>"
-		+"						By <span class='font-italic text-main'>" + this.createBy.username + "</span>"
+		+"						By <span class='font-italic text-main pointer' onclick='window.location.href=\"/TechTrade/account/wall/" + this.createBy.username + "\"'>" + this.createBy.username + "</span>"
 		+"						on " + formatCurrentDate(date)
 		+"					</p>"
 		+"					<div class='line-height-large'>"

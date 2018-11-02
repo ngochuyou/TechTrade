@@ -244,8 +244,7 @@
 								<c:if test="${post.pin ne null }">
 									<input id="isPin" type="hidden" value="false" />
 									<div class="col-6 float-left border text-center h-100 pointer">
-										<h3 class="mt-3 pin" style="color: #007bff;"
-											id="${post.id }">
+										<h3 class="mt-3 pin" style="color: #007bff;" id="${post.id }">
 											<i class="fas fa-thumbtack mr-5"></i>Unpin
 										</h3>
 									</div>
@@ -302,7 +301,7 @@
 						</div>
 					</div>
 					<div class="row p-3 border-bottom">
-						<div class="col .custom-control-description" id="composer-content"></div>
+						<div class="col custom-control-description" id="composer-content"></div>
 					</div>
 					<div class="row py-3 px-4">
 						<textarea
@@ -417,7 +416,7 @@
 								<div class="row bg-noti message pointer">
 									<input type="hidden" value="${message.id }" class="message-id">
 									<span class="message-location hidden">${message.sender.ward.name },
-										${message.sender.ward.district.name },
+										${message.sender.ward.district.name }, 
 										${message.sender.ward.district.city.name }</span>
 									<div class="col-2 border-right">
 										<img
@@ -425,7 +424,8 @@
 											class="m-auto avatar-medium">
 									</div>
 									<div class="col-9">
-										<h3 class="text-truncate message-username">${message.sender.username }</h3>
+										<h3 class="text-truncate message-username">
+											${message.sender.username }</h3>
 										<p class="text-truncate mb-1 message-content">${message.content }</p>
 										<p class="text-truncate text-small message-sentAt">
 											<fmt:formatDate value="${message.sentAt }" type="both"

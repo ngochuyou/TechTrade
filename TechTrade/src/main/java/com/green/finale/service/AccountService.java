@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,9 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.green.finale.dao.AccountDAO;
 import com.green.finale.dao.MessageDAO;
+import com.green.finale.dao.UserReportDAO;
 import com.green.finale.dao.WardDAO;
 import com.green.finale.entity.Account;
 import com.green.finale.entity.Message;
+import com.green.finale.entity.UserReport;
+import com.green.finale.entity.UserReportId;
 import com.green.finale.model.AccountModel;
 import com.green.finale.model.InboxModel;
 import com.green.finale.model.MessageModel;
@@ -42,6 +46,9 @@ public class AccountService {
 	@Autowired
 	private MessageDAO messDao;
 	
+	@Autowired
+	private UserReportDAO userReportDao;
+	
 	@Transactional
 	public Account find(String username) {
 		Account acc = accDao.find(username);
@@ -54,7 +61,7 @@ public class AccountService {
 	}
 
 	@Transactional
-	public AccountModel findModel(String username) {
+	public AccountModel findModel(String username, Principal principal) {
 		Account acc = accDao.find(username);
 
 		if (acc == null) {
@@ -62,7 +69,7 @@ public class AccountService {
 			return null;
 		}
 
-		return injectAccount(acc);
+		return injectAccount(acc, principal);
 	}
 
 	@Transactional
@@ -383,7 +390,7 @@ public class AccountService {
 		return true;
 	}
 
-	public AccountModel injectAccount(Account acc) {
+	public AccountModel injectAccount(Account acc, Principal principal) {
 		AccountModel model = new AccountModel();
 
 		model.setUsername(acc.getUsername());
@@ -398,7 +405,14 @@ public class AccountService {
 		model.setPrestigePoints(acc.getPrestigePoints());
 		model.setWallpaper(acc.getWallpaper());
 		model.setWard(acc.getWard());
-
+		
+		if (principal != null) {
+			UserReportId reportId = new UserReportId(accDao.find(principal.getName()), acc);
+			UserReport report = userReportDao.find(reportId);
+			
+			model.setReport(report);
+		}
+		
 		return model;
 	}
 

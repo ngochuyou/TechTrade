@@ -31,11 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			account = accountDao.findByEmail(key);
 
 			if (account == null) {
-				account = accountDao.findByPhone(key);
-
-				if (account == null) {
-					throw new UsernameNotFoundException(key + " not found!");
-				}
+				throw new UsernameNotFoundException(key + " not found!");
 			}
 		}
 

@@ -77,8 +77,10 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 				.userDetailsService(userDetailService);
 		
 		CharacterEncodingFilter filter = new CharacterEncodingFilter();
+		
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
+        
         http.addFilterBefore(filter,CsrfFilter.class);
 	}
 }

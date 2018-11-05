@@ -3,6 +3,7 @@ package com.green.finale.controller;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class AdminController {
 
 	@Autowired
 	private AccountService accService;
-
+	
 	@PostMapping(value = "/report/post")
 	public @ResponseBody String reportPost(@RequestBody PostReportModel model, Principal principal) {
 
@@ -39,6 +40,7 @@ public class AdminController {
 		return adminService.reportUser(model, principal.getName());
 	}
 
+	@Secured("hasRole('Admin')")
 	@GetMapping(value = "/report/view")
 	public String reportView(Model model, Principal principal) {
 		model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
@@ -49,12 +51,14 @@ public class AdminController {
 		return "report";
 	}
 
+	@Secured("hasRole('Admin')")
 	@GetMapping(value = "/post/delete/{postId}")
 	public @ResponseBody String deletePost(@PathVariable(name = "postId") long postId, Principal principal) {
 
 		return adminService.deletePost(postId, principal.getName());
 	}
 
+	@Secured("hasRole('Admin')")
 	@PostMapping(value = "/post/permadelete/{postId}")
 	public @ResponseBody String permadeletePost(@PathVariable(name = "postId") long postId, Principal principal) {
 

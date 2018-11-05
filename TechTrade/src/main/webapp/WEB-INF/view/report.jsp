@@ -52,8 +52,7 @@
 									</h1>
 								</div>
 								<div class="col-8 my-auto border-left">
-									<span>${cate.name }<span
-										class="badge badge-pill bg-light text-main position-right">1</span></span>
+									<span>${cate.name }</span>
 								</div>
 							</div>
 						</a>
@@ -173,6 +172,17 @@
 											<span class="font-weight-bold text-right">Logout</span>
 										</div>
 									</div>
+									<c:if test="${account.role eq 'Admin' }">
+										<div class="dropdown-item text-main font-weight-bold"
+											onclick="window.location.href='<spring:url value='/admin/report/view'></spring:url>'">
+											<div>
+												<i class="fas fa-flag mr-4"></i>
+											</div>
+											<div>
+												<span class="font-weight-bold text-right">Reports</span>
+											</div>
+										</div>
+									</c:if>
 								</div>
 							</div>
 						</li>
@@ -399,8 +409,7 @@
 										</button>
 										<div class="dropdown-menu dropdown-menu-left bg-main"
 											aria-labelledby="dropdownMenu2">
-											<p
-												class="dropdown-item text-white pointer"
+											<p class="dropdown-item text-white pointer"
 												id="userReport-action-messOwner" data-id="">Send a
 												message to this User.</p>
 										</div>

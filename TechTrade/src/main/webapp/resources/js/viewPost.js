@@ -152,9 +152,11 @@ $(document).ready(function() {
     var content_input = $('#content-input');
     var content_submit = $('#content-submit');
     var content_cancel = $('#content-cancel');
+    var content_container = $('#content-container');
     
     content_edit.click(function() {
     	post_description.toggleClass('hidden');
+    	content_container.toggleClass('hidden');
     	content_input.toggleClass('hidden');
     	content_submit.toggleClass('hidden');
     	content_cancel.toggleClass('hidden');
@@ -162,6 +164,7 @@ $(document).ready(function() {
      
     content_cancel.click(function() {
     	post_description.toggleClass('hidden');
+    	content_container.toggleClass('hidden');
     	content_input.val(post_description.text());
     	content_input.toggleClass('hidden');
     	content_submit.toggleClass('hidden');
@@ -252,10 +255,11 @@ $(document).ready(function() {
     	hashtags_input.val(originalHashtag);
     	hashtags_stage2.toggleClass('hidden');
     });
-    
+    alert(CKEDITOR.instances.description.getData());
     content_submit.click(function() {
-    	post_description.text(content_input.val()).toggleClass('hidden');
+    	post_description.html(CKEDITOR.instances.editor1.getData()).toggleClass('hidden');
     	content_input.toggleClass('hidden');
+    	content_container.toggleClass('hidden');
     	content_submit.toggleClass('hidden');
     	content_cancel.toggleClass('hidden');
     });

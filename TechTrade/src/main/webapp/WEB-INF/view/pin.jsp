@@ -173,6 +173,17 @@
 											<span class="font-weight-bold text-right">Logout</span>
 										</div>
 									</div>
+									<c:if test="${account.role eq 'Admin' }">
+										<div class="dropdown-item text-main font-weight-bold"
+											onclick="window.location.href='<spring:url value='/admin/report/view'></spring:url>'">
+											<div>
+												<i class="fas fa-flag mr-4"></i>
+											</div>
+											<div>
+												<span class="font-weight-bold text-right">Reports</span>
+											</div>
+										</div>
+									</c:if>
 								</div>
 							</div>
 						</li>

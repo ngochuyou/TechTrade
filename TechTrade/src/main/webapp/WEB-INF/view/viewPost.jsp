@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" isELIgnored="false"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
@@ -22,12 +22,6 @@
 	src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"></script>
 <script defer
 	src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"></script>
-<script type="text/javascript"
-	src="<spring:url value="/resources/js/viewPost.js"></spring:url>"></script>
-<sec:authorize access="isAuthenticated()">
-	<script type="text/javascript"
-		src="<spring:url value="/resources/js/mailbox.js"></spring:url>"></script>
-</sec:authorize>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 <script
@@ -53,8 +47,7 @@
 									</h1>
 								</div>
 								<div class="col-8 my-auto border-left">
-									<span>${cate.name }<span
-										class="badge badge-pill bg-light text-main position-right">1</span></span>
+									<span>${cate.name }</span>
 								</div>
 							</div>
 						</a>
@@ -353,9 +346,12 @@
 					<div class="row">
 						<div class="col custom-control-description text-size-post p-3"
 							id="post-description">${post.description }</div>
-						<form:textarea path="description"
-							class='hidden my-3 custom-control-description text-size-post p-3 w-100 text-main'
-							rows='15' id='content-input' />
+						<div id="content-container" class="hidden"
+							style="max-width: 1100px; min-width: 1100px;">
+							<form:textarea path="description"
+								class='hidden my-3 custom-control-description text-size-post p-3 w-100 text-main'
+								rows='15' id='content-input' />
+						</div>
 					</div>
 					<c:if test="${flag eq true}">
 						<div class="row px-2 text-right border-bottom">
@@ -777,5 +773,25 @@
 			value="${_csrf.token}" id="csrfToken" />
 		<div class="overlay"></div>
 	</div>
+	<script
+		src="https://cdn.ckeditor.com/ckeditor5/11.1.1/classic/ckeditor.js"></script>
+	<script type="text/javascript"
+		src="<spring:url value="/resources/js/viewPost.js"></spring:url>"></script>
+	<sec:authorize access="isAuthenticated()">
+		<script type="text/javascript"
+			src="<spring:url value="/resources/js/mailbox.js"></spring:url>"></script>
+	</sec:authorize>
+	<script type="text/javascript">
+		let CKEDITOR;
+		ClassicEditor
+		.create( document.querySelector( '#content-input' ) )
+		.then( editor => {
+			/* CKEDITOR = editor;  */
+		})
+		.catch( error => {
+			console.error( error );
+		});
+		console.log(CKEDITOR);
+	</script>
 </body>
 </html>

@@ -7,7 +7,6 @@ $(document).ready(function() {
 	.catch( error => {
 		console.error( error );
 	} );
-	
 		$('.overlay').click(function() {
 			$('#sidebar').addClass('sidebar-active');
 			$('.overlay').removeClass('active-overlay');

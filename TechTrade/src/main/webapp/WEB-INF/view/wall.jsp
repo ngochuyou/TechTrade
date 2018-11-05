@@ -53,8 +53,7 @@
 									</h1>
 								</div>
 								<div class="col-8 my-auto border-left">
-									<span>${cate.name }<span
-										class="badge badge-pill bg-light text-main position-right">1</span></span>
+									<span>${cate.name }</span>
 								</div>
 							</div>
 						</a>
@@ -174,6 +173,17 @@
 											<span class="font-weight-bold text-right">Logout</span>
 										</div>
 									</div>
+									<c:if test="${account.role eq 'Admin' }">
+										<div class="dropdown-item text-main font-weight-bold"
+											onclick="window.location.href='<spring:url value='/admin/report/view'></spring:url>'">
+											<div>
+												<i class="fas fa-flag mr-4"></i>
+											</div>
+											<div>
+												<span class="font-weight-bold text-right">Reports</span>
+											</div>
+										</div>
+									</c:if>
 								</div>
 							</div>
 						</li>
@@ -235,11 +245,6 @@
 					id="profile-posts">
 					<h3 class="text-main text-center font-weight-bold">Posts</h3>
 				</div>
-				<div
-					class="col-2 pt-4 pb-3 border-right box-shadow-hover pointer boxshadow-hover"
-					id="profile-info">
-					<h3 class="text-main text-center font-weight-bold">Informations</h3>
-				</div>
 				<c:if test="${user.username eq account.username }">
 					<div
 						class="col-2 pt-4 pb-3 border-right box-shadow-hover pointer boxshadow-hover"
@@ -276,26 +281,28 @@
 							</div>
 						</div>
 					</div>
-					<c:if test="${user.username ne account.username }">
-						<c:if test="${account.report eq null }">
-							<div class="col-6 pointer" id="report-open">
-								<h3 class="text-right">
-									<i class="fas fa-flag mr-3"></i>Report
-								</h3>
-							</div>
+					<sec:authorize access="isAuthenticated()">
+						<c:if test="${user.username ne account.username }">
+							<c:if test="${account.report eq null }">
+								<div class="col-6 pointer" id="report-open">
+									<h3 class="text-right">
+										<i class="fas fa-flag mr-3"></i>Report
+									</h3>
+								</div>
+							</c:if>
+							<c:if test="${account.report ne null }">
+								<div class="col-6 pointer" data-toggle="tooltip"
+									data-placement="bottom"
+									title="With accusation: ${account.report.description } and Description: ${account.report.content }">
+									<h3 class="text-right">
+										<i class="fas fa-flag mr-3"></i>You reported this user on
+										<fmt:formatDate value="${account.report.createdAt }"
+											type="date"></fmt:formatDate>
+									</h3>
+								</div>
+							</c:if>
 						</c:if>
-						<c:if test="${account.report ne null }">
-							<div class="col-6 pointer" data-toggle="tooltip"
-								data-placement="bottom"
-								title="With accusation: ${account.report.description } and Description: ${account.report.content }">
-								<h3 class="text-right">
-									<i class="fas fa-flag mr-3"></i>You reported this user on
-									<fmt:formatDate value="${account.report.createdAt }"
-										type="date"></fmt:formatDate>
-								</h3>
-							</div>
-						</c:if>
-					</c:if>
+					</sec:authorize>
 				</div>
 				<div id="post-content" class="bg-noti p-3">
 					<span id="sort" class="hidden">${sortBy }</span>
@@ -374,7 +381,7 @@
 							</div>
 							<div class="row pointer my-2  px-4"
 								onclick="window.location.href='<spring:url value='/post/view/${post.id }'></spring:url>'">
-								<p class="col custom-control-description text-size-post">${post.description }</p>
+								<div class="col custom-control-description text-size-post">${post.description }</div>
 							</div>
 							<div class="row px-4">
 								<sec:authorize access="isAuthenticated()">

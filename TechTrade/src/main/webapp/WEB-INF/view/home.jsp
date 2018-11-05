@@ -53,8 +53,7 @@
 									</h1>
 								</div>
 								<div class="col-8 my-auto border-left">
-									<span>${cate.name }<span
-										class="badge badge-pill bg-light text-main position-right">1</span></span>
+									<span>${cate.name }</span>
 								</div>
 							</div>
 						</a>

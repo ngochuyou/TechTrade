@@ -47,8 +47,7 @@
 									</h1>
 								</div>
 								<div class="col-8 my-auto border-left">
-									<span>${cate.name }<span
-										class="badge badge-pill bg-light text-main position-right">1</span></span>
+									<span>${cate.name }</span>
 								</div>
 							</div>
 						</a>
@@ -79,7 +78,7 @@
 			<button type="button" id="sidebarCollapse" class="btn color-main m-3">
 				<i class="fas fa-list fa-lg text-light"></i>
 			</button>
-			<form class="form-inline m-3 my-lg-0 w-50 position-relative"
+			<form class="form-inline m-3 my-lg-0 w-50 position-relative hidden"
 				id="search-form"
 				action="<spring:url value="/search?category=${page.categoryId }"></spring:url>"
 				method="get">
@@ -280,8 +279,7 @@
 								<c:if test="${post.pin ne null }">
 									<input id="isPin" type="hidden" value="false" />
 									<div class="col-6 float-left border text-center h-100 pointer">
-										<h3 class="mt-3 pin" style="color: #007bff;"
-											id="${post.id }">
+										<h3 class="mt-3 pin" style="color: #007bff;" id="${post.id }">
 											<i class="fas fa-thumbtack mr-5"></i>Unpin
 										</h3>
 									</div>

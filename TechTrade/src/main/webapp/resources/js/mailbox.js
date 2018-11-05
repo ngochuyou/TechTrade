@@ -446,6 +446,7 @@ $(document).ready(function() {
     				if (result.length == null) {
     					$(outbox_newOutbox_idError).addClass('hidden');
     					outbox_newOutbox_ids.append("<span class='color-main tags mx-2' id='newoutbox-id" + outbox_newOutbox_idNumber + "'>" + result.username + "<span class='newoutbox-id-del' id='newoutbox-id-del" + outbox_newOutbox_idNumber + "'><i class='fas fa-times-circle mx-2'></i></span>");
+    					outbox_newOutbox_idNumber++;
     					outbox_newOutbox_idInput += (',' + result.username);
     					$(outbox_newOutbox_id).val(null);
     					console.log(outbox_newOutbox_idInput);

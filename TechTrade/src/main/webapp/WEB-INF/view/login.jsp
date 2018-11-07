@@ -45,7 +45,8 @@
 		<div class="container-fluid h-100">
 			<div class="row h-100">
 				<div class="col-8 bg-info h-100 p-0">
-					<img class="w-100 h-100" src="<spring:url value="/resources/img/banner.png"></spring:url>">
+					<img class="w-100 h-100"
+						src="<spring:url value="/resources/img/banner.png"></spring:url>">
 				</div>
 				<div class="col-4 h-100 bg-eee">
 					<div class="row">
@@ -56,8 +57,7 @@
 								</div>
 								<div class="form-bottom">
 									<div class="form-group my-3">
-										<p class="text-center" id="welcome">Enter Username/
-											Email/Phonenumber</p>
+										<p class="text-center" id="welcome">Enter Username/ Email</p>
 									</div>
 									<div id="user-info" class="second-stage"></div>
 									<p

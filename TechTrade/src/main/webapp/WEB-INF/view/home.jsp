@@ -11,7 +11,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Insert title here</title>
+<title>TechTrade</title>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 <link rel="stylesheet"
@@ -193,7 +193,7 @@
 			</div>
 		</nav>
 		<div
-			style="background-image: url('<spring:url value="/resources/img/parallax.jpg"></spring:url>');"
+			style="background-image: url('<spring:url value="/resources/img/banner.png"></spring:url>');"
 			class="parallax"></div>
 		<div class="p-5" id="post-content">
 			<h1 class="panel-header">Most Recent</h1>

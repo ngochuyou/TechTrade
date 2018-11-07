@@ -10,8 +10,7 @@
 <title>Contact Management</title>
 </head>
 <body>
-	<div style="float:right"><a href="<c:url value="/logout" />">Logout</a></div>
-	<div>Dear <strong>${loggedinuser}</strong>, You are not authorized to access this page.</div>
-	<p><a href="<c:url value="/" />">Home</a></p>
+	<div>You are not authorized to access this page.</div>
+	<div class="btn btn-main"><a href="<c:url value="/" />">Home</a></div>
 </body>
 </html>

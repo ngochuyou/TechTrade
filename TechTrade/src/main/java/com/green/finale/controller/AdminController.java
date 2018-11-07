@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.green.finale.entity.Account;
 import com.green.finale.service.AccountService;
 import com.green.finale.service.AdminService;
+import com.green.finale.utils.AccountRole;
 
 @Controller
 @RequestMapping("/admin")
@@ -26,6 +28,13 @@ public class AdminController {
 
 	@GetMapping(value = "/report/view")
 	public String reportView(Model model, Principal principal) {
+		Account user = accService.find(principal.getName());
+		
+		if (user.getRole() != AccountRole.Admin) {
+			
+			return "denied";
+		}
+		
 		model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
 		model.addAttribute("account", accService.find(principal.getName()));
 		model.addAttribute("postReportList", adminService.getPostReportList(0));

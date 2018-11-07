@@ -1,8 +1,8 @@
 package com.green.finale.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -19,8 +19,8 @@ public class Image {
 	@Column(name = "filename", nullable = false)
 	private String filename;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "post_id", nullable = false)
+	@ManyToOne(optional = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "post_id", nullable = true)
 	private Post post;
 
 	public String getFilename() {

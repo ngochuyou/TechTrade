@@ -17,6 +17,8 @@
 <link rel="stylesheet"
 	href="<spring:url value="/resources/css/style.css"></spring:url>"
 	type="text/css">
+<script
+	src="https://cdn.ckeditor.com/ckeditor5/11.1.1/classic/ckeditor.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <script defer
 	src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"></script>
@@ -773,25 +775,11 @@
 			value="${_csrf.token}" id="csrfToken" />
 		<div class="overlay"></div>
 	</div>
-	<script
-		src="https://cdn.ckeditor.com/ckeditor5/11.1.1/classic/ckeditor.js"></script>
 	<script type="text/javascript"
 		src="<spring:url value="/resources/js/viewPost.js"></spring:url>"></script>
 	<sec:authorize access="isAuthenticated()">
 		<script type="text/javascript"
 			src="<spring:url value="/resources/js/mailbox.js"></spring:url>"></script>
 	</sec:authorize>
-	<script type="text/javascript">
-		let CKEDITOR;
-		ClassicEditor
-		.create( document.querySelector( '#content-input' ) )
-		.then( editor => {
-			/* CKEDITOR = editor;  */
-		})
-		.catch( error => {
-			console.error( error );
-		});
-		console.log(CKEDITOR);
-	</script>
 </body>
 </html>

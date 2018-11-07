@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.green.finale.service.AccountService;
 import com.green.finale.service.CategoryService;
 import com.green.finale.model.PostModel;
+import com.green.finale.model.PostReportModel;
 import com.green.finale.service.PostService;
 import com.green.finale.utils.Contants;
 
@@ -37,7 +39,7 @@ public class PostController {
 
 	@Autowired
 	private AccountService accService;
-	
+
 	@GetMapping(value = "/search")
 	public @ResponseBody List<Object[]> search(@RequestParam(name = "keyword", defaultValue = "") String keyword) {
 
@@ -70,7 +72,7 @@ public class PostController {
 		if (principal != null) {
 			model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
 		}
-		
+
 		return "viewPost";
 	}
 
@@ -87,15 +89,15 @@ public class PostController {
 	@PostMapping(value = "/upload")
 	public String uploadPost(@ModelAttribute(name = "model") PostModel postModel, BindingResult result, Model model,
 			Principal principal) {
-		
+
 		String error = postService.createPost(postModel, principal.getName());
-		
+
 		if (error.length() != 0) {
 			model.addAttribute("error", error);
-			
+
 			return "error";
 		}
-		
+
 		return "redirect:/account/wall/" + principal.getName();
 	}
 
@@ -117,10 +119,10 @@ public class PostController {
 
 		return "redirect:/post/view/" + postId;
 	}
-	
+
 	@GetMapping
 	public @ResponseBody List<PostModel> getPostList(@RequestParam(name = "page") long page, Principal principal) {
-		
+
 		return postService.getNewestPostModel(principal, page);
 	}
 
@@ -188,20 +190,26 @@ public class PostController {
 
 		return postService.rateHashtag(hashtag);
 	}
-	
+
 	@GetMapping(value = "/pin")
 	public @ResponseBody String pinPost(@RequestParam(name = "postId") long postId, Principal principal) {
-		
+
 		return postService.pinPost(principal.getName(), postId);
 	}
-	
+
 	@GetMapping(value = "/pinned")
 	public String getPinnedPosts(Principal principal, Model model) {
 		model.addAttribute("pinnedList", postService.getPinnedPostList(principal));
 		model.addAttribute("cateList", cateService.getCategoryList());
 		model.addAttribute("inbox", accService.getInboxModel(principal.getName(), 0));
 		model.addAttribute("account", accService.find(principal.getName()));
-		
+
 		return "pin";
+	}
+
+	@PostMapping(value = "/report")
+	public @ResponseBody String reportPost(@RequestBody PostReportModel model, Principal principal) {
+
+		return postService.reportPost(model, principal.getName());
 	}
 }

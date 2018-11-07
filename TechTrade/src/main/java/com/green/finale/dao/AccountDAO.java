@@ -84,4 +84,11 @@ public class AccountDAO {
 		}
 		return account;
 	}
+	
+	public long count() {
+		Session ss = factory.getCurrentSession();
+		TypedQuery<Long> hql = ss.createQuery("SELECT COUNT(*) FROM Account", Long.class);
+		
+		return hql.getSingleResult();
+	}
 }

@@ -1,5 +1,7 @@
 package com.green.finale.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.green.finale.entity.UserReport;
 import com.green.finale.entity.Ward;
 import com.green.finale.utils.AccountRole;
@@ -19,7 +21,10 @@ public class AccountModel {
 	private int prestigePoints;
 	private String wallpaper;
 	private Ward ward;
+	private MultipartFile avatarFile;
+	private MultipartFile wallpaperFile;
 	private UserReport report;
+	private boolean updatableLocation;
 
 	public String getUsername() {
 		return username;
@@ -125,12 +130,36 @@ public class AccountModel {
 		this.ward = ward;
 	}
 
+	public MultipartFile getAvatarFile() {
+		return avatarFile;
+	}
+
+	public MultipartFile getWallpaperFile() {
+		return wallpaperFile;
+	}
+
+	public void setAvatarFile(MultipartFile avatarFile) {
+		this.avatarFile = avatarFile;
+	}
+
+	public void setWallpaperFile(MultipartFile wallpaperFile) {
+		this.wallpaperFile = wallpaperFile;
+	}
+
 	public UserReport getReport() {
 		return report;
 	}
 
 	public void setReport(UserReport report) {
 		this.report = report;
+	}
+
+	public boolean isUpdatableLocation() {
+		return updatableLocation;
+	}
+
+	public void setUpdatableLocation(boolean updatableLocation) {
+		this.updatableLocation = updatableLocation;
 	}
 
 }

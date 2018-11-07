@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,7 @@ import com.green.finale.dao.AccountDAO;
 import com.green.finale.dao.CategoryDAO;
 import com.green.finale.dao.CommentDAO;
 import com.green.finale.dao.ImageDAO;
+import com.green.finale.dao.MessageDAO;
 import com.green.finale.dao.PinDAO;
 import com.green.finale.dao.PostDAO;
 import com.green.finale.dao.PostReportDAO;
@@ -30,13 +32,16 @@ import com.green.finale.dao.VoteDAO;
 import com.green.finale.entity.Account;
 import com.green.finale.entity.Comment;
 import com.green.finale.entity.Image;
+import com.green.finale.entity.Message;
 import com.green.finale.entity.Pin;
 import com.green.finale.entity.PinId;
 import com.green.finale.entity.Post;
+import com.green.finale.entity.PostReport;
 import com.green.finale.entity.PostReportId;
 import com.green.finale.entity.Vote;
 import com.green.finale.entity.VoteId;
 import com.green.finale.model.PostModel;
+import com.green.finale.model.PostReportModel;
 import com.green.finale.utils.AccountRole;
 import com.green.finale.utils.Contants;
 
@@ -66,7 +71,10 @@ public class PostService {
 
 	@Autowired
 	private PostReportDAO postReportDao;
-
+	
+	@Autowired
+	private MessageDAO messDao;
+	
 	@Transactional
 	public List<Post> getPostList() {
 		return postDao.getList();
@@ -182,20 +190,20 @@ public class PostService {
 		Post targetedPost = postDao.find(postId);
 
 		if (targetedPost == null) {
-			
+
 			return Contants.POST_NONEXSIT;
 		}
 
 		Account user = accDao.find(username);
 
 		if (!targetedPost.getCreateBy().getUsername().equals(username) && user.getRole() != AccountRole.Admin) {
-			
+
 			return Contants.NOT_BELONG;
 		}
-		
+
 		targetedPost.setDeleted(true);
 		postDao.update(targetedPost);
-		
+
 		return "";
 	}
 
@@ -294,7 +302,7 @@ public class PostService {
 
 			modelList.add(model);
 		}
-
+		
 		return modelList;
 	}
 
@@ -336,7 +344,7 @@ public class PostService {
 
 		return null;
 	}
-
+	
 	@Transactional
 	public String addComment(long postId, String comment, Principal principal) {
 		Post currentPost = postDao.find(postId);
@@ -451,6 +459,68 @@ public class PostService {
 	public List<Pin> getPinnedPostList(Principal principal) {
 
 		return pinDao.getPinnedList(principal.getName());
+	}
+
+	@Transactional
+	public String reportPost(PostReportModel model, String username) {
+		Account user = accDao.find(username);
+
+		if (user == null) {
+			return Contants.USER_NONEXSIT;
+		}
+
+		long targetedPostId = model.getTargetedPost();
+
+		if (targetedPostId == 0) {
+
+			return Contants.INVALID_FIELDS;
+		}
+
+		Post targetedPost = postDao.find(targetedPostId);
+
+		if (targetedPost == null) {
+
+			return Contants.POST_NONEXSIT;
+		}
+
+		PostReportId reportId = new PostReportId(user, targetedPost);
+		PostReport report = postReportDao.find(reportId);
+
+		if (report != null) {
+
+			return Contants.POSTREPORT_ALREADYEXSIT;
+		}
+
+		report = new PostReport();
+
+		report.setId(reportId);
+		report.setContent(model.getContent());
+		report.setCreatedAt(new Date());
+		report.setDescription(model.getReason());
+		postReportDao.insert(report);
+
+		List<Account> admins = accDao.getAdminList();
+		Account system = accDao.find("TechTrade");
+		Date sentAt = new Date();
+		Message reportNoti;
+		SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
+
+		for (Account admin : admins) {
+			reportNoti = new Message();
+
+			reportNoti.setContent("A Post has been reported with the reason: " + report.getDescription()
+					+ "\nDescription: " + report.getContent() + "\nOn " + sdf.format(report.getCreatedAt()));
+			reportNoti.setDeletedByReceiver(false);
+			reportNoti.setDeletedBySender(false);
+			reportNoti.setRead(false);
+			reportNoti.setReceiver(admin);
+			reportNoti.setSender(system);
+			reportNoti.setSentAt(sentAt);
+
+			messDao.insert(reportNoti);
+		}
+
+		return "Post report sent.";
 	}
 
 	public boolean validatePost(PostModel post) {

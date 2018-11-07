@@ -61,6 +61,12 @@ public class Account {
 	@Column(name = "wallpaper")
 	private String wallpaper;
 
+	@Column(name = "last_update_phone")
+	private Date lastUpdatePhone;
+
+	@Column(name = "last_update_location")
+	private Date lastUpdateLocation;
+
 	@Column(name = "banned", nullable = false)
 	private boolean banned;
 
@@ -187,4 +193,19 @@ public class Account {
 		this.deleted = deleted;
 	}
 
+	public Date getLastUpdatePhone() {
+		return lastUpdatePhone;
+	}
+
+	public void setLastUpdatePhone(Date lastUpdatePhone) {
+		this.lastUpdatePhone = lastUpdatePhone;
+	}
+
+	public Date getLastUpdateLocation() {
+		return lastUpdateLocation;
+	}
+
+	public void setLastUpdateLocation(Date lastUpdateLocation) {
+		this.lastUpdateLocation = lastUpdateLocation;
+	}
 }

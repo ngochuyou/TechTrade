@@ -342,7 +342,7 @@ $(document).ready(function() {
 	    	report_model.reason = $('input[name=report-radio]:checked').val();
 	    	$.ajax({
 	    		type : 'POST',
-	    		url : '/TechTrade/admin/report/user',
+	    		url : '/TechTrade/account/report',
 	    		contentType: "application/json; charset=utf-8",
 	    		data : JSON.stringify(report_model),
 	    		success : function(result) {

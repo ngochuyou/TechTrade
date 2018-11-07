@@ -1,4 +1,13 @@
 $(document).ready(function() {
+    ClassicEditor
+	.create( document.querySelector( '#content-input' ) )
+	.then( newEditor => {
+		
+	})
+	.catch( error => {
+		console.error( error );
+	});
+    
 	$('button').click(function(event) {
 		event.preventDefault();
 	});
@@ -104,7 +113,7 @@ $(document).ready(function() {
     var hashtags_stage2 = $('.hashtags-stage2');
     
     hashtags_edit.click(function() {
-    	hashtags_stage2.toggleClass('hidden');
+    	$(document).find('.hashtags-stage2').toggleClass('hidden');
     });
     
     var hashtags = $('#hashtags-container').text().trim();
@@ -120,6 +129,7 @@ $(document).ready(function() {
     	hashtagId = this.id.match(/\d+/);
     	targetHashtag = $('#hashtags'+hashtagId);
     	targetHashtag.addClass('deltags');
+    	hashtags_del_array.add(targetHashtag);
     	$(targetHashtag).hide();
     	originalHashtag = originalHashtag.replace(targetHashtag.text().trim(), "");
     	console.log(originalHashtag);
@@ -143,7 +153,8 @@ $(document).ready(function() {
     hashtags_cancel.click(function() {
     	hashtags_array.show();
     	$('.temptags').remove();
-    	hashtags_stage2.toggleClass('hidden');
+    	$(document).find('.deltags').removeClass('deltags');
+    	$(document).find('.hashtags-stage2').toggleClass('hidden');
     	originalHashtag = hashtags;
     });
     
@@ -248,20 +259,15 @@ $(document).ready(function() {
     
     hashtags_submit.click(function() {
     	console.log(originalHashtag);
-    	$('.temptags').addClass('hashtags');
-    	$('.temptags').removeClass('temptags');
+    	$('.temptags').addClass('hashtags').removeClass('temptags');
     	hashtags_array.show();
-    	hashtags_del_array.remove();
+    	$(document).find('.deltags').remove();
     	hashtags_input.val(originalHashtag);
-    	hashtags_stage2.toggleClass('hidden');
+    	$(document).find('.hashtags-stage2').toggleClass('hidden');
     });
-    alert(CKEDITOR.instances.description.getData());
+    
     content_submit.click(function() {
-    	post_description.html(CKEDITOR.instances.editor1.getData()).toggleClass('hidden');
-    	content_input.toggleClass('hidden');
-    	content_container.toggleClass('hidden');
-    	content_submit.toggleClass('hidden');
-    	content_cancel.toggleClass('hidden');
+    	$('#form').submit();
     });
     
     $('#submit-all').click(function() {
@@ -443,7 +449,7 @@ $(document).ready(function() {
     	report_model.targetedPost = post_id;
     	$.ajax({
     		type : 'POST',
-    		url : '/TechTrade/admin/report/post',
+    		url : '/TechTrade/post/report',
     		contentType: "application/json; charset=utf-8",
     		data : JSON.stringify(report_model),
     		success : function(result) {

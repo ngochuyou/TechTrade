@@ -44,8 +44,8 @@
 	<div class="top-content h-100">
 		<div class="container-fluid h-100">
 			<div class="row h-100">
-				<div class="col-8 bg-info h-100">
-					<h1>Banner here</h1>
+				<div class="col-8 bg-info h-100 p-0">
+					<img class="w-100 h-100" src="<spring:url value="/resources/img/banner.png"></spring:url>">
 				</div>
 				<div class="col-4 h-100 bg-eee">
 					<div class="row">

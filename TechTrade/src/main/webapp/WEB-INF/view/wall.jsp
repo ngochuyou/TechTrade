@@ -256,6 +256,11 @@
 						onclick="window.location.href='<spring:url value='/post/pinned'></spring:url>'">
 						<h3 class="text-main text-center font-weight-bold">Pinned</h3>
 					</div>
+					<div
+						class="col-2 pt-4 pb-3 border-right box-shadow-hover pointer boxshadow-hover"
+						onclick="window.location.href='<spring:url value='/account/update'></spring:url>'">
+						<h3 class="text-main text-center font-weight-bold">Profile</h3>
+					</div>
 				</c:if>
 			</div>
 			<div class="m-4">

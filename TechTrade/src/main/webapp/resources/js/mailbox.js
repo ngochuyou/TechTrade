@@ -421,7 +421,7 @@ $(document).ready(function() {
     var outbox_newOutbox = $('.outbox-composer');
     var outbox_newOutbox_open = $('.newoutbox-open');
     var outbox_newOutbox_id = $('#newoutbox-id');
-    var outbox_newOutbox_ids = $('#newoutbox-ids');
+    var outbox_newOutbox_ids = $('#newoutbox-ids');	
     var outbox_newOutbox_content = $('#newoutbox-content-input');
     var outbox_newOutbox_idNumber = 0;
     var outbox_newOutbox_idError = $('#newoutbox-id-error');
@@ -491,6 +491,9 @@ $(document).ready(function() {
     			[crfs.attr('name')] : crfs.val()
     		},
     		success : function(result) {
+    			outbox_newOutbox_idInput = "";
+    			outbox_newOutbox_ids.empty();
+    			$(outbox_newOutbox_content).val(null);
     			$(outbox_newOutbox_noti).text(result);
     			setTimeout(function() {
     				$(outbox_newOutbox_noti).remove();

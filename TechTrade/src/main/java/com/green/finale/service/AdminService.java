@@ -1,6 +1,5 @@
 package com.green.finale.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,9 +21,7 @@ import com.green.finale.entity.Account;
 import com.green.finale.entity.Message;
 import com.green.finale.entity.Post;
 import com.green.finale.entity.PostReport;
-import com.green.finale.entity.PostReportId;
 import com.green.finale.entity.UserReport;
-import com.green.finale.entity.UserReportId;
 import com.green.finale.model.PostReportModel;
 import com.green.finale.model.UserReportModel;
 import com.green.finale.utils.AccountRole;
@@ -59,132 +56,6 @@ public class AdminService {
 
 	@Autowired
 	private PinDAO pinDao;
-
-	@Transactional
-	public String reportPost(PostReportModel model, String username) {
-		Account user = accDao.find(username);
-
-		if (user == null) {
-			return Contants.USER_NONEXSIT;
-		}
-
-		long targetedPostId = model.getTargetedPost();
-
-		if (targetedPostId == 0) {
-
-			return Contants.INVALID_FIELDS;
-		}
-
-		Post targetedPost = postDao.find(targetedPostId);
-
-		if (targetedPost == null) {
-
-			return Contants.POST_NONEXSIT;
-		}
-
-		PostReportId reportId = new PostReportId(user, targetedPost);
-		PostReport report = postReportDao.find(reportId);
-
-		if (report != null) {
-
-			return Contants.POSTREPORT_ALREADYEXSIT;
-		}
-
-		report = new PostReport();
-
-		report.setId(reportId);
-		report.setContent(model.getContent());
-		report.setCreatedAt(new Date());
-		report.setDescription(model.getReason());
-		postReportDao.insert(report);
-
-		List<Account> admins = accDao.getAdminList();
-		Account system = accDao.find("TechTrade");
-		Date sentAt = new Date();
-		Message reportNoti;
-		SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
-
-		for (Account admin : admins) {
-			reportNoti = new Message();
-
-			reportNoti.setContent("A Post has been reported with the reason: " + report.getDescription()
-					+ "\nDescription: " + report.getContent() + "\nOn " + sdf.format(report.getCreatedAt()));
-			reportNoti.setDeletedByReceiver(false);
-			reportNoti.setDeletedBySender(false);
-			reportNoti.setRead(false);
-			reportNoti.setReceiver(admin);
-			reportNoti.setSender(system);
-			reportNoti.setSentAt(sentAt);
-
-			messDao.insert(reportNoti);
-		}
-
-		return "Post report sent.";
-	}
-
-	@Transactional
-	public String reportUser(UserReportModel model, String username) {
-		Account user = accDao.find(username);
-
-		if (user == null) {
-			return Contants.USER_NONEXSIT;
-		}
-
-		String targetdUsername = null;
-
-		targetdUsername = model.getTargetedUser();
-
-		if (targetdUsername == null) {
-
-			return Contants.INVALID_FIELDS;
-		}
-
-		Account targetedUser = accDao.find(targetdUsername);
-
-		if (targetedUser == null) {
-
-			return Contants.USER_NONEXSIT;
-		}
-
-		UserReportId reportId = new UserReportId(user, targetedUser);
-		UserReport report = userReportDao.find(reportId);
-
-		if (report != null) {
-
-			return Contants.USERREPORT_ALREADYEXSIT;
-		}
-
-		report = new UserReport();
-
-		report.setId(reportId);
-		report.setContent(model.getContent());
-		report.setCreatedAt(new Date());
-		report.setDescription(model.getReason());
-		userReportDao.insert(report);
-
-		List<Account> admins = accDao.getAdminList();
-		Account system = accDao.find("TechTrade");
-		Date sentAt = new Date();
-		Message reportNoti;
-		SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
-
-		for (Account admin : admins) {
-			reportNoti = new Message();
-
-			reportNoti.setContent("A User has been reported with the reason: " + report.getDescription()
-					+ "\nDescription: " + report.getContent() + "\nOn " + sdf.format(report.getCreatedAt()));
-			reportNoti.setDeletedByReceiver(false);
-			reportNoti.setDeletedBySender(false);
-			reportNoti.setRead(false);
-			reportNoti.setReceiver(admin);
-			reportNoti.setSender(system);
-			reportNoti.setSentAt(sentAt);
-
-			messDao.insert(reportNoti);
-		}
-
-		return "User report sent.";
-	}
 
 	@Transactional
 	public List<PostReportModel> getPostReportList(int page) {
@@ -269,7 +140,7 @@ public class AdminService {
 				postReportDao.deleteByPost(postId);
 				postDao.delete(post);
 				sendMessage(user, post.getCreateBy(),
-						"One of your posts has been taken down by the Community. Please check your profile page. For further details, please reply to this message.");
+						"One of your posts has been permanently taken down by the Community. Please check your profile page. For further details, please reply to this message.");
 
 				return "Post permanently deleted";
 			}

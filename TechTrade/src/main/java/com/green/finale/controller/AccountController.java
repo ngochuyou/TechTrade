@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +22,7 @@ import com.green.finale.entity.Account;
 import com.green.finale.model.AccountModel;
 import com.green.finale.model.MessageModel;
 import com.green.finale.model.PostModel;
+import com.green.finale.model.UserReportModel;
 import com.green.finale.service.AccountService;
 import com.green.finale.service.CategoryService;
 import com.green.finale.service.EmailService;
@@ -42,7 +44,7 @@ public class AccountController {
 
 	@Autowired
 	private PostService postService;
-	
+
 	@Autowired
 	private CategoryService cateService;
 
@@ -60,7 +62,7 @@ public class AccountController {
 
 			return "error";
 		}
-		
+
 		model.addAttribute("cateList", cateService.getCategoryList());
 		model.addAttribute("account", acc);
 		model.addAttribute("postList", postService.getPostListByAccount(username, page, sortBy, principal));
@@ -71,15 +73,6 @@ public class AccountController {
 		}
 
 		return "wall";
-	}
-	
-	@GetMapping(value="/update/{username}")
-	public String update(@PathVariable(name = "username") String username,Model model, Principal principal) {
-		model.addAttribute("cityList", locaService.getCityList());
-		model.addAttribute("districtList", locaService.getDistrictByIdCity("01"));
-		model.addAttribute("wardList", locaService.getWardByIdDistrict("001"));
-		
-		return "updateAccount";
 	}
 
 	@GetMapping(value = "/api/wall/{username}")
@@ -113,10 +106,10 @@ public class AccountController {
 		String resultStr = accService.createAccount(regisAcc);
 
 		if (resultStr == null) {
-			return "redirect:/";
+			return "redirect:/login";
 		} else {
 			model.addAttribute("error", resultStr);
-			
+
 			return "error";
 		}
 	}
@@ -206,7 +199,13 @@ public class AccountController {
 
 		return "/login";
 	}
-
+	
+	@GetMapping(value = "/password")
+	public @ResponseBody boolean password(@RequestParam(name = "raw") String rawPassword, Principal principal) {
+		
+		return accService.passwordCheck(principal.getName(), rawPassword);
+	}
+	
 	@GetMapping(value = "/message")
 	public @ResponseBody List<MessageModel> getMessages(@RequestParam(name = "page", defaultValue = "0") int page,
 			Principal principal) {
@@ -246,5 +245,42 @@ public class AccountController {
 			Principal principal) {
 
 		return accService.markMessage(principal.getName(), messId);
+	}
+
+	@PostMapping(value = "/report")
+	public @ResponseBody String reportUser(@RequestBody UserReportModel model, Principal principal) {
+
+		return accService.reportUser(model, principal.getName());
+	}
+
+	@GetMapping(value = "/update")
+	public String update(Model model, Principal principal) {
+		AccountModel acc = accService.findModel(principal.getName(), principal);
+
+		model.addAttribute("cityList", locaService.getCityList());
+		model.addAttribute("districtList",
+				locaService.getDistrictByIdCity(acc.getWard().getDistrict().getCity().getId()));
+		model.addAttribute("wardList", locaService.getWardByIdDistrict(acc.getWard().getDistrict().getId()));
+		model.addAttribute("account", acc);
+
+		return "updateAccount";
+	}
+
+	@PostMapping(value = "/update")
+	public String handleUpdate(@ModelAttribute(name = "account") AccountModel accountModel, BindingResult result,
+			Model model, Principal principal) {
+		if (result.hasErrors()) {
+			return "error";
+		}
+
+		String error = accService.updateAccount(accountModel, principal.getName());
+
+		if (error.length() > 0) {
+			model.addAttribute("error", error);
+
+			return "error";
+		}
+
+		return "redirect:/account/wall/" + principal.getName();
 	}
 }

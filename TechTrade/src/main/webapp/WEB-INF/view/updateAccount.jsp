@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" isELIgnored="false"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="ISO-8859-1" isELIgnored="false"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -160,7 +160,6 @@
 										</div>
 										<div>
 											<span>Inboxs</span><span class="badge bg-main ml-3">4</span>
-											</button>
 										</div>
 									</div>
 									<div class="dropdown-item text-main font-weight-bold">
@@ -178,60 +177,160 @@
 				</ul>
 			</div>
 		</nav>
-		<div
-			style="background-image: url('<spring:url value="/account/avatar/${account.wallpaper }"></spring:url>');"
-			class="parallax position-relative">
-			<div class="wallpaper-cover">
-				<p class="background-opacity m-0">
+		<form:form modelAttribute="account" method="post"
+			enctype="multipart/form-data" id="form">
+			<div class="position-relative wallpaper">
+				<img
+					src="<spring:url value="/account/avatar/${account.wallpaper }"></spring:url>"
+					class="w-100 wallpaperPreview"> <label for="wallpaperFile"
+					class="w-100 h-100 position-absolute mx-0" style="top: 0;"></label>
+				<form:input type="file" path="wallpaperFile" class="uploadFile"
+					id="wallpaperFile" />
+			</div>
+			<div>
+				<p class="background-opacity mx-2 my-3 position-relative"">
+					<label for="avatarFile" class="h-100 w-100 position-absolute"
+						style="top: 0; left: 0"></label>
+					<form:input type="file" path="avatarFile" class="uploadFile"
+						id="avatarFile" />
 					<img
 						src="<spring:url value="/account/avatar?username=${account.username }"></spring:url>"
-						class="avatar-large">
+						class="avatar-large avatarPreview">
 				</p>
 			</div>
-		</div>
-		<div class="main mx-0 postion-relative">
-			<span id="username" class="hidden">${account.username }</span>
-			<div>
-				<h1 class="text-center">${account.username }</h1>
-			</div>
-			<div class="row mx-1 p-5 bg-noti" id="info">
-				<div class="col-6">
-					<h4 class="text-left my-4">
-						<i class="fas fa-phone mr-4"></i><input type="number" id="phone" />
-					</h4>
-					<h4 class="text-left my-4">
-						<i class="fas fa-map-marker-alt mr-4"></i> <select
-							id="city-select" class="custom-select hpx-50">
-							<c:forEach var="city" items="${cityList }">
-								<option style="width: 33%" value="${city.id }">${city.name }</option>
-							</c:forEach>
-						</select> <select id="district-select" class="custom-select hpx-50">
-							<c:forEach var="district" items="${districtList }">
-								<option style="width: 33%" value="${district.id }">${district.name }</option>
-							</c:forEach>
-						</select>
-						<%-- <form:select path="wardId" id="ward-select"
-							class="custom-select hpx-50">
-							<c:forEach var="ward" items="${wardList }">
-								<option style="width:33%" value="${ward.id }">${ward.name }</option>
-							</c:forEach>
-						</form:select> --%>
-						<%-- ${account.ward.name },
-						${account.ward.district.name }, ${account.ward.district.city.name } --%>
-					</h4>
-				</div>
-				<div class="col-6">
-					<h4 class="text-left my-4">
-						<i class="fas fa-at mr-4"></i>${account.email }
-					</h4>
-					<h4 class="text-left my-4">
-						<i class="fas fa-male mr-4"></i>${account.gender }
-					</h4>
-					<h4 class="text-left my-4">
-						<i class="fas fa-arrows-alt-v mr-4"></i>${account.prestigePoints }
-					</h4>
+			<div class="mx-0 postion-relative">
+				<span id="username" class="hidden">${account.username }</span>
+				<div>
+					<h1 class="text-center">${account.username }</h1>
 				</div>
 			</div>
-		</div>
+			<div class="mx-0 postion-relative">
+				<div class="row mx-1 p-5 bg-noti" id="info">
+					<div class="col-1"></div>
+					<div class="col-10">
+						<div class="row my-3">
+							<div class="col-1">
+								<i class="fas fa-at fa-lg"></i>
+							</div>
+							<div class="col-11">
+								<h4>${account.email }</h4>
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-1">
+								<i class="fas fa-male fa-lg"></i>
+							</div>
+							<div class="col-11">
+								<h4>
+									<form:select id="gender" class="w-100 form-control hpx-50"
+										style="width: auto; font-size: 15px;" path="gender">
+										<form:option value="Male">Male</form:option>
+										<form:option value="Female">Female</form:option>
+										<form:option value="Other">Other</form:option>
+									</form:select>
+								</h4>
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-1">
+								<i class="fas fa-key fa-lg"></i>
+							</div>
+							<div class="col-11">
+								<h4 class="text-left">
+									<form:input type="password" id="password"
+										placeholder="Old Password" path="password"
+										class="form-control" />
+								</h4>
+								<p class="hidden text-danger" id="oldpassword-notmatch">Incorrect
+									old password</p>
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-1">
+								<i class="fas fa-key fa-lg"></i>
+							</div>
+							<div class="col-11">
+								<h4 class="text-left">
+									<form:input type="password" id="newPassword"
+										placeholder="New Password" path="newPassword"
+										class="form-control" />
+								</h4>
+								<p class="hidden invalid text-danger">Invalid password.</p>
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-1">
+								<i class="fas fa-key fa-lg"></i>
+							</div>
+							<div class="col-11">
+								<h4 class="text-left">
+									<input type="password" id="repassword"
+										placeholder="Confirm New Password" class="form-control" />
+								</h4>
+								<p class="hidden invalid text-danger">Invalid password.</p>
+								<p class="hidden not-match text-danger">Incorrect
+									Re-password.</p>
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-1">
+								<i class="fas fa-phone fa-lg"></i>
+							</div>
+							<div class="col-11">
+								<h4 class="text-left">
+									<form:input id="phone" placeholder="Phone Number"
+										class="w-100 d-inline-block w-75 form-control" path="phone" />
+								</h4>
+								<p class="hidden text-danger" id="invalid-phone">Invalid
+									phone number.</p>
+							</div>
+						</div>
+						<c:if test="${account.updatableLocation eq true }">
+							<div class="row my-3">
+								<div class="col-1">
+									<i class="fas fa-map-marker-alt fa-lg"></i>
+								</div>
+								<div class="col-11">
+									<h4 class="text-left">
+										<select id="city-select" class="custom-select hpx-50"
+											style="width: auto; font-size: 15px;">
+											<c:forEach var="city" items="${cityList }">
+												<option value="${city.id }"
+													${city.id eq account.ward.district.city.id ? "selected" : ""}>${city.name }</option>
+											</c:forEach>
+										</select> <select id="district-select" class="custom-select hpx-50"
+											style="width: auto; font-size: 15px;">
+											<c:forEach var="district" items="${districtList }">
+												<option value="${district.id }"
+													${district.id eq account.ward.district.id ? "selected" : "" }>${district.name }</option>
+											</c:forEach>
+										</select>
+										<form:select id="ward-select" class="custom-select hpx-50"
+											style="width: auto; font-size: 15px;" path="wardId">
+											<form:options items="${wardList }" itemValue="id"
+												itemLabel="name"></form:options>
+										</form:select>
+									</h4>
+								</div>
+							</div>
+						</c:if>
+						<c:if test="${account.updatableLocation eq false }">
+							<p>You cannot update your location since it has been less
+								than 30 days since the last time you did.</p>
+						</c:if>
+						<form:hidden path="email" />
+						<form:hidden path="username" />
+						<form:hidden path="role" />
+						<div class="row">
+							<div class="col">
+								<div class="btn btn-main" id="form-submit">Save</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-1"></div>
+				</div>
+			</div>
+		</form:form>
+	</div>
 </body>
 </html>

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,6 +18,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 @ComponentScan({ "com.green.finale" })
 public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 
@@ -69,7 +71,9 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 				.logout()
 				.logoutUrl("/logout")
 			.and()
-				.csrf().ignoringAntMatchers("/admin/report/**")
+				.csrf()
+					.ignoringAntMatchers("/post/report/**")
+					.ignoringAntMatchers("/account/report/**")
 			.and()
 				.exceptionHandling()
 				.accessDeniedPage("/denied")
@@ -79,8 +83,8 @@ public class SecurityWebConfig extends WebSecurityConfigurerAdapter {
 		CharacterEncodingFilter filter = new CharacterEncodingFilter();
 		
         filter.setEncoding("UTF-8");
-        filter.setForceEncoding(true);
-        
-        http.addFilterBefore(filter,CsrfFilter.class);
+		filter.setForceEncoding(true);
+
+		http.addFilterBefore(filter, CsrfFilter.class);
 	}
 }

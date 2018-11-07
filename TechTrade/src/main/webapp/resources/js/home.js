@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var currentPage = 0;
+	var currentPage = 1;
 	
 	$('.overlay').click(function() {
 		$('#sidebar').addClass('sidebar-active');

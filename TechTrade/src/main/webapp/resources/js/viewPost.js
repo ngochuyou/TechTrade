@@ -169,8 +169,8 @@ $(document).ready(function() {
     	post_description.toggleClass('hidden');
     	content_container.toggleClass('hidden');
     	content_input.toggleClass('hidden');
-    	content_submit.toggleClass('hidden');
-    	content_cancel.toggleClass('hidden');
+//    	content_submit.toggleClass('hidden');
+//    	content_cancel.toggleClass('hidden');
     });
      
     content_cancel.click(function() {
